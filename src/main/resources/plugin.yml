@@ -1,0 +1,4 @@
+name: LifesPluginS3
+version: '${project.version}'
+main: me.trololo11.lifespluginseason3.LifesPlugin
+api-version: '1.20'
