@@ -1,0 +1,6 @@
+host: 'localhost'
+port: '' #leave empty to use the default (1433)
+user: 'root'
+password: ''
+
+detailed-errors: false #do true if you want to have stack traces printed
