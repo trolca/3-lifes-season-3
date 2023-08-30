@@ -39,9 +39,13 @@ public class PlayerLifesDataSetup implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e) throws SQLException {
         Player player = e.getPlayer();
+
+
         byte lifes = lifesManager.getPlayerLifes(player);
 
         databaseManager.updatePlayerLifes(player.getUniqueId(), lifes);
+
+        lifesManager.removePlayerLifes(player);
     }
 
 }

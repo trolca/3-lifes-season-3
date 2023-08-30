@@ -57,6 +57,10 @@ public class DatabaseManager {
         connection.close();
     }
 
+    public void turnOffDatabase(){
+        ds.close();
+    }
+
     public byte getPlayerLifes(UUID uuid) throws SQLException {
         Connection connection = getConnection();
 

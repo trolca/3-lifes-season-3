@@ -2,3 +2,6 @@ name: LifesPluginS3
 version: '${project.version}'
 main: me.trololo11.lifespluginseason3.LifesPlugin
 api-version: '1.20'
+commands:
+  getitems:
+    description: "Gets all your items :D"
