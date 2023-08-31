@@ -7,6 +7,12 @@ import org.bukkit.inventory.ItemStack;
 
 public class Utils {
 
+    /**
+     * This is just a shortcut from using {@link ChatColor#translateAlternateColorCodes(char, String)}
+     * which is using altColorChar as '&'
+     * @param s The string to translate
+     * @return The translated string
+     */
     public static String chat(String s){
         return ChatColor.translateAlternateColorCodes('&', s);
     }
