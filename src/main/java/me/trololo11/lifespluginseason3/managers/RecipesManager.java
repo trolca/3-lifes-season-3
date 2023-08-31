@@ -15,6 +15,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * This class stores all of the custom items used by this plugin. <br>
+ * It also stores and creates the recipes for the life item and revive card item. <br>
+ * The custom items stored:
+ * <ul>
+ *     <li>Life item</li>
+ *     <li>Player life item</li>
+ *     <li>Revive card item</li>
+ *     <li>Life shard item</li>
+ *     <li>Revive card shard item</li>
+ * </ul>
+ */
 public class RecipesManager {
 
     private ItemStack lifeItem;
@@ -28,11 +40,14 @@ public class RecipesManager {
 
     private LifesPlugin plugin = LifesPlugin.getPlugin();
 
-    public void initalize(){
+    public RecipesManager(){
         createItems();
         createRecipes();
     }
 
+    /**
+     * Creates all of the custom items.
+     */
     private void createItems(){
         ArrayList<String> lore = new ArrayList<>();
 
@@ -82,6 +97,9 @@ public class RecipesManager {
         reviveShardItem.setItemMeta(reviveCardShardMeta);
     }
 
+    /**
+     * Creates and initalizes al of the custom recipes.
+     */
     private void createRecipes(){
         NamespacedKey lifesNameKey = new NamespacedKey(plugin, "life_recipe");
         NamespacedKey reviveNameKey = new NamespacedKey(plugin, "revive_card_recipe");
@@ -103,6 +121,11 @@ public class RecipesManager {
         Bukkit.getServer().addRecipe(reviveCardRecipe);
     }
 
+    /**
+     * Returns a new life item with a random UUID as it's localized name
+     * to make the items non-stackable.
+     * @return The new non-stackable life.
+     */
     public ItemStack getLifeItem() {
         ItemStack lifeItemCopy = lifeItem.clone();
         ItemMeta lifeMeta = lifeItemCopy.getItemMeta();
@@ -113,6 +136,14 @@ public class RecipesManager {
         return lifeItemCopy;
     }
 
+    /**
+     * Returns a new player life with the specified player's name
+     * on the display name. It makes it's localized name
+     * a random UUID to make it non-stackable.
+     *
+     * @param player The player to put on the display name of this life.
+     * @return A new player life
+     */
     public ItemStack getPlayerLifeItem(Player player) {
 
         ItemStack playerLifeItemCopy = playerLifeItem.clone();
@@ -124,6 +155,11 @@ public class RecipesManager {
         return playerLifeItemCopy;
     }
 
+    /**
+     * Returns a new revive card item with a random UUID as it's localized name
+     * to make the items non-stackable.
+     * @return The new non-stackable revive card.
+     */
     public ItemStack getReviveCardItem() {
         ItemStack reviveItemCopy = reviveCardItem.clone();
         ItemMeta reviveMeta = reviveItemCopy.getItemMeta();

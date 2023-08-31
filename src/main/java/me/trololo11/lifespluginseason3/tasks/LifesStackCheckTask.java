@@ -8,6 +8,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
 
+/**
+ * This task unstacks all of stacked lifes or revive cards in a player inventory
+ */
 public class LifesStackCheckTask extends BukkitRunnable {
 
     private Player p;

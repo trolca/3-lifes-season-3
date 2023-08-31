@@ -1,4 +1,4 @@
-package me.trololo11.lifespluginseason3.utils;
+package me.trololo11.lifespluginseason3.managers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,6 +21,9 @@ public class TeamsManager {
     private Team dead;
     private ArrayList<Team> lifesTeamList = new ArrayList<>();
 
+    /**
+     * Registeres all of the teams to the main scoreboard.
+     */
     public void registerEverything() {
         ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
         Scoreboard teamScoreboard = scoreboardManager.getMainScoreboard();

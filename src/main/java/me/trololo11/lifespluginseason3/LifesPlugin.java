@@ -9,9 +9,8 @@ import me.trololo11.lifespluginseason3.listeners.PlayerLifesDataSetup;
 import me.trololo11.lifespluginseason3.managers.DatabaseManager;
 import me.trololo11.lifespluginseason3.managers.LifesManager;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
-import me.trololo11.lifespluginseason3.utils.TeamsManager;
+import me.trololo11.lifespluginseason3.managers.TeamsManager;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandMap;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -46,7 +45,6 @@ public final class LifesPlugin extends JavaPlugin {
 
         teamsManager.registerEverything();
 
-        recipesManager.initalize();
 
 
 

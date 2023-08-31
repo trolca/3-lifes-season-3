@@ -2,14 +2,12 @@ package me.trololo11.lifespluginseason3.listeners;
 
 import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.managers.LifesManager;
-import me.trololo11.lifespluginseason3.utils.TeamsManager;
+import me.trololo11.lifespluginseason3.managers.TeamsManager;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.time.Instant;
 import java.util.Date;
 
 public class PlayerChangeLifesListener implements Listener {

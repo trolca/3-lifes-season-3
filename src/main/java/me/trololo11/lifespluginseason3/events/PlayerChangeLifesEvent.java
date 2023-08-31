@@ -5,6 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+/**
+ * This event is called when player's lifes are changed
+ */
 public class PlayerChangeLifesEvent extends Event {
 
     private static final HandlerList HANDLERS_LIST = new HandlerList();
