@@ -17,6 +17,15 @@ public class Utils {
         return ChatColor.translateAlternateColorCodes('&', s);
     }
 
+    public static boolean isInventoryFull(Inventory inventory){
+
+        for(ItemStack itemStack : inventory.getContents()){
+            if(itemStack == null) return false;
+        }
+
+        return true;
+    }
+
     public static int getEmptySpaceInInv(Inventory inventory){
 
         int empty = 0;

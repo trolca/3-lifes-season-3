@@ -78,12 +78,12 @@ public class RecipesManager {
         lore.add(ChatColor.WHITE + "Później użyj PPM by og wskrzesić!");
         reviveMeta.setLore(lore);
         reviveMeta.setCustomModelData(8760005);
-        reviveMeta.setLocalizedName("revive_card");
+        reviveMeta.setLocalizedName("revive_card_player:null");
 
         ItemMeta heartShardMeta = lifeShardItem.getItemMeta();
         heartShardMeta.setDisplayName(ChatColor.RED + "Kawałek życia");
         heartShardMeta.setCustomModelData(8760001);
-        heartShardMeta.setLocalizedName("heart_shard");
+        heartShardMeta.setLocalizedName("life_shard");
 
         ItemMeta reviveCardShardMeta = reviveCardItem.getItemMeta();
         reviveCardShardMeta.setDisplayName(ChatColor.AQUA + "Kawałek karty odrodzenia");
@@ -164,6 +164,16 @@ public class RecipesManager {
         ItemStack reviveItemCopy = reviveCardItem.clone();
         ItemMeta reviveMeta = reviveItemCopy.getItemMeta();
         reviveMeta.setLocalizedName(reviveMeta.getLocalizedName()+"_"+UUID.randomUUID());
+
+        reviveItemCopy.setItemMeta(reviveMeta);
+
+        return reviveItemCopy;
+    }
+
+    public ItemStack getReviveCardItem(UUID uuid) {
+        ItemStack reviveItemCopy = reviveCardItem.clone();
+        ItemMeta reviveMeta = reviveItemCopy.getItemMeta();
+        reviveMeta.setLocalizedName(reviveMeta.getLocalizedName()+"_"+uuid);
 
         reviveItemCopy.setItemMeta(reviveMeta);
 

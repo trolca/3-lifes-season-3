@@ -1,17 +1,26 @@
 package me.trololo11.lifespluginseason3.managers;
 
+import me.trololo11.lifespluginseason3.listeners.datasetups.PlayerLifesDataSetup;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * This class manages how much lifes a plyer has on the server side. <br>
- * This data is stored in a hashMap.s
- * @see me.trololo11.lifespluginseason3.listeners.PlayerLifesDataSetup
+ * This data is stored in a hashMap.
+ * @see PlayerLifesDataSetup
  */
 public class LifesManager {
 
     private final HashMap<Player, Byte> playerLifes = new HashMap<>();
+    private final ArrayList<OfflinePlayer> deadPlayers;
+
+    public LifesManager(ArrayList<OfflinePlayer> allDeadPlayers){
+        this.deadPlayers = allDeadPlayers;
+    }
+
 
     /**
      * Gets the stored lifes of a player.
@@ -28,6 +37,9 @@ public class LifesManager {
      * @param lifes The new amount of lifes
      */
     public void setPlayerLifes(Player player, byte lifes){
+        if(lifes <= 0) deadPlayers.add(player);
+        else deadPlayers.remove(player);
+
         playerLifes.put(player, lifes);
     }
 
@@ -38,4 +50,9 @@ public class LifesManager {
     public void removePlayerLifes(Player player){
         playerLifes.remove(player);
     }
+
+    public ArrayList<OfflinePlayer> getDeadPlayers() {
+        return deadPlayers;
+    }
+
 }

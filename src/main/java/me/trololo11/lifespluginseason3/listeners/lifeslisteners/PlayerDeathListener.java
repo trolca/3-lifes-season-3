@@ -1,4 +1,4 @@
-package me.trololo11.lifespluginseason3.listeners;
+package me.trololo11.lifespluginseason3.listeners.lifeslisteners;
 
 import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.managers.LifesManager;

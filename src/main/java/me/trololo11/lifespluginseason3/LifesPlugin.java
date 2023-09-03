@@ -1,11 +1,15 @@
 package me.trololo11.lifespluginseason3;
 
 import me.trololo11.lifespluginseason3.commands.GetItemsCommand;
+import me.trololo11.lifespluginseason3.commands.SetLifesCommand;
+import me.trololo11.lifespluginseason3.commands.TakeLifeCommand;
+import me.trololo11.lifespluginseason3.commands.tabcompleters.SetLifesTabCompleter;
 import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.listeners.CustomItemsCraftingFix;
-import me.trololo11.lifespluginseason3.listeners.PlayerChangeLifesListener;
-import me.trololo11.lifespluginseason3.listeners.PlayerDeathListener;
-import me.trololo11.lifespluginseason3.listeners.PlayerLifesDataSetup;
+import me.trololo11.lifespluginseason3.listeners.lifeslisteners.LifeUseListener;
+import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerChangeLifesListener;
+import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerDeathListener;
+import me.trololo11.lifespluginseason3.listeners.datasetups.PlayerLifesDataSetup;
 import me.trololo11.lifespluginseason3.managers.DatabaseManager;
 import me.trololo11.lifespluginseason3.managers.LifesManager;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
@@ -40,7 +44,6 @@ public final class LifesPlugin extends JavaPlugin {
         teamsManager = new TeamsManager();
         databaseManager = new DatabaseManager();
         recipesManager = new RecipesManager();
-        lifesManager = new LifesManager();
         logger = Bukkit.getLogger();
 
         teamsManager.registerEverything();
@@ -50,6 +53,8 @@ public final class LifesPlugin extends JavaPlugin {
 
         try {
             databaseManager.initialize();
+            lifesManager = new LifesManager(databaseManager.getAllDeadPlayers());
+
         } catch (SQLException e) {
             logger.severe("Error while connecting to the database");
             logger.severe("Make sure the info in config is accurate!");
@@ -61,6 +66,7 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerLifesDataSetup(lifesManager, databaseManager), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(lifesManager), this);
         getServer().getPluginManager().registerEvents(new CustomItemsCraftingFix(recipesManager), this);
+        getServer().getPluginManager().registerEvents(new LifeUseListener(lifesManager), this);
 
         try {
             setupData();
@@ -70,6 +76,10 @@ public final class LifesPlugin extends JavaPlugin {
         }
 
         getCommand("getitems").setExecutor(new GetItemsCommand(recipesManager));
+        getCommand("setlifes").setExecutor(new SetLifesCommand());
+        getCommand("takelife").setExecutor(new TakeLifeCommand(lifesManager, recipesManager));
+
+        getCommand("setlifes").setTabCompleter(new SetLifesTabCompleter());
 
 
 

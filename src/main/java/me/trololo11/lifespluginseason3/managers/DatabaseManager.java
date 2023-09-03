@@ -3,9 +3,13 @@ package me.trololo11.lifespluginseason3.managers;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import me.trololo11.lifespluginseason3.LifesPlugin;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Properties;
 import java.util.UUID;
 
 /**
@@ -151,6 +155,30 @@ public class DatabaseManager {
 
         statement.close();
         connection.close();
+    }
+
+    public ArrayList<OfflinePlayer> getAllDeadPlayers() throws SQLException {
+        Connection connection = getConnection();
+
+        String sql = "SELECT * FROM player_lifes WHERE lifes = 0";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        ResultSet results = statement.executeQuery();
+
+        ArrayList<OfflinePlayer> deadPlayers = new ArrayList<>();
+
+        while(results.next()){
+            UUID playerUUID = UUID.fromString(results.getString("uuid"));
+            OfflinePlayer player = Bukkit.getOfflinePlayer(playerUUID);
+
+            deadPlayers.add(player);
+        }
+
+        statement.close();
+        connection.close();
+        return deadPlayers;
+
     }
 
 }
