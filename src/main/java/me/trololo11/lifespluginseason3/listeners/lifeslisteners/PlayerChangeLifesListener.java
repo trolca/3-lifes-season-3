@@ -28,6 +28,7 @@ public class PlayerChangeLifesListener implements Listener {
         lifesManager.setPlayerLifes(player, lifes);
 
         if(lifes <= 0){
+            teamsManager.getLifesTeamList().get(0).addEntry(player.getName());
             player.ban(ChatColor.RED + "UMARŁEŚ FFFF", (Date) null, null);
             return;
         }

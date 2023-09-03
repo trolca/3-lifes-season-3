@@ -6,6 +6,9 @@ import me.trololo11.lifespluginseason3.commands.TakeLifeCommand;
 import me.trololo11.lifespluginseason3.commands.tabcompleters.SetLifesTabCompleter;
 import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.listeners.CustomItemsCraftingFix;
+import me.trololo11.lifespluginseason3.listeners.MenuManager;
+import me.trololo11.lifespluginseason3.listeners.ReviveCardRenameListener;
+import me.trololo11.lifespluginseason3.listeners.ReviveCardUseListener;
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.LifeUseListener;
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerChangeLifesListener;
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerDeathListener;
@@ -67,6 +70,9 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(lifesManager), this);
         getServer().getPluginManager().registerEvents(new CustomItemsCraftingFix(recipesManager), this);
         getServer().getPluginManager().registerEvents(new LifeUseListener(lifesManager), this);
+        getServer().getPluginManager().registerEvents(new MenuManager(), this);
+        getServer().getPluginManager().registerEvents(new ReviveCardRenameListener(lifesManager), this);
+        getServer().getPluginManager().registerEvents(new ReviveCardUseListener(lifesManager, databaseManager), this);
 
         try {
             setupData();

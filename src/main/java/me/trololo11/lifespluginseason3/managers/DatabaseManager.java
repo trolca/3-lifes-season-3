@@ -67,7 +67,7 @@ public class DatabaseManager {
 
         Statement statement = connection.createStatement();
 
-        statement.execute("CREATE TABLE IF NOT EXISTS player_lifes(uuid varchar(36) primary key, lifes tinyint)");
+        statement.execute("CREATE TABLE IF NOT EXISTS player_lifes(uuid varchar(36) primary key, lifes tinyint, is_revived bool)");
 
         statement.close();
 
@@ -122,12 +122,13 @@ public class DatabaseManager {
     public void addPlayerLifes(UUID uuid, byte lifes) throws SQLException {
         Connection connection = getConnection();
 
-        String sql = "INSERT INTO player_lifes(uuid, lifes) VALUES (?, ?)";
+        String sql = "INSERT INTO player_lifes(uuid, lifes, is_revived) VALUES (?, ?, ?)";
 
         PreparedStatement statement = connection.prepareStatement(sql);
 
         statement.setString(1, uuid.toString());
         statement.setByte(2, lifes);
+        statement.setBoolean(3, false);
 
         statement.executeUpdate();
 
@@ -179,6 +180,44 @@ public class DatabaseManager {
         connection.close();
         return deadPlayers;
 
+    }
+
+    public void setIsRevived(UUID uuid, boolean isRevived) throws SQLException {
+        Connection connection = getConnection();
+
+        String sql = "UPDATE player_lifes SET is_revived = ? WHERE uuid = ?";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setBoolean(1, isRevived);
+        statement.setString(2, uuid.toString());
+
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
+    }
+
+    public boolean getIsRevived(UUID uuid) throws SQLException {
+        Connection connection = getConnection();
+
+        String sql = "SELECT * FROM player_lifes WHERE uuid = ?";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setString(1, uuid.toString());
+
+        ResultSet results = statement.executeQuery();
+
+        if(results.next()){
+            boolean isRevived = results.getBoolean("is_revived");
+
+            statement.close();
+            connection.close();
+            return isRevived;
+        }
+
+        return false;
     }
 
 }

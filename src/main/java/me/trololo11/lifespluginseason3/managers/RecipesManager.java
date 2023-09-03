@@ -73,6 +73,7 @@ public class RecipesManager {
         ItemMeta reviveMeta = reviveCardItem.getItemMeta();
         reviveMeta.setDisplayName(ChatColor.AQUA + ChatColor.BOLD.toString() + "Karta odrodzenia");
         lore.clear();
+        lore.add(ChatColor.GRAY + "Przypisany gracz: nikt");
         lore.add(ChatColor.WHITE + "Zmień nazwe tego itemu na osobe");
         lore.add(ChatColor.WHITE + "którą chcesz wskrzesić.");
         lore.add(ChatColor.WHITE + "Później użyj PPM by og wskrzesić!");
@@ -83,12 +84,12 @@ public class RecipesManager {
         ItemMeta heartShardMeta = lifeShardItem.getItemMeta();
         heartShardMeta.setDisplayName(ChatColor.RED + "Kawałek życia");
         heartShardMeta.setCustomModelData(8760001);
-        heartShardMeta.setLocalizedName("life_shard");
+        heartShardMeta.setLocalizedName("shard_life");
 
         ItemMeta reviveCardShardMeta = reviveCardItem.getItemMeta();
         reviveCardShardMeta.setDisplayName(ChatColor.AQUA + "Kawałek karty odrodzenia");
         reviveCardShardMeta.setCustomModelData(8760001);
-        reviveCardShardMeta.setLocalizedName("revive_card");
+        reviveCardShardMeta.setLocalizedName("shard_revive_card");
 
         lifeItem.setItemMeta(heartMeta);
         reviveCardItem.setItemMeta(reviveMeta);

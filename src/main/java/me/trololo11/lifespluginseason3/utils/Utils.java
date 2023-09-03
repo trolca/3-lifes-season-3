@@ -1,9 +1,17 @@
 package me.trololo11.lifespluginseason3.utils;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Utils {
 
@@ -50,5 +58,42 @@ public class Utils {
                 materialCount = is.getAmount();
 
         return resultCount * materialCount;
+    }
+
+    public static ItemStack createItem(Material material, String name, String localizedName, String... lore){
+        ItemStack item = new ItemStack(material);
+
+        ArrayList<String> loreArray = new ArrayList<>();
+
+        for(String string : lore){
+            loreArray.add(Utils.chat(string));
+        }
+
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName(Utils.chat(name));
+        itemMeta.setLocalizedName(localizedName);
+        itemMeta.setLore(loreArray);
+
+        item.setItemMeta(itemMeta);
+
+        return item;
+    }
+
+    public boolean checkByUUID(ArrayList<OfflinePlayer> checkArray, OfflinePlayer player){
+        for(OfflinePlayer checkPlayer : checkArray){
+            if(player.getUniqueId().equals(checkPlayer.getUniqueId())) return true;
+        }
+
+        return false;
+    }
+
+    public static void addSafelyItem(ItemStack itemStack, Player player){
+
+        if(isInventoryFull(player.getInventory())){
+            player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
+        }else{
+            player.getInventory().addItem(itemStack);
+        }
+
     }
 }

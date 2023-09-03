@@ -51,6 +51,14 @@ public class LifesManager {
         playerLifes.remove(player);
     }
 
+    /**
+     * Removes a plyer from the deadPlayer arrayList
+     * @param player The player to remove
+     */
+    public void removeDeadPlayer(OfflinePlayer player){
+        deadPlayers.remove(player);
+    }
+
     public ArrayList<OfflinePlayer> getDeadPlayers() {
         return deadPlayers;
     }

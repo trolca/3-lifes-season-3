@@ -4,6 +4,7 @@ import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.managers.DatabaseManager;
 import me.trololo11.lifespluginseason3.managers.LifesManager;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -40,6 +41,13 @@ public class PlayerLifesDataSetup implements Listener {
             lifes = 3;
 
             databaseManager.addPlayerLifes(player.getUniqueId(), lifes);
+        }
+
+        if(databaseManager.getIsRevived(player.getUniqueId())){
+            databaseManager.setIsRevived(player.getUniqueId(), false);
+
+            player.sendMessage(ChatColor.GOLD + "Zostałes wskrzeszony!");
+            lifes = 2;
         }
 
         Bukkit.getPluginManager().callEvent(new PlayerChangeLifesEvent(player, lifes));
