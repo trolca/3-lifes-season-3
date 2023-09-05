@@ -34,6 +34,11 @@ public class Utils {
         return true;
     }
 
+    /**
+     * Returns how much empty space there is in an inventory
+     * @param inventory The inventory check
+     * @return The empty space
+     */
     public static int getEmptySpaceInInv(Inventory inventory){
 
         int empty = 0;
@@ -60,6 +65,14 @@ public class Utils {
         return resultCount * materialCount;
     }
 
+    /**
+     * Creates a new {@link ItemStack} from the specified parameters
+     * @param material The material of this item
+     * @param name The display name of this item
+     * @param localizedName The localized name of this item
+     * @param lore The LOREEE of this item
+     * @return The created {@link ItemStack}
+     */
     public static ItemStack createItem(Material material, String name, String localizedName, String... lore){
         ItemStack item = new ItemStack(material);
 
@@ -87,6 +100,11 @@ public class Utils {
         return false;
     }
 
+    /**
+     * Tries to add an item to a player's inventory if it's full it drops the item on the ground
+     * @param itemStack The item stack to add
+     * @param player The player to add it to
+     */
     public static void addSafelyItem(ItemStack itemStack, Player player){
 
         if(isInventoryFull(player.getInventory())){

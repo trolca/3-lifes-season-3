@@ -7,8 +7,8 @@ import me.trololo11.lifespluginseason3.commands.tabcompleters.SetLifesTabComplet
 import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.listeners.CustomItemsCraftingFix;
 import me.trololo11.lifespluginseason3.listeners.MenuManager;
-import me.trololo11.lifespluginseason3.listeners.ReviveCardRenameListener;
-import me.trololo11.lifespluginseason3.listeners.ReviveCardUseListener;
+import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardRenameListener;
+import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardUseListener;
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.LifeUseListener;
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerChangeLifesListener;
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerDeathListener;

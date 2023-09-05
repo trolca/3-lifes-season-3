@@ -1,4 +1,4 @@
-package me.trololo11.lifespluginseason3.listeners;
+package me.trololo11.lifespluginseason3.listeners.revivelisteners;
 
 import me.trololo11.lifespluginseason3.managers.DatabaseManager;
 import me.trololo11.lifespluginseason3.managers.LifesManager;
