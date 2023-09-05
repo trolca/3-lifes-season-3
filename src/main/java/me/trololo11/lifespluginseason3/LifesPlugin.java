@@ -1,6 +1,7 @@
 package me.trololo11.lifespluginseason3;
 
 import me.trololo11.lifespluginseason3.commands.GetItemsCommand;
+import me.trololo11.lifespluginseason3.commands.LifesMenuCommand;
 import me.trololo11.lifespluginseason3.commands.SetLifesCommand;
 import me.trololo11.lifespluginseason3.commands.TakeLifeCommand;
 import me.trololo11.lifespluginseason3.commands.tabcompleters.SetLifesTabCompleter;
@@ -21,6 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -51,7 +53,7 @@ public final class LifesPlugin extends JavaPlugin {
 
         teamsManager.registerEverything();
 
-
+        setupDirs();
 
 
         try {
@@ -84,6 +86,7 @@ public final class LifesPlugin extends JavaPlugin {
         getCommand("getitems").setExecutor(new GetItemsCommand(recipesManager));
         getCommand("setlifes").setExecutor(new SetLifesCommand());
         getCommand("takelife").setExecutor(new TakeLifeCommand(lifesManager, recipesManager));
+        getCommand("lifesmenu").setExecutor(new LifesMenuCommand());
 
         getCommand("setlifes").setTabCompleter(new SetLifesTabCompleter());
 
@@ -137,6 +140,51 @@ public final class LifesPlugin extends JavaPlugin {
         globalDbProperties.setProperty("minimumIdle", "1");
         globalDbProperties.setProperty("maximumPoolSize", "4");
         globalDbProperties.setProperty("initializationFailTimeout", "20000");
+    }
+
+    private void setupDirs() {
+        String dataFolder = this.getDataFolder().getPath();
+
+        File file = new File(dataFolder + "/quests-data");
+        if (!file.exists()) file.mkdirs();
+
+        file = new File(dataFolder + "/quests-data/all-daily");
+        if (!file.exists()) file.mkdirs();
+
+        createTiersForQuests("all-daily");
+
+        file = new File(dataFolder + "/quests-data/all-weekly");
+        if (!file.exists()) file.mkdirs();
+
+        createTiersForQuests("all-weekly");
+
+        file = new File(dataFolder + "/quests-data/all-card-quests");
+        if (!file.exists()) file.mkdirs();
+
+        createTiersForQuests("all-card-quests");
+
+        file = new File(dataFolder + "/quests-data/active-daily");
+        if (!file.exists()) file.mkdirs();
+
+        file = new File(dataFolder + "/quests-data/active-weekly");
+        if (!file.exists()) file.mkdirs();
+
+        file = new File(dataFolder + "/quests-data/active-card-quests");
+        if (!file.exists()) file.mkdirs();
+
+        file = new File(dataFolder + "/quests-data/language-files");
+        if (!file.exists()) file.mkdirs();
+    }
+
+    private void createTiersForQuests(String questsName){
+        String basicPath = "/quests-data/"+questsName;
+
+        for(int i=0; i < 3; i++){
+
+            File file = new File(basicPath + "/tier-"+(i+1));
+            if(!file.exists()) file.mkdir();
+        }
+
     }
 
     public static LifesPlugin getPlugin(){

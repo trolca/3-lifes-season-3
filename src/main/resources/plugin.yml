@@ -9,6 +9,8 @@ commands:
     description: "Sets player's amount of lifes"
   takelife:
     description: "Takes your life!"
+  lifesmenu:
+    description: "Opens the main lifes menu"
 permissions:
   3lifes3.admin:
     description: "A administator perm for the 3LifesPluginSeason3"

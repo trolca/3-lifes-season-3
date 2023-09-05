@@ -9,7 +9,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -82,12 +85,25 @@ public class Utils {
             loreArray.add(Utils.chat(string));
         }
 
-        ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName(Utils.chat(name));
-        itemMeta.setLocalizedName(localizedName);
-        itemMeta.setLore(loreArray);
+        item.setItemMeta(getItemMeta(item.getItemMeta(), name, localizedName, loreArray));
 
-        item.setItemMeta(itemMeta);
+        return item;
+    }
+
+    public static ItemStack createPlayerHead(OfflinePlayer owner, String name, String localizedName, String... lore){
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+
+        ArrayList<String> loreArray = new ArrayList<>();
+
+        for(String string : lore){
+            loreArray.add(Utils.chat(string));
+        }
+
+        SkullMeta skullMeta = (SkullMeta) getItemMeta(item.getItemMeta(), name, localizedName, loreArray);
+
+        skullMeta.setOwningPlayer(owner);
+
+        item.setItemMeta(skullMeta);
 
         return item;
     }
@@ -113,5 +129,35 @@ public class Utils {
             player.getInventory().addItem(itemStack);
         }
 
+    }
+
+    /**
+     * Creates a new text file using the data from the provided {@link InputStream}
+     * @param is The inputStream to get the text from
+     * @param file The file to write to
+     * @throws IOException {@inheritDoc}
+     */
+    public static void createTextFile(InputStream is, File file) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+        file.createNewFile();
+        FileWriter fileWriter = new FileWriter(file, StandardCharsets.UTF_8);
+        int read = reader.read();
+        while(read != -1){
+            fileWriter.write((char) read);
+            read = reader.read();
+        }
+
+        reader.close();
+        fileWriter.close();
+    }
+
+
+    private static ItemMeta getItemMeta(ItemMeta itemMeta, String displayName, String localizedName, ArrayList<String> lore){
+
+        itemMeta.setDisplayName(Utils.chat(displayName));
+        itemMeta.setLocalizedName(localizedName);
+        itemMeta.setLore(lore);
+
+        return itemMeta;
     }
 }

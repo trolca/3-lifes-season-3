@@ -3,6 +3,7 @@ package me.trololo11.lifespluginseason3.managers;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import me.trololo11.lifespluginseason3.LifesPlugin;
+import me.trololo11.lifespluginseason3.utils.Quest;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -220,4 +221,63 @@ public class DatabaseManager {
         return false;
     }
 
+
+    public void createQuestTable(QuestTableType questTableType, ArrayList<Quest> quests) throws SQLException {
+        StringBuilder sqlBuilder = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
+
+        sqlBuilder.append(getQuestTableName(questTableType)).append("(uuid varchar(36) primary key,");
+
+        for(Quest quest : quests){
+            sqlBuilder.append(" ").append(quest.getDatabaseName()).append(" int,");
+        }
+
+        String sql = sqlBuilder.toString().substring(0, sqlBuilder.length()-1) + ")";
+        System.out.println(sql);
+        Connection connection = getConnection();
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
+    }
+
+    public void removeQuestTable(QuestTableType questTableType) throws SQLException {
+        String sql = "DROP TABLE "+getQuestTableName(questTableType);
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
+    }
+
+    private String getQuestTableName(QuestTableType questTableType){
+        switch (questTableType){
+            case DAILY -> {
+                return  "daily_quests";
+            }
+            case WEEKLY -> {
+                return  "weekly_quests";
+            }
+            case CARD -> {
+                return  "card_quests";
+            }
+            default -> {
+                return  "generic_quests";
+            }
+        }
+    }
+
+
+    public enum QuestTableType{
+
+        DAILY,
+        WEEKLY,
+        CARD
+    }
 }
+
+
