@@ -4,3 +4,5 @@ user: 'root'
 password: ''
 
 detailed-errors: false #do true if you want to have stack traces printed
+
+quest-tier: 1 # the tier of quests that is currently set (max value: 3)

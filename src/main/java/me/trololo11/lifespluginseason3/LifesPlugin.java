@@ -14,15 +14,13 @@ import me.trololo11.lifespluginseason3.listeners.lifeslisteners.LifeUseListener;
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerChangeLifesListener;
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerDeathListener;
 import me.trololo11.lifespluginseason3.listeners.datasetups.PlayerLifesDataSetup;
-import me.trololo11.lifespluginseason3.managers.DatabaseManager;
-import me.trololo11.lifespluginseason3.managers.LifesManager;
-import me.trololo11.lifespluginseason3.managers.RecipesManager;
-import me.trololo11.lifespluginseason3.managers.TeamsManager;
+import me.trololo11.lifespluginseason3.managers.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -33,9 +31,11 @@ public final class LifesPlugin extends JavaPlugin {
     private DatabaseManager databaseManager;
     private LifesManager lifesManager;
     private RecipesManager recipesManager;
+    private QuestManager questManager;
+    private QuestsTimingsManager questsTimingsManager;
 
     private boolean detailedErrors;
-
+    private int tier=1;
     public Properties globalDbProperties;
     public Logger logger;
 
@@ -44,17 +44,11 @@ public final class LifesPlugin extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
         detailedErrors = getConfig().getBoolean("detailed-errors");
+        tier = getConfig().getInt("quest-tier");
         setupDbProperties();
-
-        teamsManager = new TeamsManager();
-        databaseManager = new DatabaseManager();
-        recipesManager = new RecipesManager();
         logger = Bukkit.getLogger();
 
-        teamsManager.registerEverything();
-
-        setupDirs();
-
+        databaseManager = new DatabaseManager();
 
         try {
             databaseManager.initialize();
@@ -66,6 +60,21 @@ public final class LifesPlugin extends JavaPlugin {
             if(detailedErrors) e.printStackTrace();
             return;
         }
+
+        try {
+            setupDirs();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        questsTimingsManager = new QuestsTimingsManager();
+        teamsManager = new TeamsManager();
+        recipesManager = new RecipesManager();
+        questManager = new QuestManager(databaseManager, questsTimingsManager);
+
+
+
+        teamsManager.registerEverything();
 
         getServer().getPluginManager().registerEvents(new PlayerChangeLifesListener(lifesManager, teamsManager), this);
         getServer().getPluginManager().registerEvents(new PlayerLifesDataSetup(lifesManager, databaseManager), this);
@@ -142,7 +151,7 @@ public final class LifesPlugin extends JavaPlugin {
         globalDbProperties.setProperty("initializationFailTimeout", "20000");
     }
 
-    private void setupDirs() {
+    private void setupDirs() throws IOException {
         String dataFolder = this.getDataFolder().getPath();
 
         File file = new File(dataFolder + "/quests-data");
@@ -172,19 +181,30 @@ public final class LifesPlugin extends JavaPlugin {
         file = new File(dataFolder + "/quests-data/active-card-quests");
         if (!file.exists()) file.mkdirs();
 
-        file = new File(dataFolder + "/quests-data/language-files");
-        if (!file.exists()) file.mkdirs();
+
+        file = new File(dataFolder + "/quests-data/quests-timings.yml");
+        if(!file.exists()) file.createNewFile();
     }
 
     private void createTiersForQuests(String questsName){
-        String basicPath = "/quests-data/"+questsName;
+        String basicPath = this.getDataFolder() + "/quests-data/"+questsName;
 
         for(int i=0; i < 3; i++){
-
             File file = new File(basicPath + "/tier-"+(i+1));
-            if(!file.exists()) file.mkdir();
+
+            if(!file.exists()) file.mkdirs();
         }
 
+    }
+
+    public int getTier() {
+        return tier;
+    }
+
+    public void setTier(int tier) {
+        if(tier < 1) tier = 1;
+        else if (tier > 3) tier = 3;
+        this.tier = tier;
     }
 
     public static LifesPlugin getPlugin(){
