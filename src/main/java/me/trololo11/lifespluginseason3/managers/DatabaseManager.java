@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.utils.Quest;
+import me.trololo11.lifespluginseason3.utils.QuestType;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -222,10 +223,10 @@ public class DatabaseManager {
     }
 
 
-    public void createQuestTable(QuestTableType questTableType, ArrayList<Quest> quests) throws SQLException {
+    public void createQuestTable(QuestType questType, ArrayList<Quest> quests) throws SQLException {
         StringBuilder sqlBuilder = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
 
-        sqlBuilder.append(getQuestTableName(questTableType)).append("(uuid varchar(36) primary key,");
+        sqlBuilder.append(getQuestTableName(questType)).append("(uuid varchar(36) primary key,");
 
         for(Quest quest : quests){
             sqlBuilder.append(" ").append(quest.getDatabaseName()).append(" int,");
@@ -243,8 +244,8 @@ public class DatabaseManager {
         connection.close();
     }
 
-    public void removeQuestTable(QuestTableType questTableType) throws SQLException {
-        String sql = "DROP TABLE "+getQuestTableName(questTableType);
+    public void removeQuestTable(QuestType questType) throws SQLException {
+        String sql = "DROP TABLE IF EXISTS "+getQuestTableName(questType);
         Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement(sql);
 
@@ -254,7 +255,7 @@ public class DatabaseManager {
         connection.close();
     }
 
-    private String getQuestTableName(QuestTableType questTableType){
+    private String getQuestTableName(QuestType questTableType){
         switch (questTableType){
             case DAILY -> {
                 return  "daily_quests";
@@ -272,12 +273,6 @@ public class DatabaseManager {
     }
 
 
-    public enum QuestTableType{
-
-        DAILY,
-        WEEKLY,
-        CARD
-    }
 }
 
 

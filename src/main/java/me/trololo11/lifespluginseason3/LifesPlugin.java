@@ -36,6 +36,9 @@ public final class LifesPlugin extends JavaPlugin {
 
     private boolean detailedErrors;
     private int tier=1;
+    public int dailyQuestsCount=6;
+    public int weeklyQuestsCount=10;
+    public int cardQuestsCount=11;
     public Properties globalDbProperties;
     public Logger logger;
 
@@ -45,6 +48,9 @@ public final class LifesPlugin extends JavaPlugin {
         saveDefaultConfig();
         detailedErrors = getConfig().getBoolean("detailed-errors");
         tier = getConfig().getInt("quest-tier");
+        dailyQuestsCount = getConfig().getInt("daily-quests-count");
+        weeklyQuestsCount = getConfig().getInt("weekly-quests-count");
+        cardQuestsCount = getConfig().getInt("card-quests-count");
         setupDbProperties();
         logger = Bukkit.getLogger();
 
@@ -157,43 +163,36 @@ public final class LifesPlugin extends JavaPlugin {
         File file = new File(dataFolder + "/quests-data");
         if (!file.exists()) file.mkdirs();
 
-        file = new File(dataFolder + "/quests-data/all-daily");
+        file = new File(dataFolder + "/quests-data/daily-quests");
         if (!file.exists()) file.mkdirs();
 
-        createTiersForQuests("all-daily");
+        createSubfoldersForQuests("daily-quests");
 
-        file = new File(dataFolder + "/quests-data/all-weekly");
+        file = new File(dataFolder + "/quests-data/weekly-quests");
         if (!file.exists()) file.mkdirs();
 
-        createTiersForQuests("all-weekly");
+        createSubfoldersForQuests("weekly-quests");
 
-        file = new File(dataFolder + "/quests-data/all-card-quests");
+        file = new File(dataFolder + "/quests-data/card-quests");
         if (!file.exists()) file.mkdirs();
 
-        createTiersForQuests("all-card-quests");
-
-        file = new File(dataFolder + "/quests-data/active-daily");
-        if (!file.exists()) file.mkdirs();
-
-        file = new File(dataFolder + "/quests-data/active-weekly");
-        if (!file.exists()) file.mkdirs();
-
-        file = new File(dataFolder + "/quests-data/active-card-quests");
-        if (!file.exists()) file.mkdirs();
+        createSubfoldersForQuests("card-quests");
 
 
         file = new File(dataFolder + "/quests-data/quests-timings.yml");
         if(!file.exists()) file.createNewFile();
     }
 
-    private void createTiersForQuests(String questsName){
+    private void createSubfoldersForQuests(String questsName){
         String basicPath = this.getDataFolder() + "/quests-data/"+questsName;
 
         for(int i=0; i < 3; i++){
             File file = new File(basicPath + "/tier-"+(i+1));
-
             if(!file.exists()) file.mkdirs();
         }
+
+        File activeFolder = new File(basicPath + "/active-quests");
+        if(!activeFolder.exists()) activeFolder.mkdirs();
 
     }
 

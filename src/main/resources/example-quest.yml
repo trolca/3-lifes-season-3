@@ -1,0 +1,13 @@
+quest-name: "Example quest"
+description:
+  - "This is a quest"
+  - "It is a really cool quest"
+  - "&6It can even change colors"
+  - "&7&o(10/10 would recommend)"
+database-name: "example_quest"
+icon: CAKE
+show-progress: false
+max-progress: 1
+
+listener-type: BREAK_BLOCKS
+target: GRASS_BLOCK

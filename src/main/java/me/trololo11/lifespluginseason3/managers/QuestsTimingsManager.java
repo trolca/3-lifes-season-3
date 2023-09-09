@@ -1,6 +1,7 @@
 package me.trololo11.lifespluginseason3.managers;
 
 import me.trololo11.lifespluginseason3.LifesPlugin;
+import me.trololo11.lifespluginseason3.utils.QuestType;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -14,62 +15,45 @@ public class QuestsTimingsManager {
     private FileConfiguration fileConfig;
     private LifesPlugin plugin = LifesPlugin.getPlugin();
 
-    public Date getDailyEndDate() throws IOException {
+    public Date getEndDate(QuestType questType) throws IOException{
         file = new File(plugin.getDataFolder()+"/quests-data/quests-timings.yml");
         checkFile(file);
         fileConfig = YamlConfiguration.loadConfiguration(file);
-        long time = fileConfig.getLong("daily-date");
-
-        return new Date(time);
-
-    }
-
-    public Date getWeeklyEndDate() throws IOException {
-        file = new File(plugin.getDataFolder()+"/quests-data/quests-timings.yml");
-        checkFile(file);
-        fileConfig = YamlConfiguration.loadConfiguration(file);
-        long time = fileConfig.getLong("weekly-date");
-
-
-        return new Date(time);
-
-    }
-
-    public Date getCardEndDate() throws IOException{
-        file = new File(plugin.getDataFolder()+"/quests-data/quests-timings.yml");
-        checkFile(file);
-        fileConfig = YamlConfiguration.loadConfiguration(file);
-        long time = fileConfig.getLong("card-date");
-
+        long time = fileConfig.getLong(getPathName(questType));
 
         return new Date(time);
     }
 
-    public void setDailyEndDate(Date date) throws IOException {
+    public void setEndDate(Date date, QuestType questType) throws IOException{
         file = new File(plugin.getDataFolder()+"/quests-data/quests-timings.yml");
         checkFile(file);
         fileConfig = YamlConfiguration.loadConfiguration(file);
 
-        fileConfig.set("daily-date", date.getTime());
+        fileConfig.set(getPathName(questType), date.getTime());
         fileConfig.save(file);
     }
 
-    public void setCardEndDate(Date date) throws IOException {
-        file = new File(plugin.getDataFolder()+"/quests-data/quests-timings.yml");
-        checkFile(file);
-        fileConfig = YamlConfiguration.loadConfiguration(file);
+    private String getPathName(QuestType questType){
 
-        fileConfig.set("card-date", date.getTime());
-        fileConfig.save(file);
-    }
+        switch (questType){
 
-    public void setWeeklyEndDate(Date date) throws IOException {
-        file = new File(plugin.getDataFolder()+"/quests-data/quests-timings.yml");
-        checkFile(file);
-        fileConfig = YamlConfiguration.loadConfiguration(file);
+            case DAILY -> {
+                return "daily-date";
+            }
 
-        fileConfig.set("weekly-date", date.getTime());
-        fileConfig.save(file);
+            case WEEKLY -> {
+                return "weekly-date";
+            }
+
+            case CARD -> {
+                return "card-date";
+            }
+
+            default -> {
+                return "generic-date";
+            }
+        }
+
     }
 
 
@@ -80,6 +64,7 @@ public class QuestsTimingsManager {
             fileConfig = YamlConfiguration.loadConfiguration(file);
             fileConfig.set("weekly-date", new Date().getTime());
             fileConfig.set("daily-date", new Date().getTime());
+            fileConfig.set("card-date", new Date().getTime());
 
             fileConfig.save(file);
         }
