@@ -183,7 +183,7 @@ public final class LifesPlugin extends JavaPlugin {
         if(!file.exists()) file.createNewFile();
     }
 
-    private void createSubfoldersForQuests(String questsName){
+    private void createSubfoldersForQuests(String questsName) throws IOException {
         String basicPath = this.getDataFolder() + "/quests-data/"+questsName;
 
         for(int i=0; i < 3; i++){
@@ -193,6 +193,9 @@ public final class LifesPlugin extends JavaPlugin {
 
         File activeFolder = new File(basicPath + "/active-quests");
         if(!activeFolder.exists()) activeFolder.mkdirs();
+
+        File tierCheck = new File(basicPath + "/active-quests/curr-tier.yml");
+        if(!tierCheck.exists()) tierCheck.createNewFile();
 
     }
 

@@ -6,6 +6,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * This class represents a custom quest which should be created from a YML file. <br><br>
+ * It stores information such as:
+ * <ul>
+ *     <li>The name of the quest</li>
+ *     <li>The description of this quest</li>
+ *     <li>The database name for this quest</li>
+ *     <li>The progress that player has to do to complete this quest (the variable is called maxProgress)</li>
+ *     <li>If the quest should show the progress or not</li>
+ *     <li>The icon of this quest</li>
+ *     <li>The {@link ListenerType} of this quest</li>
+ *     <li>The {@link QuestType} of this quest</li>
+ *     <li>The targets of this quest</li>
+ * </ul>
+ */
 public class Quest {
 
     private final String name;

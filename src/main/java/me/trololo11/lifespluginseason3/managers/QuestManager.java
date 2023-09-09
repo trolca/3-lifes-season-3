@@ -18,6 +18,11 @@ import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * This class is used to store and manage the timings of all the quests that
+ * are used in this plugin. <br>
+ * This class is responcible for randomizing new quests after their time has run out.
+ */
 public class QuestManager {
 
     private final LifesPlugin plugin = LifesPlugin.getPlugin();
@@ -45,6 +50,10 @@ public class QuestManager {
         }
     }
 
+    /**
+     * This function gets all of the quests and adds them to a internal array. <br>
+     * It also sorts the active quests to their own arrays.
+     */
     private void setupAllQuests(){
         String mainFolder = plugin.getDataFolder() + "/quests-data";
         int tier = plugin.getTier();
@@ -60,6 +69,10 @@ public class QuestManager {
         activeCardQuests.addAll(getAllQuestsInFolder(mainFolder + "/card-quests/active-quests", QuestType.CARD));
     }
 
+    /**
+     * This function is used to check all of the quests time. <br>
+     * It check if the quests should be deleted.
+     */
     public void checkPageQuestTimings() throws IOException, SQLException {
         Date dailyDate = questsTimingsManager.getEndDate(QuestType.DAILY);
         Date weeklyDate = questsTimingsManager.getEndDate(QuestType.WEEKLY);
@@ -70,13 +83,15 @@ public class QuestManager {
         checkDate(cardDate, 604800000, QuestType.CARD);
     }
 
-    /*
-    soo this is a kida hard function so im gonna explain it as best as I can lol
-    in the plugin data folder we have a file which stores the date when weekly and daily pages of quests have to end
-    so this function calculates the timer logic for the pages and checks if its after today
-    the function above is responcible (thats not how you spell is it) for calling it
-    (its explained im more detail in the function)
-
+    /**
+     * Checks if the date of every questType has passed (aka is after the current type). <br>
+     * This function is responcible for calling the {@link ChangePageTimeTask} which changes the text in the main menu
+     * and countdowns the time for the quests
+     * @param date The date to check if is after
+     * @param newTime The new time to add to the current time in the quests countdown
+     * @param questType The quest type to check it
+     * @throws IOException On error while saving quest-timings.yml
+     * @throws SQLException On error while creating the tables
      */
     private void checkDate(Date date, long newTime, QuestType questType) throws IOException, SQLException {
         Date todayDate = new Date();
@@ -126,6 +141,14 @@ public class QuestManager {
         }
     }
 
+    /**
+     * This function is responcible for creating a new set of randomly generated quests for the specified
+     * quest type. It also creates a new table in the database to store the progress of the quests.
+     * @param questType The quest type to create the quests
+     * @param newTime The new time to add to the current type
+     * @throws IOException On quests-timings.yml file error
+     * @throws SQLException On error while creating the tables
+     */
     public void createNewDate(QuestType questType, long newTime) throws IOException, SQLException {
         Date todayDate = new Date();
         Date newDate = new Date(todayDate.getTime()+newTime);
@@ -139,7 +162,8 @@ public class QuestManager {
         int ranQuestsLenght = randomizedQuests.size();
 
         if(ranQuestsLenght > count) count = ranQuestsLenght;
-        resetAllActiveQuestFiles(currQuestArray, plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/tier-" + plugin.getTier());
+        String activeQuestsPath = plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/active-quests";
+        resetAllActiveQuestFiles(currQuestArray, plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType), activeQuestsPath);
         databaseManager.removeQuestTable(questType);
         currQuestArray.clear();
 
@@ -155,30 +179,51 @@ public class QuestManager {
             currQuestArray.add(addQuest);
 
             File questFile = new File(questFilePaths.get(addQuest));
-            Path newPath = Path.of(plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/active-quests/" + questFile.getName() );
+            Path newPath = Path.of(activeQuestsPath + "/" + questFile.getName() );
             Files.copy(questFile.toPath(), newPath, StandardCopyOption.REPLACE_EXISTING);
             questFilePaths.put(addQuest, newPath.toString());
             questFile.delete();
         }
 
+        File tierCheck = new File(plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/active-quests/curr-tier.yml");
 
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(tierCheck);
+        config.set("tier", plugin.getTier());
+        config.save(tierCheck);
 
         databaseManager.createQuestTable(questType, currQuestArray);
         questsTimingsManager.setEndDate(newDate, questType);
 
     }
 
+    /**
+     * This function moves all of the active quests YML files to their orginal unactivated folder.
+     * @param activeQuests The quests you want to move
+     * @param questsFolderPath The folder of the type of quests
+     * @param activeQuestsPath The active folder of the quests
+     * @throws IOException When deleting a quest file fails
+     */
+    private void resetAllActiveQuestFiles(ArrayList<Quest> activeQuests, String questsFolderPath, String activeQuestsPath) throws IOException {
 
-    private void resetAllActiveQuestFiles(ArrayList<Quest> activeQuests, String normalQuestsPath) throws IOException {
+        YamlConfiguration tierConfig = YamlConfiguration.loadConfiguration(new File(activeQuestsPath + "/curr-tier.yml"));
+        int tier = tierConfig.getInt("tier");
+        if(tier == 0) tier = 1;
 
         for(Quest quest : activeQuests){
             File file = new File(questFilePaths.get(quest));
-            Files.copy(file.toPath(), Path.of(normalQuestsPath + "/" + file.getName()), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(file.toPath(), Path.of(questsFolderPath + "/tier-" + tier + "/" + file.getName()), StandardCopyOption.REPLACE_EXISTING);
             file.delete();
         }
 
     }
 
+    /**
+     * Gets all the YML files of quests in the specified folder and turns them to
+     * a {@link Quest} objects using the {@link QuestManager#createQuest(File, QuestType)} function.
+     * @param folderPath The path to get all of the quests from
+     * @param questType The type of the quests
+     * @return An {@link ArrayList} of Quests that were in the specified folder
+     */
     private ArrayList<Quest> getAllQuestsInFolder(String folderPath, QuestType questType){
         ArrayList<Quest> createdQuests = new ArrayList<>();
         File listFiles = new File(folderPath);
@@ -186,6 +231,7 @@ public class QuestManager {
         if(listedFileQuests == null) return createdQuests;
 
         for(File file : listedFileQuests){
+            if(file.getName().equalsIgnoreCase("curr-tier.yml")) continue;
             Quest quest = createQuest(file, questType);
             createdQuests.add(quest);
         }
@@ -193,14 +239,20 @@ public class QuestManager {
         return createdQuests;
     }
 
-
+    /**
+     * This function creates a new {@link Quest} object based from the .yml file
+     * provided. (The blueprint and how to create the quest yml files is located in questHelp.txt)
+     * @param questFile The YML file to create the Quest from
+     * @param questType The type of the quest to create
+     * @return A new {@link Quest} object
+     */
     private Quest createQuest(File questFile, QuestType questType){
         YamlConfiguration config = YamlConfiguration.loadConfiguration(questFile);
         String name = config.getString("quest-name");
         ArrayList<String> description = (ArrayList<String>) config.getStringList("description");
         String databaseName = config.getString("database-name");
         if(databaseName == null || databaseName.isBlank()){
-            plugin.logger.severe("Couldn't find the database name for the quest "+ config.getName());
+            plugin.logger.severe("Couldn't find the database name for the quest " + questFile.getName());
             throw new RuntimeException();
         }
         Material icon;
@@ -239,12 +291,20 @@ public class QuestManager {
         return newQuest;
     }
 
-
-    private ArrayList<Object> getTargets(ListenerType questType, ArrayList<String> stringTargets){
+    /**
+     * This function transforms every target which is saved as a string
+     * to a specified object that the {@link ListenerType} provided requries. <br><br>
+     * For example if we had a quest with the {@link ListenerType#BREAK_BLOCKS} this function would transform
+     * the list of targets which are a string to a new {@link Material} object
+     * @param listenerType The listener type of the quest
+     * @param stringTargets The targets to transform
+     * @return A new ArrayList of transformed targets
+     */
+    private ArrayList<Object> getTargets(ListenerType listenerType, ArrayList<String> stringTargets){
 
         ArrayList<Object> targets = new ArrayList<>();
 
-        switch (questType){
+        switch (listenerType){
 
             case BREAK_BLOCKS -> stringTargets.forEach(o -> targets.add(Material.getMaterial(o)));
 
@@ -254,6 +314,11 @@ public class QuestManager {
 
     }
 
+    /**
+     * Gets the folder name where the quests are stored of the specified questType
+     * @param questType The questType to check
+     * @return The folder name
+     */
     private String getQuestFolderName(QuestType questType){
         switch (questType){
 
@@ -276,6 +341,11 @@ public class QuestManager {
         }
     }
 
+    /**
+     * Returns a {@link ArrayList} of {@link Quest}s which have the same {@link QuestType} as the one provided
+     * @param questType The quest type of the quests you want to get
+     * @return An {@link ArrayList<Quest>} of Quests
+     */
     private ArrayList<Quest> getCorrespondingQuestArray(QuestType questType){
 
         switch (questType){

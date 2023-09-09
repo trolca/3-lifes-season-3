@@ -222,7 +222,12 @@ public class DatabaseManager {
         return false;
     }
 
-
+    /**
+     * It creates a new quest table that will store all of the quests progress of players.
+     * This table will have columns which represent every quest.
+     * @param questType The quest type to create the table for
+     * @param quests The quests to add to this table
+     */
     public void createQuestTable(QuestType questType, ArrayList<Quest> quests) throws SQLException {
         StringBuilder sqlBuilder = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
 
@@ -244,6 +249,10 @@ public class DatabaseManager {
         connection.close();
     }
 
+    /**
+     * It removes the specified quest table
+     * @param questType The quest type so it can know which table to remove
+     */
     public void removeQuestTable(QuestType questType) throws SQLException {
         String sql = "DROP TABLE IF EXISTS "+getQuestTableName(questType);
         Connection connection = getConnection();
