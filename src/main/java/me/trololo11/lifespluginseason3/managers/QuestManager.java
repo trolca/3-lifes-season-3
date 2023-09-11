@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * This class is used to store and manage the timings of all the quests that
  * are used in this plugin. <br>
- * This class is responcible for randomizing new quests after their time has run out.
+ * This class is responsible for randomizing new quests after their time has run out.
  */
 public class QuestManager {
 
@@ -84,8 +84,8 @@ public class QuestManager {
     }
 
     /**
-     * Checks if the date of every questType has passed (aka is after the current type). <br>
-     * This function is responcible for calling the {@link ChangePageTimeTask} which changes the text in the main menu
+     * Checks if the date of every questType has passed (aka is after the current time). <br>
+     * This function is responsible for calling the {@link ChangePageTimeTask} which changes the text in the main menu
      * and countdowns the time for the quests
      * @param date The date to check if is after
      * @param newTime The new time to add to the current time in the quests countdown
@@ -142,7 +142,7 @@ public class QuestManager {
     }
 
     /**
-     * This function is responcible for creating a new set of randomly generated quests for the specified
+     * This function is responsible for creating a new set of randomly generated quests for the specified
      * quest type. It also creates a new table in the database to store the progress of the quests.
      * @param questType The quest type to create the quests
      * @param newTime The new time to add to the current type
@@ -179,10 +179,12 @@ public class QuestManager {
             currQuestArray.add(addQuest);
 
             File questFile = new File(questFilePaths.get(addQuest));
-            Path newPath = Path.of(activeQuestsPath + "/" + questFile.getName() );
+            Path newPath = Path.of(activeQuestsPath + "/" + questFile.getName() );    
             Files.copy(questFile.toPath(), newPath, StandardCopyOption.REPLACE_EXISTING);
             questFilePaths.put(addQuest, newPath.toString());
             questFile.delete();
+
+            allQuests.remove(addQuest);
         }
 
         File tierCheck = new File(plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/active-quests/curr-tier.yml");
@@ -210,6 +212,7 @@ public class QuestManager {
         if(tier == 0) tier = 1;
 
         for(Quest quest : activeQuests){
+            allQuests.add(quest);
             File file = new File(questFilePaths.get(quest));
             Files.copy(file.toPath(), Path.of(questsFolderPath + "/tier-" + tier + "/" + file.getName()), StandardCopyOption.REPLACE_EXISTING);
             file.delete();
@@ -240,8 +243,8 @@ public class QuestManager {
     }
 
     /**
-     * This function creates a new {@link Quest} object based from the .yml file
-     * provided. (The blueprint and how to create the quest yml files is located in questHelp.txt)
+     * This function creates a new {@link Quest} object based from the YML file
+     * provided. (The blueprint and how to create the quest YML files is located in questHelp.txt)
      * @param questFile The YML file to create the Quest from
      * @param questType The type of the quest to create
      * @return A new {@link Quest} object
