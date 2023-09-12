@@ -1,6 +1,8 @@
 package me.trololo11.lifespluginseason3.menus;
 
+import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.utils.Menu;
+import me.trololo11.lifespluginseason3.utils.QuestType;
 import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -10,6 +12,11 @@ import org.bukkit.inventory.ItemStack;
 
 public class MainLifesMenu extends Menu {
 
+    private QuestManager questManager;
+
+    public MainLifesMenu(QuestManager questManager){
+        this.questManager = questManager;
+    }
 
     @Override
     public String getMenuName(Player player) {
@@ -25,9 +32,9 @@ public class MainLifesMenu extends Menu {
     public void setMenuItems(Player player) {
         ItemStack whiteFiller = Utils.createItem(Material.WHITE_STAINED_GLASS_PANE, " ", "filler");
         ItemStack blackFiller = Utils.createItem(Material.BLACK_STAINED_GLASS_PANE, " ", "filler");
-        ItemStack dailyQuests = Utils.createItem(Material.ENCHANTED_BOOK, "&c&lQuesty dzienne", "daily-quests");
-        ItemStack weeklyQuests = Utils.createItem(Material.ENCHANTED_BOOK, "&e&lQuesty tygodniowe", "weekly-quests");
-        ItemStack cardQuests = Utils.createItem(Material.PAPER, "&b&lQuesty do karty", "card-quests");
+        ItemStack dailyQuests = Utils.createItem(Material.ENCHANTED_BOOK, "&c&lQuesty dzienne", "daily");
+        ItemStack weeklyQuests = Utils.createItem(Material.ENCHANTED_BOOK, "&e&lQuesty tygodniowe", "weekly");
+        ItemStack cardQuests = Utils.createItem(Material.PAPER, "&b&lQuesty do karty", "card");
         ItemStack statistics = Utils.createPlayerHead(player, "&2Statystyki "+ player.getName(), "statistics");
         ItemStack back = Utils.createItem(Material.RED_DYE, "&c&lPowrót", "back");
 
@@ -46,6 +53,27 @@ public class MainLifesMenu extends Menu {
 
     @Override
     public void handleMenu(InventoryClickEvent e) {
+        Player player = (Player) e.getWhoClicked();
+        ItemStack item = e.getCurrentItem();
+
+        switch (item.getType()){
+
+            case ENCHANTED_BOOK -> {
+                QuestType questType = null;
+                try {
+                    questType = QuestType.valueOf(item.getItemMeta().getLocalizedName().toUpperCase());
+                }catch (IllegalArgumentException ex){
+                    return;
+                }
+
+                new QuestsMenu(this, questType == QuestType.DAILY ? "&c&lQuesty dzienne" : "&e&lQuesty tygodniowe", questType, questManager).open(player);
+            }
+
+            case PAPER -> {
+                new QuestsMenu(this, "&f&lQuesty do karty", QuestType.CARD, questManager).open(player);
+            }
+
+        }
 
     }
 }

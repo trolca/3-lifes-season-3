@@ -31,10 +31,11 @@ public class QuestManager {
 
     private final HashMap<Quest, String> questFilePaths = new HashMap<>();
 
-    private ArrayList<Quest> allQuests = new ArrayList<>();
-    private ArrayList<Quest> activeDailyQuests = new ArrayList<>();
-    private ArrayList<Quest> activeWeeklyQuests = new ArrayList<>();
-    private ArrayList<Quest> activeCardQuests = new ArrayList<>();
+    private final ArrayList<Quest> allQuests = new ArrayList<>();
+    private final ArrayList<Quest> allActiveQuests = new ArrayList<>();
+    private final ArrayList<Quest> activeDailyQuests = new ArrayList<>();
+    private final ArrayList<Quest> activeWeeklyQuests = new ArrayList<>();
+    private final ArrayList<Quest> activeCardQuests = new ArrayList<>();
 
 
 
@@ -62,11 +63,17 @@ public class QuestManager {
         allQuests.addAll(getAllQuestsInFolder(mainFolder + "/weekly-quests/tier-"+tier, QuestType.WEEKLY));
         allQuests.addAll(getAllQuestsInFolder(mainFolder + "/card-quests/tier-"+tier, QuestType.CARD));
 
-
+        for(Quest quest : allQuests){
+            System.out.println(quest.getDatabaseName());
+        }
 
         activeDailyQuests.addAll(getAllQuestsInFolder(mainFolder + "/daily-quests/active-quests", QuestType.DAILY));
         activeWeeklyQuests.addAll(getAllQuestsInFolder(mainFolder + "/weekly-quests/active-quests", QuestType.WEEKLY));
         activeCardQuests.addAll(getAllQuestsInFolder(mainFolder + "/card-quests/active-quests", QuestType.CARD));
+
+        allActiveQuests.addAll(activeDailyQuests);
+        allActiveQuests.addAll(activeWeeklyQuests);
+        allActiveQuests.addAll(activeCardQuests);
     }
 
     /**
@@ -81,6 +88,10 @@ public class QuestManager {
         checkDate(dailyDate, 86400000-1, QuestType.DAILY);
         checkDate(weeklyDate, 604800000, QuestType.WEEKLY);
         checkDate(cardDate, 604800000, QuestType.CARD);
+
+        for(Quest quest : allActiveQuests){
+            System.out.println("Active quests: "+ quest.getDatabaseName());
+        }
     }
 
     /**
@@ -177,6 +188,7 @@ public class QuestManager {
             existingNames.add(addQuest.getDatabaseName());
 
             currQuestArray.add(addQuest);
+            allActiveQuests.add(addQuest);
 
             File questFile = new File(questFilePaths.get(addQuest));
             Path newPath = Path.of(activeQuestsPath + "/" + questFile.getName() );    
@@ -213,6 +225,7 @@ public class QuestManager {
 
         for(Quest quest : activeQuests){
             allQuests.add(quest);
+            allActiveQuests.remove(quest);
             File file = new File(questFilePaths.get(quest));
             Files.copy(file.toPath(), Path.of(questsFolderPath + "/tier-" + tier + "/" + file.getName()), StandardCopyOption.REPLACE_EXISTING);
             file.delete();
@@ -235,6 +248,7 @@ public class QuestManager {
 
         for(File file : listedFileQuests){
             if(file.getName().equalsIgnoreCase("curr-tier.yml")) continue;
+
             Quest quest = createQuest(file, questType);
             createdQuests.add(quest);
         }
@@ -349,7 +363,7 @@ public class QuestManager {
      * @param questType The quest type of the quests you want to get
      * @return An {@link ArrayList<Quest>} of Quests
      */
-    private ArrayList<Quest> getCorrespondingQuestArray(QuestType questType){
+    public ArrayList<Quest> getCorrespondingQuestArray(QuestType questType){
 
         switch (questType){
 
@@ -371,6 +385,10 @@ public class QuestManager {
 
         }
 
+    }
+
+    public ArrayList<Quest> getAllActiveQuests() {
+        return allActiveQuests;
     }
 
 

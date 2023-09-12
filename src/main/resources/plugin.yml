@@ -11,6 +11,8 @@ commands:
     description: "Takes your life!"
   lifesmenu:
     description: "Opens the main lifes menu"
+  setprogress:
+    description: "Sets a quest progress!"
 permissions:
   3lifes3.admin:
     description: "A administator perm for the 3LifesPluginSeason3"

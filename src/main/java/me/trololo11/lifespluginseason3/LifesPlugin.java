@@ -1,13 +1,11 @@
 package me.trololo11.lifespluginseason3;
 
-import me.trololo11.lifespluginseason3.commands.GetItemsCommand;
-import me.trololo11.lifespluginseason3.commands.LifesMenuCommand;
-import me.trololo11.lifespluginseason3.commands.SetLifesCommand;
-import me.trololo11.lifespluginseason3.commands.TakeLifeCommand;
+import me.trololo11.lifespluginseason3.commands.*;
 import me.trololo11.lifespluginseason3.commands.tabcompleters.SetLifesTabCompleter;
 import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.listeners.CustomItemsCraftingFix;
 import me.trololo11.lifespluginseason3.listeners.MenuManager;
+import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsProgressDataSetup;
 import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardRenameListener;
 import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardUseListener;
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.LifeUseListener;
@@ -15,6 +13,7 @@ import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerChangeLife
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerDeathListener;
 import me.trololo11.lifespluginseason3.listeners.datasetups.PlayerLifesDataSetup;
 import me.trololo11.lifespluginseason3.managers.*;
+import me.trololo11.lifespluginseason3.utils.QuestType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,6 +32,7 @@ public final class LifesPlugin extends JavaPlugin {
     private RecipesManager recipesManager;
     private QuestManager questManager;
     private QuestsTimingsManager questsTimingsManager;
+    private QuestsProgressDataSetup questsProgressDataSetup;
 
     private boolean detailedErrors;
     private int tier=1;
@@ -77,6 +77,7 @@ public final class LifesPlugin extends JavaPlugin {
         teamsManager = new TeamsManager();
         recipesManager = new RecipesManager();
         questManager = new QuestManager(databaseManager, questsTimingsManager);
+        questsProgressDataSetup = new QuestsProgressDataSetup(databaseManager, questManager);
 
 
 
@@ -90,6 +91,7 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MenuManager(), this);
         getServer().getPluginManager().registerEvents(new ReviveCardRenameListener(lifesManager), this);
         getServer().getPluginManager().registerEvents(new ReviveCardUseListener(lifesManager, databaseManager), this);
+        getServer().getPluginManager().registerEvents(questsProgressDataSetup, this);
 
         try {
             setupData();
@@ -101,7 +103,8 @@ public final class LifesPlugin extends JavaPlugin {
         getCommand("getitems").setExecutor(new GetItemsCommand(recipesManager));
         getCommand("setlifes").setExecutor(new SetLifesCommand());
         getCommand("takelife").setExecutor(new TakeLifeCommand(lifesManager, recipesManager));
-        getCommand("lifesmenu").setExecutor(new LifesMenuCommand());
+        getCommand("lifesmenu").setExecutor(new LifesMenuCommand(questManager));
+        getCommand("setprogress").setExecutor(new SetProgressCommand(questManager));
 
         getCommand("setlifes").setTabCompleter(new SetLifesTabCompleter());
 
@@ -119,9 +122,15 @@ public final class LifesPlugin extends JavaPlugin {
 
             try {
                 databaseManager.updatePlayerLifes(player.getUniqueId(), lifes);
+
+                for(QuestType questType : QuestType.values()){
+                    databaseManager.updateQuestDataForPlayer(questType, player, questManager);
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+
+
 
         }
 
@@ -145,6 +154,10 @@ public final class LifesPlugin extends JavaPlugin {
 
             Bukkit.getPluginManager().callEvent(new PlayerChangeLifesEvent(player, lifes));
 
+
+            for(QuestType questType : QuestType.values()){
+                questsProgressDataSetup.setupPlayerQuestsProgress(questType, player);
+            }
         }
 
     }

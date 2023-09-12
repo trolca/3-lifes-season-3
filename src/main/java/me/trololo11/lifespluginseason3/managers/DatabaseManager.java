@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -242,6 +243,105 @@ public class DatabaseManager {
         Connection connection = getConnection();
 
         PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
+    }
+
+    public HashMap<String, Integer> getQuestsDataFromTable(QuestType questType, UUID uuid, QuestManager questManager) throws SQLException{
+        String sql = "SELECT * FROM "+getQuestTableName(questType) + " WHERE uuid = ?";
+        Connection connection = getConnection();
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setString(1, uuid.toString());
+
+        ArrayList<Quest> activeQuests = questManager.getCorrespondingQuestArray(questType);
+        HashMap<String, Integer> questsData = new HashMap<>();
+
+        ResultSet resultSet = statement.executeQuery();
+
+        if(!resultSet.next()) return null;
+
+        for(Quest quest : activeQuests){
+
+            try{
+                int progress = resultSet.getInt(quest.getDatabaseName());
+                questsData.put(quest.getDatabaseName(), progress);
+            }catch (SQLException e){
+                break;
+            }
+
+        }
+
+        statement.close();
+        connection.close();
+        return questsData;
+    }
+
+    public void addQuestDataForPlayer(QuestType questType, Player player, QuestManager questManager) throws SQLException {
+        StringBuilder sql = new StringBuilder("INSERT INTO "+getQuestTableName(questType) + "(uuid, ");
+        StringBuilder endSql  = new StringBuilder("( ?, ");
+
+        ArrayList<Quest> activeQuests = questManager.getCorrespondingQuestArray(questType);
+
+        for(Quest quest : activeQuests){
+            sql.append(quest.getDatabaseName() + ", ");
+            endSql.append("?, ");
+        }
+
+        sql.delete(sql.length()-2, sql.length());
+        endSql.delete(endSql.length()-2, endSql.length());
+        sql.append(") VALUES ");
+        sql.append(endSql);
+        sql.append(")");
+
+        System.out.println("add sql: "+ sql);
+
+        Connection connection = getConnection();
+
+        PreparedStatement statement = connection.prepareStatement(sql.toString());
+
+        statement.setString(1, player.getUniqueId().toString());
+
+        for(int i=0; i < activeQuests.size(); i++){
+            statement.setInt( i+2, activeQuests.get(i).getPlayerProgress(player));
+        }
+
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
+    }
+
+    public void updateQuestDataForPlayer(QuestType questType, Player player, QuestManager questManager) throws SQLException {
+        StringBuilder sql = new StringBuilder("UPDATE ");
+        sql.append(getQuestTableName(questType)).append(" SET ");
+
+        ArrayList<Quest> allActiveQuests = questManager.getCorrespondingQuestArray(questType);
+        for(Quest quest : allActiveQuests){
+            sql.append(quest.getDatabaseName() + " = ?, ");
+        }
+
+
+        sql.delete(sql.length()-2, sql.length());
+        sql.append(" WHERE uuid = ?");
+
+        System.out.println("Update sql: "+ sql);
+
+        String sqlString = sql.toString();
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sqlString);
+
+        for(int i=0; i < allActiveQuests.size(); i++){
+            Quest quest = allActiveQuests.get(i);
+            statement.setInt(i+1, quest.getPlayerProgress(player));
+        }
+
+        statement.setString(allActiveQuests.size()+1, player.getUniqueId().toString());
 
         statement.executeUpdate();
 

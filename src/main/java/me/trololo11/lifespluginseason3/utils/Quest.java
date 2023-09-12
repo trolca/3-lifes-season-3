@@ -1,9 +1,11 @@
 package me.trololo11.lifespluginseason3.utils;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -35,7 +37,7 @@ public class Quest {
     private QuestType questType;
     private final ArrayList<Object> targets;
 
-
+    private final HashMap<Player, Integer> playerProgress = new HashMap<>();
 
     public Quest(String name, String databaseName, int maxProgress, boolean showProgress, Material icon, ArrayList<String> description, QuestType questType, ListenerType listenerType, ArrayList<Object> targets) {
         this.name = name;
@@ -43,7 +45,11 @@ public class Quest {
         this.showProgress = showProgress;
         this.icon = icon;
         this.maxProgress = maxProgress;
-        this.description = description;
+        ArrayList<String> realDescription = new ArrayList<>();
+        for(String str : description){
+            realDescription.add(Utils.chat("&f" + str));
+        }
+        this.description = realDescription;
         this.questType = questType;
         this.listenerType = listenerType;
         this.targets = targets;
@@ -85,7 +91,21 @@ public class Quest {
         return targets;
     }
 
+    public void setPlayerProgress(Player player, int progress){
+        playerProgress.put(player, progress);
+    }
 
+    public void removePlayerProgress(Player player){
+        playerProgress.remove(player);
+    }
+
+    public int getPlayerProgress(Player player){
+        return playerProgress.getOrDefault(player, 0);
+    }
+
+    public boolean hasFinished(Player player){
+        return getPlayerProgress(player) >= getMaxProgress();
+    }
 
 
 
