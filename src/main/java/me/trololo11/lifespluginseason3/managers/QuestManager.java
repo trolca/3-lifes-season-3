@@ -29,6 +29,7 @@ public class QuestManager {
     private final DatabaseManager databaseManager;
     private final QuestsTimingsManager questsTimingsManager;
 
+    private final HashMap<ListenerType, ArrayList<Quest>> listenerTypesQuests = new HashMap<>();
     private final HashMap<Quest, String> questFilePaths = new HashMap<>();
 
     private final ArrayList<Quest> allQuests = new ArrayList<>();
@@ -63,9 +64,6 @@ public class QuestManager {
         allQuests.addAll(getAllQuestsInFolder(mainFolder + "/weekly-quests/tier-"+tier, QuestType.WEEKLY));
         allQuests.addAll(getAllQuestsInFolder(mainFolder + "/card-quests/tier-"+tier, QuestType.CARD));
 
-        for(Quest quest : allQuests){
-            System.out.println(quest.getDatabaseName());
-        }
 
         activeDailyQuests.addAll(getAllQuestsInFolder(mainFolder + "/daily-quests/active-quests", QuestType.DAILY));
         activeWeeklyQuests.addAll(getAllQuestsInFolder(mainFolder + "/weekly-quests/active-quests", QuestType.WEEKLY));
@@ -74,6 +72,12 @@ public class QuestManager {
         allActiveQuests.addAll(activeDailyQuests);
         allActiveQuests.addAll(activeWeeklyQuests);
         allActiveQuests.addAll(activeCardQuests);
+
+        for(ListenerType listenerType : ListenerType.values()){
+
+            ArrayList<Quest> listenerQuests = new ArrayList<>(allActiveQuests.stream().filter(quest -> quest.getListenerType() == listenerType).toList());
+            listenerTypesQuests.put(listenerType, listenerQuests);
+        }
     }
 
     /**
@@ -88,10 +92,6 @@ public class QuestManager {
         checkDate(dailyDate, 86400000-1, QuestType.DAILY);
         checkDate(weeklyDate, 604800000, QuestType.WEEKLY);
         checkDate(cardDate, 604800000, QuestType.CARD);
-
-        for(Quest quest : allActiveQuests){
-            System.out.println("Active quests: "+ quest.getDatabaseName());
-        }
     }
 
     /**
@@ -172,6 +172,11 @@ public class QuestManager {
         int count = QuestUtils.getQuestsCount(questType);
         int ranQuestsLenght = randomizedQuests.size();
 
+        if(ranQuestsLenght < 1){
+            plugin.logger.severe("Please make at least one "+ questType.toString().toLowerCase() + " quest!");
+            throw new RuntimeException();
+        }
+
         if(ranQuestsLenght > count) count = ranQuestsLenght;
         String activeQuestsPath = plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/active-quests";
         resetAllActiveQuestFiles(currQuestArray, plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType), activeQuestsPath);
@@ -189,6 +194,7 @@ public class QuestManager {
 
             currQuestArray.add(addQuest);
             allActiveQuests.add(addQuest);
+            listenerTypesQuests.get(addQuest.getListenerType()).add(addQuest);
 
             File questFile = new File(questFilePaths.get(addQuest));
             Path newPath = Path.of(activeQuestsPath + "/" + questFile.getName() );    
@@ -225,6 +231,7 @@ public class QuestManager {
 
         for(Quest quest : activeQuests){
             allQuests.add(quest);
+            listenerTypesQuests.get(quest.getListenerType()).remove(quest);
             allActiveQuests.remove(quest);
             File file = new File(questFilePaths.get(quest));
             Files.copy(file.toPath(), Path.of(questsFolderPath + "/tier-" + tier + "/" + file.getName()), StandardCopyOption.REPLACE_EXISTING);
@@ -290,13 +297,10 @@ public class QuestManager {
             throw new RuntimeException();
         }
 
-        String target = config.getString("target");
-        ArrayList<String> stringTargets;
-        if(target == null){
-            stringTargets = (ArrayList<String>) config.getStringList("target");
-        }else{
-            stringTargets = new ArrayList<>();
-            stringTargets.add(target);
+        ArrayList<String> stringTargets = (ArrayList<String>) config.getStringList("target");
+
+        if(stringTargets.isEmpty()) {
+            stringTargets.add(config.getString("target"));
         }
 
         ArrayList<Object> targets = getTargets(listenerType, stringTargets);
@@ -321,11 +325,13 @@ public class QuestManager {
 
         ArrayList<Object> targets = new ArrayList<>();
 
+
         switch (listenerType){
 
-            case BREAK_BLOCKS -> stringTargets.forEach(o -> targets.add(Material.getMaterial(o)));
+            case BREAK_BLOCKS -> stringTargets.forEach(s -> targets.add(Material.getMaterial(s.toUpperCase())));
 
         }
+
 
         return targets;
 
@@ -391,7 +397,8 @@ public class QuestManager {
         return allActiveQuests;
     }
 
-
-
+    public HashMap<ListenerType, ArrayList<Quest>> getListenerTypesQuests() {
+        return listenerTypesQuests;
+    }
 
 }

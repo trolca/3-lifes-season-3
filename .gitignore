@@ -92,6 +92,9 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
+
+pom.xml
+
 # Windows shortcuts
 *.lnk
 

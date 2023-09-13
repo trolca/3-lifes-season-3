@@ -70,7 +70,7 @@ public class DatabaseManager {
 
         Statement statement = connection.createStatement();
 
-        statement.execute("CREATE TABLE IF NOT EXISTS player_lifes(uuid varchar(36) primary key, lifes tinyint, is_revived bool)");
+        statement.execute("CREATE TABLE IF NOT EXISTS player_lifes(uuid varchar(36) primary key not null, lifes tinyint not null, is_revived bool not null)");
 
         statement.close();
 
@@ -232,14 +232,13 @@ public class DatabaseManager {
     public void createQuestTable(QuestType questType, ArrayList<Quest> quests) throws SQLException {
         StringBuilder sqlBuilder = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
 
-        sqlBuilder.append(getQuestTableName(questType)).append("(uuid varchar(36) primary key,");
+        sqlBuilder.append(getQuestTableName(questType)).append("(uuid varchar(36) primary key not null,");
 
         for(Quest quest : quests){
-            sqlBuilder.append(" ").append(quest.getDatabaseName()).append(" int,");
+            sqlBuilder.append(" ").append(quest.getDatabaseName()).append(" int not null,");
         }
 
         String sql = sqlBuilder.toString().substring(0, sqlBuilder.length()-1) + ")";
-        System.out.println(sql);
         Connection connection = getConnection();
 
         PreparedStatement statement = connection.prepareStatement(sql);
@@ -298,7 +297,6 @@ public class DatabaseManager {
         sql.append(endSql);
         sql.append(")");
 
-        System.out.println("add sql: "+ sql);
 
         Connection connection = getConnection();
 
@@ -329,7 +327,6 @@ public class DatabaseManager {
         sql.delete(sql.length()-2, sql.length());
         sql.append(" WHERE uuid = ?");
 
-        System.out.println("Update sql: "+ sql);
 
         String sqlString = sql.toString();
 

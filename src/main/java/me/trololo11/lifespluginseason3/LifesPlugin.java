@@ -6,6 +6,7 @@ import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.listeners.CustomItemsCraftingFix;
 import me.trololo11.lifespluginseason3.listeners.MenuManager;
 import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsProgressDataSetup;
+import me.trololo11.lifespluginseason3.listeners.questslisteners.BreakBlocksListener;
 import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardRenameListener;
 import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardUseListener;
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.LifeUseListener;
@@ -92,6 +93,8 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ReviveCardRenameListener(lifesManager), this);
         getServer().getPluginManager().registerEvents(new ReviveCardUseListener(lifesManager, databaseManager), this);
         getServer().getPluginManager().registerEvents(questsProgressDataSetup, this);
+
+        getServer().getPluginManager().registerEvents(new BreakBlocksListener(questManager), this);
 
         try {
             setupData();
