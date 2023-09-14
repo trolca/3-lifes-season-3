@@ -62,12 +62,12 @@ public class QuestsMenu extends Menu {
 
             ArrayList<String> lore = new ArrayList<>(quest.getDescription());
 
-            //this is kinda bad will fix promise X :>
+            //fixed it less go
             lore.add("");
-            lore.add( quest.getShowProgress() ? ( quest.hasFinished(player) ?
+            lore.add( quest.hasFinished(player) ?
                     Utils.chat("&a&lSkończony!") :
-                    Utils.chat("&2&lProgress: " + quest.getPlayerProgress(player) + "/" + quest.getMaxProgress()) ) :
-                    quest.hasFinished(player) ? Utils.chat("&a&lSkończony!") :
+                        quest.getShowProgress() ?
+                        Utils.chat("&2&lProgress: " + quest.getPlayerProgress(player) + "/" + quest.getMaxProgress())  :
                     Utils.chat("&c&lNie skończony!")
                     );
 

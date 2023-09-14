@@ -1,5 +1,7 @@
 package me.trololo11.lifespluginseason3.utils;
 
+import me.trololo11.lifespluginseason3.events.QuestFinishedEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -22,6 +24,12 @@ import java.util.List;
  *     <li>The {@link QuestType} of this quest</li>
  *     <li>The targets of this quest</li>
  * </ul>
+ * This class also stores local player's progress and
+ * when a player is playing on the server and makes progress in a quest
+ * <b>only the local (stored in this class) progress is changed.</b>
+ * The data is saved to the sql database only when player leaves the game
+ * and is set locally when a player joins the server.
+ *
  */
 public class Quest {
 
@@ -92,7 +100,9 @@ public class Quest {
     }
 
     public void setPlayerProgress(Player player, int progress){
+        boolean isInital = playerProgress.containsKey(player);
         playerProgress.put(player, progress);
+        if(hasFinished(player) && isInital) Bukkit.getServer().getPluginManager().callEvent(new QuestFinishedEvent(player, this));
     }
 
     public void removePlayerProgress(Player player){

@@ -35,7 +35,6 @@ public class ChangePageTimeTask extends BukkitRunnable {
         if(startTime < 0 || (startTime == 0 && whatChange != 'm')){
             try {
                 //waits a second bcs of they small incarrucy of the calculations
-                //(its hard to fix and like GLaDOS said 'the best solution to a problem is usually the easiest one')s
                 Thread.sleep(1000);
                 questsManager.checkPageQuestTimings();
             } catch (IOException | SQLException | InterruptedException e) {
@@ -44,13 +43,11 @@ public class ChangePageTimeTask extends BukkitRunnable {
             cancel();
         }
     }
-    //TODO create a system to update the time text on main lifes menu
     private void updateText(){
         //just updates the text
         if(whatChange == 'd') timerText = startTime + " d";
-        if(whatChange == 'h') timerText =  "0 d "+startTime+" h";
+        if(whatChange == 'h') timerText =  startTime+" h";
         if(whatChange == 'm') timerText = (startTime+1) + " m";
-//        if(questType == QuestType.DAILY) plugin.setDailyPageText(timerText);
-//        else plugin.setWeeklyPageText(timerText);
+        questsManager.setQuestPageTimeText(questType, timerText);
     }
 }

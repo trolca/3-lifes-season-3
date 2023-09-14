@@ -160,4 +160,27 @@ public class Utils {
 
         return itemMeta;
     }
+
+    /**
+     * Returns a time in string based type. <br>
+     * For ex. "1h3m3s"
+     * @param time The time to format to string. <b>The time must be provided in seconds</b>
+     * @return A formated string based from the time param. <br>
+     * For a param 63 it would return "1m3s"
+     */
+    public static String getStringTime(int time){
+        int days = time/85400;
+        int hours = (time/3600)-(days*24);
+        int minutes = (time/60)-(hours*60);
+        int seconds = time-(minutes*60);
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if(days != 0) stringBuilder.append(days+"d");
+        if(hours != 0) stringBuilder.append(hours+"h");
+        if(minutes != 0) stringBuilder.append(minutes+"m");
+        if(seconds != 0) stringBuilder.append(seconds+"s");
+
+        return stringBuilder.toString();
+
+    }
 }

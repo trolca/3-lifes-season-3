@@ -32,11 +32,20 @@ public class MainLifesMenu extends Menu {
     public void setMenuItems(Player player) {
         ItemStack whiteFiller = Utils.createItem(Material.WHITE_STAINED_GLASS_PANE, " ", "filler");
         ItemStack blackFiller = Utils.createItem(Material.BLACK_STAINED_GLASS_PANE, " ", "filler");
-        ItemStack dailyQuests = Utils.createItem(Material.ENCHANTED_BOOK, "&c&lQuesty dzienne", "daily");
-        ItemStack weeklyQuests = Utils.createItem(Material.ENCHANTED_BOOK, "&e&lQuesty tygodniowe", "weekly");
-        ItemStack cardQuests = Utils.createItem(Material.PAPER, "&b&lQuesty do karty", "card");
+        ItemStack dailyQuests = Utils.createItem(Material.ENCHANTED_BOOK, "&c&lQuesty dzienne", "daily",
+                "&fQuesty które sie restartują codziennie!", "&f&o(Dostajesz z nich kawałek życia)", "",
+                "&bPozostały czas: "+ questManager.getQuestPageTimeText(QuestType.DAILY));
+        ItemStack weeklyQuests = Utils.createItem(Material.ENCHANTED_BOOK, "&e&lQuesty tygodniowe", "weekly",
+                "&fQuesty które sie restartują co tydzień!", "&f&o(Dostajesz z nich kawałek karty odrodzenia)", "",
+                "&bPozostały czas: " + questManager.getQuestPageTimeText(QuestType.WEEKLY));
+
+        ItemStack cardQuests = Utils.createItem(Material.PAPER, "&b&lQuesty do karty", "card",
+                "&fQuesty za które dostajesz randomową karte ulepszenia!", "&f&o(Restartują sie co tydzień)", "",
+                "&bPozostały czas: "+ questManager.getQuestPageTimeText(QuestType.CARD));
+
         ItemStack statistics = Utils.createPlayerHead(player, "&2Statystyki "+ player.getName(), "statistics");
         ItemStack back = Utils.createItem(Material.RED_DYE, "&c&lPowrót", "back");
+
 
         for(int i=0; i < getSlots(); i++){
             if(i < 9) inventory.setItem(i, blackFiller);
@@ -70,10 +79,17 @@ public class MainLifesMenu extends Menu {
             }
 
             case PAPER -> {
+                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("card")) return;
                 new QuestsMenu(this, "&f&lQuesty do karty", QuestType.CARD, questManager).open(player);
+            }
+
+            case RED_DYE ->{
+                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("back")) return;
+                player.closeInventory();
             }
 
         }
 
     }
+
 }

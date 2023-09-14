@@ -1,13 +1,16 @@
 package me.trololo11.lifespluginseason3.managers;
 
+import me.trololo11.lifespluginseason3.menus.MainLifesMenu;
 import me.trololo11.lifespluginseason3.tasks.ChangePageTimeTask;
 import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.utils.ListenerType;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.QuestType;
 import me.trololo11.lifespluginseason3.utils.QuestUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,9 +22,12 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * This class is used to store and manage the timings of all the quests that
- * are used in this plugin. <br>
- * This class is responsible for randomizing new quests after their time has run out.
+ * This class stores and manages all of the object of {@link Quest} that
+ * are used in this plugin. <b>This should be the only place that a new objects
+ * of {@link Quest} are created</b> and all of the other classes should get their Quests
+ * objects from this class.<br><br>
+ * This class also manages the changing of active quests every x amount of
+ * time and setting new randomized active quests.
  */
 public class QuestManager {
 
@@ -30,6 +36,7 @@ public class QuestManager {
     private final QuestsTimingsManager questsTimingsManager;
 
     private final HashMap<ListenerType, ArrayList<Quest>> listenerTypesQuests = new HashMap<>();
+    private final HashMap<QuestType, String> pageTimingText = new HashMap<>();
     private final HashMap<Quest, String> questFilePaths = new HashMap<>();
 
     private final ArrayList<Quest> allQuests = new ArrayList<>();
@@ -391,6 +398,33 @@ public class QuestManager {
 
         }
 
+    }
+
+    /**
+     *  Gets the text time that is displayed under the quests menu buttons
+     *  in the {@link MainLifesMenu}.
+     * @param questType The quest type to get the time text for.
+     * @return The text time.
+     */
+    public String getQuestPageTimeText(QuestType questType){
+        return pageTimingText.get(questType);
+    }
+
+    /**
+     *  Sets the text time that is displayed under the quests menu buttons
+     *  in the {@link MainLifesMenu}.
+     * @param questType The quest type to set the time text for.
+     * @param text The time text.
+     */
+    public void setQuestPageTimeText(QuestType questType, String text){
+        pageTimingText.put(questType, text);
+
+        for(Player player : Bukkit.getOnlinePlayers()){
+
+            if(player.getOpenInventory().getTopInventory().getHolder() instanceof MainLifesMenu mainLifesMenu){
+                mainLifesMenu.setMenuItems(player);
+            }
+        }
     }
 
     public ArrayList<Quest> getAllActiveQuests() {
