@@ -7,6 +7,7 @@ import me.trololo11.lifespluginseason3.utils.ListenerType;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.QuestType;
 import me.trololo11.lifespluginseason3.utils.QuestUtils;
+import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsProgressDataSetup;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,7 +15,6 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -27,7 +27,9 @@ import java.util.*;
  * of {@link Quest} are created</b> and all of the other classes should get their Quests
  * objects from this class.<br><br>
  * This class also manages the changing of active quests every x amount of
- * time and setting new randomized active quests.
+ * time and setting new randomized active quests. <br>
+ * This class does not set the local data of quests, the {@link LifesPlugin} and
+ * {@link QuestsProgressDataSetup} are responsible for that.
  */
 public class QuestManager {
 
@@ -38,6 +40,7 @@ public class QuestManager {
     private final HashMap<ListenerType, ArrayList<Quest>> listenerTypesQuests = new HashMap<>();
     private final HashMap<QuestType, String> pageTimingText = new HashMap<>();
     private final HashMap<Quest, String> questFilePaths = new HashMap<>();
+    private final HashMap<Player, HashMap<QuestType, Integer> > playerAmountOfFinishedQuests = new HashMap<>();
 
     private final ArrayList<Quest> allQuests = new ArrayList<>();
     private final ArrayList<Quest> allActiveQuests = new ArrayList<>();
@@ -85,6 +88,33 @@ public class QuestManager {
             ArrayList<Quest> listenerQuests = new ArrayList<>(allActiveQuests.stream().filter(quest -> quest.getListenerType() == listenerType).toList());
             listenerTypesQuests.put(listenerType, listenerQuests);
         }
+
+
+
+    }
+
+
+    public void calculatePlayerFinishedQuests(Player player){
+
+        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+        HashMap<QuestType, Integer> playerAmountCompleted = playerAmountOfFinishedQuests.getOrDefault(player, new HashMap<>());
+
+        for(QuestType questType : QuestType.values()){
+            int completedAmount = 0;
+            ArrayList<Quest> currQuests = getCorrespondingQuestArray(questType);
+
+            for(Quest quest : currQuests){
+
+                if(quest.hasFinished(player)) completedAmount++;
+
+            }
+
+            playerAmountCompleted.put(questType, completedAmount);
+
+        }
+
+        playerAmountOfFinishedQuests.put(player, playerAmountCompleted);
+
     }
 
     /**
@@ -425,6 +455,19 @@ public class QuestManager {
                 mainLifesMenu.setMenuItems(player);
             }
         }
+    }
+
+    public void incrementPlayerFinishedQuests(Player player, QuestType questType){
+        int newAmount = playerAmountOfFinishedQuests.get(player).get(questType)+1;
+        playerAmountOfFinishedQuests.get(player).put(questType, newAmount);
+    }
+
+    public int getPlayerFinishedQuests(Player player, QuestType questType){
+        return playerAmountOfFinishedQuests.get(player).getOrDefault(questType, 0);
+    }
+
+    public void removePlayerCompletedQuests(Player player){
+        playerAmountOfFinishedQuests.remove(player);
     }
 
     public ArrayList<Quest> getAllActiveQuests() {

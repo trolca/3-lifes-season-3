@@ -1,6 +1,7 @@
 package me.trololo11.lifespluginseason3.menus;
 
 import me.trololo11.lifespluginseason3.managers.QuestManager;
+import me.trololo11.lifespluginseason3.managers.RecipesManager;
 import me.trololo11.lifespluginseason3.utils.Menu;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.QuestType;
@@ -16,10 +17,16 @@ import java.util.ArrayList;
 public class QuestsMenu extends Menu {
 
     private MainLifesMenu mainLifesMenu;
+    private QuestManager questManager;
+    private QuestType questTypeOfThisInv;
     private String invName;
+    private RecipesManager recipesManager;
     private ArrayList<Quest> quests;
-    public QuestsMenu(MainLifesMenu mainLifesMenu, String invName, QuestType questType, QuestManager questManager){
+    public QuestsMenu(MainLifesMenu mainLifesMenu, String invName, QuestType questType, QuestManager questManager, RecipesManager recipesManager){
         this.mainLifesMenu = mainLifesMenu;
+        this.questManager = questManager;
+        this.questTypeOfThisInv = questType;
+        this.recipesManager = recipesManager;
         this.invName = invName;
         quests = questManager.getCorrespondingQuestArray(questType);
     }
@@ -41,6 +48,11 @@ public class QuestsMenu extends Menu {
         ItemStack back = Utils.createItem(Material.RED_DYE, "&c&lPowrót", "back");
         ItemStack completed = Utils.createItem(Material.GREEN_WOOL, "&aSkończony!", "completed");
         ItemStack notCompleted = Utils.createItem(Material.RED_WOOL, "&cNie skończony!", "not-completed");
+        ItemStack progress = Utils.createItem(Material.LIME_STAINED_GLASS_PANE, " ", "progress");
+
+        float progressFillPercentage = (float) questManager.getPlayerFinishedQuests(player, questTypeOfThisInv)/questManager.getCorrespondingQuestArray(questTypeOfThisInv).size() ;
+
+        int fillSlots = (int) (7 * progressFillPercentage);
 
         for(int i=0; i < getSlots(); i++){
 
@@ -48,6 +60,10 @@ public class QuestsMenu extends Menu {
             else inventory.setItem(i, filler);
         }
 
+        for(int i = 1; i <= fillSlots; i++){
+            inventory.setItem(i, progress);
+        }
+        inventory.setItem(0, getCustomCorrespondingItem(questTypeOfThisInv));
         inventory.setItem(8, back);
 
         for(int i=0; i < quests.size(); i++){
@@ -102,6 +118,30 @@ public class QuestsMenu extends Menu {
             mainLifesMenu.open(player);
 
         }
+
+    }
+
+
+    private ItemStack getCustomCorrespondingItem(QuestType questType){
+
+        ItemStack item = new ItemStack(Material.PINK_WOOL);
+
+        switch (questType){
+
+            case DAILY -> item = recipesManager.getLifeShardItem();
+            case WEEKLY -> item = recipesManager.getReviveShardItem();
+            case CARD -> item = new ItemStack(Material.GHAST_TEAR);
+
+        }
+
+        ItemMeta itemMeta = item.getItemMeta();
+
+        String localizedName = itemMeta.hasLocalizedName() ? itemMeta.getLocalizedName() : "";
+
+        itemMeta.setLocalizedName(localizedName + "-menu");
+
+        item.setItemMeta(itemMeta);
+        return item;
 
     }
 }

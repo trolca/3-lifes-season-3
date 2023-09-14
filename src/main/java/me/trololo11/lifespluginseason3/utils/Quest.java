@@ -100,7 +100,7 @@ public class Quest {
     }
 
     public void setPlayerProgress(Player player, int progress){
-        boolean isInital = playerProgress.containsKey(player);
+        boolean isInital = playerProgress.containsKey(player) && !hasFinished(player);
         playerProgress.put(player, progress);
         if(hasFinished(player) && isInital) Bukkit.getServer().getPluginManager().callEvent(new QuestFinishedEvent(player, this));
     }

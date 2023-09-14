@@ -30,6 +30,7 @@ public class QuestsProgressDataSetup implements Listener {
         for(QuestType questType : QuestType.values()){
             setupPlayerQuestsProgress(questType, player);
         }
+        questManager.calculatePlayerFinishedQuests(player);
     }
 
     @EventHandler
@@ -43,6 +44,8 @@ public class QuestsProgressDataSetup implements Listener {
         for(Quest quest : questManager.getAllActiveQuests()){
             quest.removePlayerProgress(player);
         }
+
+        questManager.removePlayerCompletedQuests(player);
     }
 
     public void setupPlayerQuestsProgress(QuestType questType, Player player) throws SQLException {

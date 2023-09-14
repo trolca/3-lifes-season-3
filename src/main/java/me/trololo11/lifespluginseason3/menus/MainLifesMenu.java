@@ -1,6 +1,7 @@
 package me.trololo11.lifespluginseason3.menus;
 
 import me.trololo11.lifespluginseason3.managers.QuestManager;
+import me.trololo11.lifespluginseason3.managers.RecipesManager;
 import me.trololo11.lifespluginseason3.utils.Menu;
 import me.trololo11.lifespluginseason3.utils.QuestType;
 import me.trololo11.lifespluginseason3.utils.Utils;
@@ -13,9 +14,11 @@ import org.bukkit.inventory.ItemStack;
 public class MainLifesMenu extends Menu {
 
     private QuestManager questManager;
+    private RecipesManager recipesManager;
 
-    public MainLifesMenu(QuestManager questManager){
+    public MainLifesMenu(QuestManager questManager, RecipesManager recipesManager){
         this.questManager = questManager;
+        this.recipesManager = recipesManager;
     }
 
     @Override
@@ -75,12 +78,12 @@ public class MainLifesMenu extends Menu {
                     return;
                 }
 
-                new QuestsMenu(this, questType == QuestType.DAILY ? "&c&lQuesty dzienne" : "&e&lQuesty tygodniowe", questType, questManager).open(player);
+                new QuestsMenu(this, questType == QuestType.DAILY ? "&c&lQuesty dzienne" : "&e&lQuesty tygodniowe", questType, questManager, recipesManager).open(player);
             }
 
             case PAPER -> {
                 if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("card")) return;
-                new QuestsMenu(this, "&f&lQuesty do karty", QuestType.CARD, questManager).open(player);
+                new QuestsMenu(this, "&f&lQuesty do karty", QuestType.CARD, questManager, recipesManager).open(player);
             }
 
             case RED_DYE ->{

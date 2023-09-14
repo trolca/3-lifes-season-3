@@ -94,7 +94,7 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ReviveCardRenameListener(lifesManager), this);
         getServer().getPluginManager().registerEvents(new ReviveCardUseListener(lifesManager, databaseManager), this);
         getServer().getPluginManager().registerEvents(questsProgressDataSetup, this);
-        getServer().getPluginManager().registerEvents(new QuestFinishedListener(), this);
+        getServer().getPluginManager().registerEvents(new QuestFinishedListener(questManager), this);
 
         getServer().getPluginManager().registerEvents(new BreakBlocksListener(questManager), this);
 
@@ -108,7 +108,7 @@ public final class LifesPlugin extends JavaPlugin {
         getCommand("getitems").setExecutor(new GetItemsCommand(recipesManager));
         getCommand("setlifes").setExecutor(new SetLifesCommand());
         getCommand("takelife").setExecutor(new TakeLifeCommand(lifesManager, recipesManager));
-        getCommand("lifesmenu").setExecutor(new LifesMenuCommand(questManager));
+        getCommand("lifesmenu").setExecutor(new LifesMenuCommand(questManager, recipesManager));
         getCommand("setprogress").setExecutor(new SetProgressCommand(questManager));
 
         getCommand("setlifes").setTabCompleter(new SetLifesTabCompleter());
@@ -163,6 +163,9 @@ public final class LifesPlugin extends JavaPlugin {
             for(QuestType questType : QuestType.values()){
                 questsProgressDataSetup.setupPlayerQuestsProgress(questType, player);
             }
+
+
+            questManager.calculatePlayerFinishedQuests(player);
         }
 
     }
