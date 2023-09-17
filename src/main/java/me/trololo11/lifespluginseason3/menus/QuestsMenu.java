@@ -1,7 +1,9 @@
 package me.trololo11.lifespluginseason3.menus;
 
 import me.trololo11.lifespluginseason3.managers.QuestManager;
+import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
+import me.trololo11.lifespluginseason3.menus.questawardmenus.LifeShardAwardsMenu;
 import me.trololo11.lifespluginseason3.utils.Menu;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.QuestType;
@@ -9,6 +11,7 @@ import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -18,13 +21,15 @@ public class QuestsMenu extends Menu {
 
     private MainLifesMenu mainLifesMenu;
     private QuestManager questManager;
+    private QuestsAwardsManager questsAwardsManager;
     private QuestType questTypeOfThisInv;
     private String invName;
     private RecipesManager recipesManager;
     private ArrayList<Quest> quests;
-    public QuestsMenu(MainLifesMenu mainLifesMenu, String invName, QuestType questType, QuestManager questManager, RecipesManager recipesManager){
+    public QuestsMenu(MainLifesMenu mainLifesMenu, String invName, QuestType questType, QuestManager questManager, QuestsAwardsManager questsAwardsManager ,  RecipesManager recipesManager){
         this.mainLifesMenu = mainLifesMenu;
         this.questManager = questManager;
+        this.questsAwardsManager = questsAwardsManager;
         this.questTypeOfThisInv = questType;
         this.recipesManager = recipesManager;
         this.invName = invName;
@@ -89,6 +94,7 @@ public class QuestsMenu extends Menu {
 
             questMeta.setLocalizedName(quest.getDatabaseName());
             questMeta.setLore(lore);
+            questMeta.addItemFlags(ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES);
 
             questItem.setItemMeta(questMeta);
 
@@ -112,10 +118,19 @@ public class QuestsMenu extends Menu {
         Player player = (Player) e.getWhoClicked();
         ItemStack item = e.getCurrentItem();
 
-        if (item.getType() == Material.RED_DYE) {
-            if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("back")) return;
+        switch (item.getType()){
 
-            mainLifesMenu.open(player);
+            case RED_DYE -> {
+                if (!item.getItemMeta().getLocalizedName().equalsIgnoreCase("back")) return;
+
+                mainLifesMenu.open(player);
+            }
+
+            case GOLD_NUGGET -> {
+                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("shard_life-menu")) return;
+
+                new LifeShardAwardsMenu(this, recipesManager, questManager, questsAwardsManager).open(player);
+            }
 
         }
 

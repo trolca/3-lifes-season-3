@@ -1,6 +1,7 @@
 package me.trololo11.lifespluginseason3.menus;
 
 import me.trololo11.lifespluginseason3.managers.QuestManager;
+import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
 import me.trololo11.lifespluginseason3.utils.Menu;
 import me.trololo11.lifespluginseason3.utils.QuestType;
@@ -15,10 +16,12 @@ public class MainLifesMenu extends Menu {
 
     private QuestManager questManager;
     private RecipesManager recipesManager;
+    private QuestsAwardsManager questsAwardsManager;
 
-    public MainLifesMenu(QuestManager questManager, RecipesManager recipesManager){
+    public MainLifesMenu(QuestManager questManager, RecipesManager recipesManager, QuestsAwardsManager questsAwardsManager){
         this.questManager = questManager;
         this.recipesManager = recipesManager;
+        this.questsAwardsManager = questsAwardsManager;
     }
 
     @Override
@@ -71,19 +74,19 @@ public class MainLifesMenu extends Menu {
         switch (item.getType()){
 
             case ENCHANTED_BOOK -> {
-                QuestType questType = null;
+                QuestType questType;
                 try {
                     questType = QuestType.valueOf(item.getItemMeta().getLocalizedName().toUpperCase());
                 }catch (IllegalArgumentException ex){
                     return;
                 }
 
-                new QuestsMenu(this, questType == QuestType.DAILY ? "&c&lQuesty dzienne" : "&e&lQuesty tygodniowe", questType, questManager, recipesManager).open(player);
+                new QuestsMenu(this, questType == QuestType.DAILY ? "&c&lQuesty dzienne" : "&e&lQuesty tygodniowe", questType, questManager,questsAwardsManager, recipesManager).open(player);
             }
 
             case PAPER -> {
                 if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("card")) return;
-                new QuestsMenu(this, "&f&lQuesty do karty", QuestType.CARD, questManager, recipesManager).open(player);
+                new QuestsMenu(this, "&f&lQuesty do karty", QuestType.CARD, questManager,questsAwardsManager, recipesManager).open(player);
             }
 
             case RED_DYE ->{

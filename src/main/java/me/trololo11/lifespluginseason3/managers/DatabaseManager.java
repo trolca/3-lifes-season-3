@@ -71,6 +71,7 @@ public class DatabaseManager {
         Statement statement = connection.createStatement();
 
         statement.execute("CREATE TABLE IF NOT EXISTS player_lifes(uuid varchar(36) primary key not null, lifes tinyint not null, is_revived bool not null)");
+        statement.execute("CREATE TABLE IF NOT EXISTS quests_awards_data(uuid varchar(36) primary key, daily_quests tinyint not null, weekly_quests tinyint not null, card_quests tinyint not null)");
 
         statement.close();
 
@@ -359,6 +360,63 @@ public class DatabaseManager {
 
         statement.close();
         connection.close();
+    }
+
+    public void updatePlayerTakenAwards(UUID uuid, byte dailyNum, byte weeklyNum, byte cardNum) throws SQLException {
+        String sql = "UPDATE quests_awards_data SET daily_quests = ?, weekly_quests = ?, card_quests = ? WHERE uuid = ?";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setByte(1, dailyNum);
+        statement.setByte(2, weeklyNum);
+        statement.setByte(3, cardNum);
+        statement.setString(4, uuid.toString());
+
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
+
+    }
+
+    public void addPlayerTakenAwards(UUID uuid) throws SQLException {
+        String sql = "INSERT INTO quests_awards_data(uuid, daily_quests, weekly_quests, card_quests) VALUES (?, ?, ?, ?)";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setString(1, uuid.toString());
+        statement.setByte(2, (byte) 0);
+        statement.setByte(3, (byte) 0);
+        statement.setByte(4, (byte) 0);
+
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
+    }
+
+    public ArrayList<Byte> getPlayerTakenAwards(UUID uuid) throws SQLException {
+        String sql = "SELECT * FROM quests_awards_data WHERE uuid = ?";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setString(1, uuid.toString());
+
+        ResultSet results = statement.executeQuery();
+        ArrayList<Byte> awards = new ArrayList<>();
+        if(results.next()){
+            awards.add(results.getByte("daily_quests"));
+            awards.add(results.getByte("weekly_quests"));
+            awards.add(results.getByte("card_quests"));
+        }
+
+        statement.close();
+        connection.close();
+
+
+        return awards;
     }
 
     private String getQuestTableName(QuestType questTableType){

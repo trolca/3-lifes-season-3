@@ -1,6 +1,7 @@
 package me.trololo11.lifespluginseason3.commands;
 
 import me.trololo11.lifespluginseason3.managers.QuestManager;
+import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
 import me.trololo11.lifespluginseason3.menus.MainLifesMenu;
 import org.bukkit.Sound;
@@ -13,10 +14,12 @@ public class LifesMenuCommand implements CommandExecutor {
 
     private QuestManager questManager;
     private RecipesManager recipesManager;
+    private QuestsAwardsManager questsAwardsManager;
 
-    public LifesMenuCommand(QuestManager questManager, RecipesManager recipesManager){
+    public LifesMenuCommand(QuestManager questManager, RecipesManager recipesManager, QuestsAwardsManager questsAwardsManager){
         this.questManager = questManager;
         this.recipesManager = recipesManager;
+        this.questsAwardsManager = questsAwardsManager;
     }
 
     @Override
@@ -26,7 +29,7 @@ public class LifesMenuCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        new MainLifesMenu(questManager, recipesManager).open(player);
+        new MainLifesMenu(questManager, recipesManager, questsAwardsManager).open(player);
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
 
         return true;

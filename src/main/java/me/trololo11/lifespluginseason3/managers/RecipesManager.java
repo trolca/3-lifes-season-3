@@ -182,11 +182,11 @@ public class RecipesManager {
     }
 
     public ItemStack getLifeShardItem() {
-        return lifeShardItem;
+        return lifeShardItem.clone();
     }
 
     public ItemStack getReviveShardItem() {
-        return reviveShardItem;
+        return reviveShardItem.clone();
     }
 
     public ShapedRecipe getLifesRecipe() {

@@ -23,6 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -35,6 +36,7 @@ public final class LifesPlugin extends JavaPlugin {
     private QuestManager questManager;
     private QuestsTimingsManager questsTimingsManager;
     private QuestsProgressDataSetup questsProgressDataSetup;
+    private QuestsAwardsManager questsAwardsManager;
 
     private boolean detailedErrors;
     private int tier=1;
@@ -79,6 +81,7 @@ public final class LifesPlugin extends JavaPlugin {
         teamsManager = new TeamsManager();
         recipesManager = new RecipesManager();
         questManager = new QuestManager(databaseManager, questsTimingsManager);
+        questsAwardsManager = new QuestsAwardsManager();
         questsProgressDataSetup = new QuestsProgressDataSetup(databaseManager, questManager);
 
 
@@ -108,7 +111,7 @@ public final class LifesPlugin extends JavaPlugin {
         getCommand("getitems").setExecutor(new GetItemsCommand(recipesManager));
         getCommand("setlifes").setExecutor(new SetLifesCommand());
         getCommand("takelife").setExecutor(new TakeLifeCommand(lifesManager, recipesManager));
-        getCommand("lifesmenu").setExecutor(new LifesMenuCommand(questManager, recipesManager));
+        getCommand("lifesmenu").setExecutor(new LifesMenuCommand(questManager, recipesManager, questsAwardsManager));
         getCommand("setprogress").setExecutor(new SetProgressCommand(questManager));
 
         getCommand("setlifes").setTabCompleter(new SetLifesTabCompleter());
@@ -131,9 +134,17 @@ public final class LifesPlugin extends JavaPlugin {
                 for(QuestType questType : QuestType.values()){
                     databaseManager.updateQuestDataForPlayer(questType, player, questManager);
                 }
+
+                databaseManager.updatePlayerTakenAwards(player.getUniqueId(),
+                        questsAwardsManager.getAwardsTakenForPlayer(player, QuestType.DAILY),
+                        questsAwardsManager.getAwardsTakenForPlayer(player, QuestType.WEEKLY),
+                        questsAwardsManager.getAwardsTakenForPlayer(player, QuestType.CARD));
+
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+
+
 
 
 
@@ -166,6 +177,16 @@ public final class LifesPlugin extends JavaPlugin {
 
 
             questManager.calculatePlayerFinishedQuests(player);
+
+            ArrayList<Byte> takenAwards = databaseManager.getPlayerTakenAwards(player.getUniqueId());
+            if(takenAwards.isEmpty()){
+                databaseManager.addPlayerTakenAwards(player.getUniqueId());
+                takenAwards = databaseManager.getPlayerTakenAwards(player.getUniqueId());
+            }
+
+            questsAwardsManager.setAwardsTakenForPlayer(player, QuestType.DAILY, takenAwards.get(0));
+            questsAwardsManager.setAwardsTakenForPlayer(player, QuestType.WEEKLY, takenAwards.get(1));
+            questsAwardsManager.setAwardsTakenForPlayer(player, QuestType.CARD, takenAwards.get(2));
         }
 
     }

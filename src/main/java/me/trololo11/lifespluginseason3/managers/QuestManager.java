@@ -49,7 +49,6 @@ public class QuestManager {
     private final ArrayList<Quest> activeCardQuests = new ArrayList<>();
 
 
-
     public QuestManager(DatabaseManager databaseManager, QuestsTimingsManager questsTimingsManager){
         this.databaseManager = databaseManager;
         this.questsTimingsManager = questsTimingsManager;
@@ -83,14 +82,15 @@ public class QuestManager {
         allActiveQuests.addAll(activeWeeklyQuests);
         allActiveQuests.addAll(activeCardQuests);
 
+        calulcateListenerQuestArrays();
+    }
+
+    private void calulcateListenerQuestArrays(){
         for(ListenerType listenerType : ListenerType.values()){
 
             ArrayList<Quest> listenerQuests = new ArrayList<>(allActiveQuests.stream().filter(quest -> quest.getListenerType() == listenerType).toList());
             listenerTypesQuests.put(listenerType, listenerQuests);
         }
-
-
-
     }
 
 
@@ -215,6 +215,7 @@ public class QuestManager {
         }
 
         if(ranQuestsLenght > count) count = ranQuestsLenght;
+
         String activeQuestsPath = plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/active-quests";
         resetAllActiveQuestFiles(currQuestArray, plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType), activeQuestsPath);
         databaseManager.removeQuestTable(questType);
@@ -250,6 +251,14 @@ public class QuestManager {
 
         databaseManager.createQuestTable(questType, currQuestArray);
         questsTimingsManager.setEndDate(newDate, questType);
+        calulcateListenerQuestArrays();
+
+        for(Player player : Bukkit.getOnlinePlayers()){
+            playerAmountOfFinishedQuests.get(player).put(questType, 0);
+        }
+
+        checkPageQuestTimings();
+
 
     }
 
@@ -476,6 +485,18 @@ public class QuestManager {
 
     public HashMap<ListenerType, ArrayList<Quest>> getListenerTypesQuests() {
         return listenerTypesQuests;
+    }
+
+    public ArrayList<Quest> getActiveDailyQuests() {
+        return activeDailyQuests;
+    }
+
+    public ArrayList<Quest> getActiveWeeklyQuests() {
+        return activeWeeklyQuests;
+    }
+
+    public ArrayList<Quest> getActiveCardQuests() {
+        return activeCardQuests;
     }
 
 }
