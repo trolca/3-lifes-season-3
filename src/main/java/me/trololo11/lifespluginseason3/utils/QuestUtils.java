@@ -33,14 +33,27 @@ public class QuestUtils {
         }
     }
 
+    /**
+     * This function is responsible for creating the appropriate type
+     * of item for a awards take menu
+     * @param orginalItem The orginal item you want to modify
+     * @param awardTaken The item to put if the award has been already taken by a player
+     * @param normalMeta The item meta to put if the award cannot be taken by a player
+     * @param takeMeta The item meta to put if the player can take this award but hasn't already
+     * @param howMuchShouldTake How much awards should the player take based of it's finished quests
+     * @param howManyTaken How much awards the player has already taken
+     * @param allQuestsSize The amount of all quests in this type of quests
+     * @param playerFinishedQuests How much quests has this player already finished
+     * @param numOfTheItem The number of this award (The award number starts at 1)
+     * @param maxAmountAwards The max amount of awards that a player can take (not count the "final" award (aka the card shard) )
+     * @param questsPerAward How many quests the player has to do for 1 award
+     * @return The appropriate item
+     */
     public static ItemStack getAwardItem(ItemStack orginalItem,ItemStack awardTaken, ItemMeta normalMeta, ItemMeta takeMeta, int howMuchShouldTake, int howManyTaken, int allQuestsSize, int playerFinishedQuests, int numOfTheItem, int maxAmountAwards, int questsPerAward){
-        int numCheck = maxAmountAwards-numOfTheItem;
 
-
-
-        if(howMuchShouldTake >= numCheck && howManyTaken < numCheck ){
+        if(howMuchShouldTake >= numOfTheItem && howManyTaken < numOfTheItem ){
             orginalItem.setItemMeta(takeMeta);
-        } else if (howManyTaken >= numCheck) {
+        } else if (howManyTaken >= numOfTheItem) {
             orginalItem = awardTaken;
         }else{
 
@@ -54,6 +67,7 @@ public class QuestUtils {
 
 
         }
+
 
         return orginalItem;
     }

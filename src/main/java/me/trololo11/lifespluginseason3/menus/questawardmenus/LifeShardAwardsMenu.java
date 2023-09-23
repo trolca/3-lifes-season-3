@@ -52,14 +52,12 @@ public class LifeShardAwardsMenu extends Menu {
             inventory.setItem(i, filler);
         }
 
-        float howMuchQuestsFinishedPercentage = (float) questManager.getPlayerFinishedQuests(player, QuestType.DAILY)/questManager.getActiveDailyQuests().size() ;
-        //System.out.println(howMuchQuestsFinishedPercentage);
-        int howMuchShouldTake = (int) Math.ceil( ( questsAwardsManager.getMaxAmountOfAwards(QuestType.DAILY) - 1 ) * howMuchQuestsFinishedPercentage);
-        //System.out.println(howMuchShouldTake);
-        int maxAmountOfAwards = questsAwardsManager.getMaxAmountOfAwards(QuestType.DAILY)-1;
-        int questsPerAward = questManager.getActiveDailyQuests().size()/ (questsAwardsManager.getMaxAmountOfAwards(QuestType.DAILY)-1);
+        int questsPerAward = questManager.getQuestsPerAwards(QuestType.DAILY);
         int playerFinishedQuests = questManager.getPlayerFinishedQuests(player, QuestType.DAILY);
         byte howManyTaken = questsAwardsManager.getAwardsTakenForPlayer(player, QuestType.DAILY);
+        int howMuchShouldTake = playerFinishedQuests >= questManager.getActiveDailyQuests().size() ? (questsAwardsManager.getMaxAmountOfAwards(QuestType.DAILY)-1) : playerFinishedQuests/questsPerAward;
+        int maxAmountOfAwards = questsAwardsManager.getMaxAmountOfAwards(QuestType.DAILY)-1;
+
 
         ItemMeta lifeShardTakeMeta = lifeShard1.getItemMeta();
         lifeShardTakeMeta.setDisplayName(Utils.chat("&cKilknij by mnie odebrać!"));
@@ -71,11 +69,13 @@ public class LifeShardAwardsMenu extends Menu {
         lifeShardStandardMeta.setDisplayName(Utils.chat("&4Zrób jeszcze <num> questy by odebrać!"));
         lifeShardStandardMeta.setLocalizedName("lifes-shard-not-take");
 
-        lifeShard1 = QuestUtils.getAwardItem(lifeShard1, awardTaken, lifeShardStandardMeta, lifeShardTakeMeta, howMuchShouldTake, howManyTaken,
-                questManager.getAllActiveQuests().size(), playerFinishedQuests, 1, maxAmountOfAwards, questsPerAward);
+        int activeQuestsSize = questManager.getCorrespondingQuestArray(QuestType.DAILY).size();
 
-       lifeShard2 = lifeShard1 = QuestUtils.getAwardItem(lifeShard1, awardTaken, lifeShardStandardMeta, lifeShardTakeMeta, howMuchShouldTake, howManyTaken,
-               questManager.getAllActiveQuests().size(), playerFinishedQuests, 2, maxAmountOfAwards, questsPerAward);
+        lifeShard1 = QuestUtils.getAwardItem(lifeShard1, awardTaken, lifeShardStandardMeta.clone(), lifeShardTakeMeta, howMuchShouldTake, howManyTaken,
+                activeQuestsSize, playerFinishedQuests, 1, maxAmountOfAwards, questsPerAward);
+
+       lifeShard2 = QuestUtils.getAwardItem(lifeShard2, awardTaken, lifeShardStandardMeta.clone(), lifeShardTakeMeta, howMuchShouldTake, howManyTaken,
+               activeQuestsSize, playerFinishedQuests, 2, maxAmountOfAwards, questsPerAward);
 
         if(howManyTaken == 2){
             lifeShardTakeMeta.setDisplayName(Utils.chat("&bKliknij by mnie odebrać!"));
@@ -132,6 +132,15 @@ public class LifeShardAwardsMenu extends Menu {
                 player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
                 setMenuItems(player);
 
+            }
+
+            case GHAST_TEAR -> {
+                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("card-shard-take")) return;
+
+                questsAwardsManager.setAwardsTakenForPlayer(player, QuestType.DAILY, (byte) (questsAwardsManager.getAwardsTakenForPlayer(player, QuestType.DAILY)+1 ));
+                player.getInventory().addItem(new ItemStack(Material.GHAST_TEAR));
+                player.playSound(player, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
+                setMenuItems(player);
             }
 
 

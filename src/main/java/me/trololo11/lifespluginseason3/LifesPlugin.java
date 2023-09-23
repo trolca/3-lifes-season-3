@@ -6,6 +6,7 @@ import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.listeners.CustomItemsCraftingFix;
 import me.trololo11.lifespluginseason3.listeners.MenuManager;
 import me.trololo11.lifespluginseason3.listeners.QuestFinishedListener;
+import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsAwardsDataSetup;
 import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsProgressDataSetup;
 import me.trololo11.lifespluginseason3.listeners.questslisteners.BreakBlocksListener;
 import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardRenameListener;
@@ -80,11 +81,9 @@ public final class LifesPlugin extends JavaPlugin {
         questsTimingsManager = new QuestsTimingsManager();
         teamsManager = new TeamsManager();
         recipesManager = new RecipesManager();
-        questManager = new QuestManager(databaseManager, questsTimingsManager);
         questsAwardsManager = new QuestsAwardsManager();
+        questManager = new QuestManager(databaseManager, questsTimingsManager, questsAwardsManager);
         questsProgressDataSetup = new QuestsProgressDataSetup(databaseManager, questManager);
-
-
 
         teamsManager.registerEverything();
 
@@ -97,9 +96,8 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ReviveCardRenameListener(lifesManager), this);
         getServer().getPluginManager().registerEvents(new ReviveCardUseListener(lifesManager, databaseManager), this);
         getServer().getPluginManager().registerEvents(questsProgressDataSetup, this);
+        getServer().getPluginManager().registerEvents(new QuestsAwardsDataSetup(questsAwardsManager, databaseManager), this);
         getServer().getPluginManager().registerEvents(new QuestFinishedListener(questManager), this);
-
-        getServer().getPluginManager().registerEvents(new BreakBlocksListener(questManager), this);
 
         try {
             setupData();
@@ -107,6 +105,9 @@ public final class LifesPlugin extends JavaPlugin {
             logger.warning("[LifesPluginS3] Error while setting up data!");
             if(detailedErrors) e.printStackTrace();
         }
+
+
+        getServer().getPluginManager().registerEvents(new BreakBlocksListener(questManager), this);
 
         getCommand("getitems").setExecutor(new GetItemsCommand(recipesManager));
         getCommand("setlifes").setExecutor(new SetLifesCommand());
@@ -170,7 +171,6 @@ public final class LifesPlugin extends JavaPlugin {
 
             Bukkit.getPluginManager().callEvent(new PlayerChangeLifesEvent(player, lifes));
 
-
             for(QuestType questType : QuestType.values()){
                 questsProgressDataSetup.setupPlayerQuestsProgress(questType, player);
             }
@@ -190,6 +190,7 @@ public final class LifesPlugin extends JavaPlugin {
         }
 
     }
+
 
 
     public void setupDbProperties(){

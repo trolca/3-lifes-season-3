@@ -21,6 +21,10 @@ public class TeamsManager {
     private Team dead;
     private ArrayList<Team> lifesTeamList = new ArrayList<>();
 
+    public TeamsManager(){
+        registerEverything();
+    }
+
     /**
      * Registeres all of the teams to the main scoreboard.
      */

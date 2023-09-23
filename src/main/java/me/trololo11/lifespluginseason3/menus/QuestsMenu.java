@@ -4,11 +4,16 @@ import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
 import me.trololo11.lifespluginseason3.menus.questawardmenus.LifeShardAwardsMenu;
+import me.trololo11.lifespluginseason3.menus.questawardmenus.WeeklyQuestsAwardsMenu;
 import me.trololo11.lifespluginseason3.utils.Menu;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.QuestType;
 import me.trololo11.lifespluginseason3.utils.Utils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -26,6 +31,7 @@ public class QuestsMenu extends Menu {
     private String invName;
     private RecipesManager recipesManager;
     private ArrayList<Quest> quests;
+
     public QuestsMenu(MainLifesMenu mainLifesMenu, String invName, QuestType questType, QuestManager questManager, QuestsAwardsManager questsAwardsManager ,  RecipesManager recipesManager){
         this.mainLifesMenu = mainLifesMenu;
         this.questManager = questManager;
@@ -48,14 +54,15 @@ public class QuestsMenu extends Menu {
 
     @Override
     public void setMenuItems(Player player) {
-        ItemStack darkFiller = Utils.createItem(Material.GRAY_STAINED_GLASS_PANE, " ", "filler");
+        float progressFillPercentage = (float) questManager.getPlayerFinishedQuests(player, questTypeOfThisInv)/questManager.getCorrespondingQuestArray(questTypeOfThisInv).size() ;
+        int progressInt = Math.round(progressFillPercentage*100);
+
+        ItemStack darkFiller = Utils.createItem(Material.GRAY_STAINED_GLASS_PANE, "&7"+progressInt+"%", "filler");
         ItemStack filler = Utils.createItem(Material.WHITE_STAINED_GLASS_PANE, " ", "filler");
         ItemStack back = Utils.createItem(Material.RED_DYE, "&c&lPowrót", "back");
         ItemStack completed = Utils.createItem(Material.GREEN_WOOL, "&aSkończony!", "completed");
         ItemStack notCompleted = Utils.createItem(Material.RED_WOOL, "&cNie skończony!", "not-completed");
-        ItemStack progress = Utils.createItem(Material.LIME_STAINED_GLASS_PANE, " ", "progress");
-
-        float progressFillPercentage = (float) questManager.getPlayerFinishedQuests(player, questTypeOfThisInv)/questManager.getCorrespondingQuestArray(questTypeOfThisInv).size() ;
+        ItemStack progress = Utils.createItem(Material.LIME_STAINED_GLASS_PANE, "&a"+progressInt+"%" , "progress");
 
         int fillSlots = (int) (7 * progressFillPercentage);
 
@@ -68,7 +75,7 @@ public class QuestsMenu extends Menu {
         for(int i = 1; i <= fillSlots; i++){
             inventory.setItem(i, progress);
         }
-        inventory.setItem(0, getCustomCorrespondingItem(questTypeOfThisInv));
+        inventory.setItem(0, getCustomCorrespondingItem(questTypeOfThisInv, player));
         inventory.setItem(8, back);
 
         for(int i=0; i < quests.size(); i++){
@@ -132,12 +139,27 @@ public class QuestsMenu extends Menu {
                 new LifeShardAwardsMenu(this, recipesManager, questManager, questsAwardsManager).open(player);
             }
 
+            case IRON_NUGGET -> {
+                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("shard_revive_card-menu")) return;
+
+                new WeeklyQuestsAwardsMenu(this, recipesManager, questManager, questsAwardsManager).open(player);
+            }
+
+            case GHAST_TEAR -> {
+                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("card-shard-take")) return;
+
+                player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+                player.getInventory().addItem(new ItemStack(Material.GHAST_TEAR));
+                questsAwardsManager.setAwardsTakenForPlayer(player, QuestType.CARD, (byte) 1);
+                setMenuItems(player);
+            }
+
         }
 
     }
 
 
-    private ItemStack getCustomCorrespondingItem(QuestType questType){
+    private ItemStack getCustomCorrespondingItem(QuestType questType, Player player){
 
         ItemStack item = new ItemStack(Material.PINK_WOOL);
 
@@ -145,11 +167,34 @@ public class QuestsMenu extends Menu {
 
             case DAILY -> item = recipesManager.getLifeShardItem();
             case WEEKLY -> item = recipesManager.getReviveShardItem();
-            case CARD -> item = new ItemStack(Material.GHAST_TEAR);
+            case CARD ->{
+                int playerTaken = questsAwardsManager.getAwardsTakenForPlayer(player, questType);
+                item = new ItemStack(playerTaken >= 1 ? Material.BARRIER : Material.GHAST_TEAR );
+                if(playerTaken < 1 && questManager.getPlayerFinishedQuests(player, questType) < questManager.getQuestsPerAwards(questType)) break;
+
+                if(playerTaken >= 1){
+                    ItemMeta blockedMeta = item.getItemMeta();
+                    blockedMeta.setDisplayName(ChatColor.DARK_RED  + "To już zostało odebrane!");
+                    blockedMeta.setLocalizedName("card-shard-blocked");
+                    item.setItemMeta(blockedMeta);
+                }else{
+                    ItemMeta takeMeta = item.getItemMeta();
+                    takeMeta.setDisplayName(ChatColor.BLUE + "Kliknij by mnie odebrać!");
+                    takeMeta.addEnchant(Enchantment.MENDING, 1, false);
+                    takeMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                    takeMeta.setLocalizedName("card-shard-take");
+                    item.setItemMeta(takeMeta);
+                }
+
+                return item;
+
+            }
 
         }
 
         ItemMeta itemMeta = item.getItemMeta();
+
+        itemMeta.setDisplayName((questType == QuestType.DAILY ? ChatColor.RED : ChatColor.AQUA) + "Postęp w questach");
 
         String localizedName = itemMeta.hasLocalizedName() ? itemMeta.getLocalizedName() : "";
 

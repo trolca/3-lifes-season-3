@@ -379,6 +379,17 @@ public class DatabaseManager {
 
     }
 
+    public void resetPlayerTakenAwards(QuestType questType) throws SQLException {
+        String sql = "UPDATE quests_awards_data SET " + getQuestTableName(questType) + " = 0";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.executeUpdate();
+        statement.close();
+        connection.close();
+    }
+
     public void addPlayerTakenAwards(UUID uuid) throws SQLException {
         String sql = "INSERT INTO quests_awards_data(uuid, daily_quests, weekly_quests, card_quests) VALUES (?, ?, ?, ?)";
 

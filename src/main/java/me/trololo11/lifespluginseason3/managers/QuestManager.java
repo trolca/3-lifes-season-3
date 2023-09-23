@@ -36,11 +36,13 @@ public class QuestManager {
     private final LifesPlugin plugin = LifesPlugin.getPlugin();
     private final DatabaseManager databaseManager;
     private final QuestsTimingsManager questsTimingsManager;
+    private final QuestsAwardsManager questsAwardsManager;
 
     private final HashMap<ListenerType, ArrayList<Quest>> listenerTypesQuests = new HashMap<>();
     private final HashMap<QuestType, String> pageTimingText = new HashMap<>();
     private final HashMap<Quest, String> questFilePaths = new HashMap<>();
     private final HashMap<Player, HashMap<QuestType, Integer> > playerAmountOfFinishedQuests = new HashMap<>();
+    private final HashMap<QuestType, Integer> questsPerAwards = new HashMap<>();
 
     private final ArrayList<Quest> allQuests = new ArrayList<>();
     private final ArrayList<Quest> allActiveQuests = new ArrayList<>();
@@ -49,9 +51,10 @@ public class QuestManager {
     private final ArrayList<Quest> activeCardQuests = new ArrayList<>();
 
 
-    public QuestManager(DatabaseManager databaseManager, QuestsTimingsManager questsTimingsManager){
+    public QuestManager(DatabaseManager databaseManager, QuestsTimingsManager questsTimingsManager, QuestsAwardsManager questsAwardsManager){
         this.databaseManager = databaseManager;
         this.questsTimingsManager = questsTimingsManager;
+        this.questsAwardsManager = questsAwardsManager;
         setupAllQuests();
         try {
             checkPageQuestTimings();
@@ -82,9 +85,22 @@ public class QuestManager {
         allActiveQuests.addAll(activeWeeklyQuests);
         allActiveQuests.addAll(activeCardQuests);
 
+        for(Player player : Bukkit.getOnlinePlayers()){
+            calculatePlayerFinishedQuests(player);
+        }
+
         calulcateListenerQuestArrays();
+
+        for(QuestType questType : QuestType.values()){
+            calculateQuestsPerAward(questType);
+        }
     }
 
+    /**
+     * This function sorts quests by their {@link ListenerType} to ArrayLists and
+     * puts them into an internal array to make the listening for quests
+     * easier
+     */
     private void calulcateListenerQuestArrays(){
         for(ListenerType listenerType : ListenerType.values()){
 
@@ -93,7 +109,10 @@ public class QuestManager {
         }
     }
 
-
+    /**
+     * Calculates how much quests has a specified player finished
+     * @param player The player to check
+     */
     public void calculatePlayerFinishedQuests(Player player){
 
         @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
@@ -206,6 +225,7 @@ public class QuestManager {
         ArrayList<Quest> currQuestArray = getCorrespondingQuestArray(questType);
         ArrayList<String> existingNames = new ArrayList<>();
 
+
         int count = QuestUtils.getQuestsCount(questType);
         int ranQuestsLenght = randomizedQuests.size();
 
@@ -219,6 +239,7 @@ public class QuestManager {
         String activeQuestsPath = plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/active-quests";
         resetAllActiveQuestFiles(currQuestArray, plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType), activeQuestsPath);
         databaseManager.removeQuestTable(questType);
+        databaseManager.resetPlayerTakenAwards(questType);
         currQuestArray.clear();
 
         for(int i=0; i < count; i++){
@@ -257,7 +278,9 @@ public class QuestManager {
             playerAmountOfFinishedQuests.get(player).put(questType, 0);
         }
 
-        checkPageQuestTimings();
+        calculateQuestsPerAward(questType);
+
+        checkDate(newDate, newTime, questType);
 
 
     }
@@ -356,6 +379,11 @@ public class QuestManager {
         questFilePaths.put(newQuest, questFile.getAbsolutePath());
 
         return newQuest;
+    }
+
+    private void calculateQuestsPerAward(QuestType questType){
+        int questsPerAward = (int) Math.ceil((double) getCorrespondingQuestArray(questType).size()/ (questsAwardsManager.getMaxAmountOfAwards(questType)-1));
+        questsPerAwards.put(questType, questsPerAward);
     }
 
     /**
@@ -497,6 +525,10 @@ public class QuestManager {
 
     public ArrayList<Quest> getActiveCardQuests() {
         return activeCardQuests;
+    }
+
+    public int getQuestsPerAwards(QuestType questType){
+        return questsPerAwards.get(questType);
     }
 
 }

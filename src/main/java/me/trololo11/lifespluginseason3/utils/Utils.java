@@ -54,6 +54,12 @@ public class Utils {
         return empty;
     }
 
+    /**
+     * Gets the max amount of items that a player can craft from the
+     * specified recipe
+     * @param inv The inventory to check
+     * @return The max amount of items
+     */
     public static int getMaxCraftAmount(CraftingInventory inv) {
         if (inv.getResult() == null)
             return 0;
