@@ -30,6 +30,7 @@ public class CustomItemsCraftingFix implements Listener {
         ItemStack currItem;
         Player player = (Player) e.getWhoClicked();
 
+
         if(e.getRecipe().getResult().equals(recipesManager.getLifesRecipe().getResult())){
             currItem = recipesManager.getLifeItem();
         }else if(e.getRecipe().getResult().equals(recipesManager.getReviveCardRecipe().getResult())){

@@ -6,6 +6,7 @@ import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.listeners.CustomItemsCraftingFix;
 import me.trololo11.lifespluginseason3.listeners.MenuManager;
 import me.trololo11.lifespluginseason3.listeners.QuestFinishedListener;
+import me.trololo11.lifespluginseason3.listeners.cardlisteners.TakeLifeCardListener;
 import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsAwardsDataSetup;
 import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsProgressDataSetup;
 import me.trololo11.lifespluginseason3.listeners.questslisteners.BreakBlocksListener;
@@ -38,6 +39,7 @@ public final class LifesPlugin extends JavaPlugin {
     private QuestsTimingsManager questsTimingsManager;
     private QuestsProgressDataSetup questsProgressDataSetup;
     private QuestsAwardsManager questsAwardsManager;
+    private CardManager cardManager;
 
     private boolean detailedErrors;
     private int tier=1;
@@ -84,6 +86,7 @@ public final class LifesPlugin extends JavaPlugin {
         questsAwardsManager = new QuestsAwardsManager();
         questManager = new QuestManager(databaseManager, questsTimingsManager, questsAwardsManager);
         questsProgressDataSetup = new QuestsProgressDataSetup(databaseManager, questManager);
+        cardManager = new CardManager();
 
         teamsManager.registerEverything();
 
@@ -98,6 +101,8 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(questsProgressDataSetup, this);
         getServer().getPluginManager().registerEvents(new QuestsAwardsDataSetup(questsAwardsManager, databaseManager), this);
         getServer().getPluginManager().registerEvents(new QuestFinishedListener(questManager), this);
+
+        getServer().getPluginManager().registerEvents(new TakeLifeCardListener(cardManager, lifesManager, recipesManager), this);
 
         try {
             setupData();
@@ -114,6 +119,8 @@ public final class LifesPlugin extends JavaPlugin {
         getCommand("takelife").setExecutor(new TakeLifeCommand(lifesManager, recipesManager));
         getCommand("lifesmenu").setExecutor(new LifesMenuCommand(questManager, recipesManager, questsAwardsManager));
         getCommand("setprogress").setExecutor(new SetProgressCommand(questManager));
+        getCommand("getallcards").setExecutor(new GetAllCardsItems(cardManager));
+        getCommand("isinvfull").setExecutor(new InvFullCommand());
 
         getCommand("setlifes").setTabCompleter(new SetLifesTabCompleter());
 

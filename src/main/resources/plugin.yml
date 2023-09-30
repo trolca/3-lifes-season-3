@@ -13,6 +13,10 @@ commands:
     description: "Opens the main lifes menu"
   setprogress:
     description: "Sets a quest progress!"
+  getallcards:
+    description: "Gives you all the cards lol"
+  isinvfull:
+    description: "IS inv full?"
 permissions:
   3lifes3.admin:
     description: "A administator perm for the 3LifesPluginSeason3"

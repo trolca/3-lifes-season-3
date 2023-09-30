@@ -33,7 +33,7 @@ public class LifeUseListener implements Listener {
         ItemStack item = e.getItem();
         if(item == null) return;
         if(!item.hasItemMeta()) return;
-        if(!item.getItemMeta().getLocalizedName().startsWith("life") && !item.getItemMeta().getLocalizedName().startsWith("player_life")) return;
+        if(!item.getItemMeta().getLocalizedName().startsWith("life_item") && !item.getItemMeta().getLocalizedName().startsWith("player_life")) return;
         byte newLifes = (byte) (lifesManager.getPlayerLifes(player)+1);
         int slot = e.getHand() == EquipmentSlot.HAND ? player.getInventory().getHeldItemSlot() : 40;
 

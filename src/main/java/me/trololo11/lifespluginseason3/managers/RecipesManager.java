@@ -62,7 +62,7 @@ public class RecipesManager {
         lore.add(ChatColor.WHITE + "Użyj PPM by użyć!");
         heartMeta.setLore(lore);
         heartMeta.setCustomModelData(8760001);
-        heartMeta.setLocalizedName("life");
+        heartMeta.setLocalizedName("life_item");
 
         ItemMeta playerHeartMeta = playerLifeItem.getItemMeta();
         playerHeartMeta.setDisplayName(ChatColor.DARK_RED + ChatColor.BOLD.toString() + "Życie <player>");

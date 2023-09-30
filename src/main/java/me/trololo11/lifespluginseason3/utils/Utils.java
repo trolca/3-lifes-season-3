@@ -1,5 +1,6 @@
 package me.trololo11.lifespluginseason3.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -52,6 +53,12 @@ public class Utils {
         }
 
         return empty;
+    }
+
+    public static boolean isPlayerInvFull(PlayerInventory playerInventory){
+        int howMuch = Utils.getEmptySpaceInInv(playerInventory);
+
+        return howMuch-6 < 0;
     }
 
     /**
@@ -190,6 +197,40 @@ public class Utils {
 
     }
 
+    /**
+     * Checks the inventory for an item that has a localized name which starts the same as the one provided
+     * and returns the index of the slot of this item. <br><br>
+     * If no item is found it returns -1
+     * @param localizedName The localized name to check in the item
+     * @param inventory The inventory to check
+     * @return The index of this item, if none is found then returns -1.
+     */
+    public static int indexOfItemLocalized(String localizedName, Inventory inventory){
+        ItemStack[] contents = inventory.getContents();
+        int lenghtCon = contents.length;
 
-    //public static ItemMeta createItemMetaForAward(ItemMeta awardMeta,int numOfAward, byte howMuchTaken)
+        for(int i=0; i < lenghtCon; i++){
+            ItemStack item = contents[i];
+
+            if(item == null || !item.hasItemMeta() || !item.getItemMeta().hasLocalizedName()) continue;
+
+            if(item.getItemMeta().getLocalizedName().startsWith(localizedName)) return i;
+
+        }
+
+        return -1;
+
+    }
+
+    public static void givePlayerItemSafely(Player player, ItemStack itemStack){
+        PlayerInventory inventory = player.getInventory();
+        if(Utils.isPlayerInvFull(inventory)){
+            player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
+        }else{
+            inventory.addItem(itemStack);
+        }
+
+    }
+
+
 }

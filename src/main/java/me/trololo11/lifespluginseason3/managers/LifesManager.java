@@ -28,7 +28,7 @@ public class LifesManager {
      * @return How many lifes a player has
      */
     public byte getPlayerLifes(Player player){
-        return playerLifes.getOrDefault(player,  (byte) 0);
+        return playerLifes.get(player);
     }
 
     /**

@@ -34,7 +34,7 @@ public class ChangePageTimeTask extends BukkitRunnable {
         if(startTime >= 0) updateText();
         if(startTime < 0 || (startTime == 0 && whatChange != 'm')){
             try {
-                //waits a second bcs of they small incarrucy of the calculations
+                //waits a second bcs of the small incarrucy of the calculations
                 Thread.sleep(1000);
                 questsManager.checkPageQuestTimings();
             } catch (IOException | SQLException | InterruptedException e) {
