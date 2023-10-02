@@ -8,6 +8,10 @@ import me.trololo11.lifespluginseason3.cardstuff.cardtypes.TakeLifeCard;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * This class bassicaly stores all of the {@link CardClass} in a hash map
+ * where the key is the {@link CardType} of the card.
+ */
 public class CardManager {
 
     private HashMap<CardType, CardClass> cardClassHashMap = new HashMap<>();
@@ -22,10 +26,20 @@ public class CardManager {
         }
     }
 
+    /**
+     * Gets the {@link CardClass} of the {@link CardType} specified
+     * @param cardType The cardType to get
+     * @return The {@link CardClass}
+     */
     public CardClass getCard(CardType cardType){
         return cardClassHashMap.get(cardType);
     }
 
+    /**
+     * Gets all of the {@link CardClass} that are stored in
+     * this manager.
+     * @return All of the {@link CardClass}
+     */
     public ArrayList<CardClass> getAllCards(){
         return allCards;
     }

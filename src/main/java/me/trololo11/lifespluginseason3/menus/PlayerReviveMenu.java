@@ -3,6 +3,7 @@ package me.trololo11.lifespluginseason3.menus;
 import me.trololo11.lifespluginseason3.managers.LifesManager;
 import me.trololo11.lifespluginseason3.utils.Menu;
 import me.trololo11.lifespluginseason3.utils.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class PlayerReviveMenu extends Menu {
 
@@ -39,49 +41,59 @@ public class PlayerReviveMenu extends Menu {
         ItemStack back = Utils.createItem(Material.RED_DYE, "&c&lWyjdź", "back");
 
         for(int i = 0; i < getSlots(); i++){
-            if(i < 9 || i % 8 == 0 || ( i + (i/9) ) % 9 == 0 || i > 44) inventory.setItem(i, filler);
+            if(i < 9 || i > 44) inventory.setItem(i, filler);
         }
 
         ArrayList<OfflinePlayer> deadPlayers = lifesManager.getDeadPlayers();
 
         for(int i=0; i < deadPlayers.size(); i++){
 
-            int currI = i+10+(addI(i));
+
             OfflinePlayer deadPlayer = deadPlayers.get(i);
 
             SkullMeta headMeta = (SkullMeta) playerHead.getItemMeta();
 
-            headMeta.setDisplayName(ChatColor.RED + deadPlayer.getName());
+            headMeta.setDisplayName(ChatColor.DARK_RED + deadPlayer.getName());
             headMeta.setOwningPlayer(deadPlayer);
+            headMeta.setLocalizedName(deadPlayer.getUniqueId().toString());
 
             playerHead.setItemMeta(headMeta);
 
-            inventory.setItem(currI, playerHead);
+            inventory.setItem((i+9), playerHead);
         }
 
         inventory.setItem(8, back);
     }
 
-    private int addI(int i){
-        switch (i){
-
-            case 16, 25, 34, 43 ->{
-                return 2;
-            }
-
-            case 17, 26, 35, 44 ->{
-                return 1;
-            }
-
-            default -> {
-                return 0;
-            }
-
-        }
-    }
 
     @Override
     public void handleMenu(InventoryClickEvent e) {
+        ItemStack item = e.getCurrentItem();
+        Player player = (Player) e.getWhoClicked();
+
+        switch (item.getType()){
+
+            case RED_DYE -> {
+                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("back")) return;
+
+                player.closeInventory();
+            }
+
+            case PLAYER_HEAD -> {
+                UUID deadUuid;
+                try {
+                    deadUuid = UUID.fromString(item.getItemMeta().getLocalizedName());
+                }catch (IllegalArgumentException ex){
+                    return;
+                }
+                OfflinePlayer deadPlayer = Bukkit.getOfflinePlayer(deadUuid);
+
+                new PlayerReviveConfirmMenu(lifesManager, deadPlayer, this).open(player);
+
+            }
+
+        }
+
 
     }
 }

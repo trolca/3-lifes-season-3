@@ -56,11 +56,7 @@ public class ReviveCardUseListener implements Listener {
         }
 
         player.getInventory().setItemInMainHand(null);
-        databaseManager.setIsRevived(deadPlayer.getUniqueId(), true);
-        lifesManager.removeDeadPlayer(player);
-        BanList<PlayerProfile> banList = Bukkit.getBanList(BanList.Type.PROFILE);
-
-        banList.pardon(deadPlayer.getPlayerProfile());
+        lifesManager.revivePlayer(deadPlayer, (byte) 2);
 
         for(Player onlinePlayer : Bukkit.getOnlinePlayers()){
 

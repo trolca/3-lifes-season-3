@@ -1,9 +1,13 @@
 package me.trololo11.lifespluginseason3.managers;
 
 import me.trololo11.lifespluginseason3.listeners.datasetups.PlayerLifesDataSetup;
+import org.bukkit.BanList;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.profile.PlayerProfile;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -16,9 +20,11 @@ public class LifesManager {
 
     private final HashMap<Player, Byte> playerLifes = new HashMap<>();
     private final ArrayList<OfflinePlayer> deadPlayers;
+    private final DatabaseManager databaseManager;
 
-    public LifesManager(ArrayList<OfflinePlayer> allDeadPlayers){
+    public LifesManager(ArrayList<OfflinePlayer> allDeadPlayers, DatabaseManager databaseManager){
         this.deadPlayers = allDeadPlayers;
+        this.databaseManager = databaseManager;
     }
 
 
@@ -57,6 +63,23 @@ public class LifesManager {
      */
     public void removeDeadPlayer(OfflinePlayer player){
         deadPlayers.remove(player);
+    }
+
+    /**
+     * Revives the specified player. <br>
+     * This means: <br>
+     * Removes the specified player from the deadPlayers ArrayList, sets the
+     * player to be given 2 lifes on join and removes them from the banned list
+     * @param deadPlayer The player to revive
+     * @throws SQLException On error while setting the revivning on join value
+     */
+    public void revivePlayer(OfflinePlayer deadPlayer, byte lifesAfterRevive) throws SQLException {
+        databaseManager.setIsRevived(deadPlayer.getUniqueId(), true);
+        databaseManager.updatePlayerLifes(deadPlayer.getUniqueId(), lifesAfterRevive);
+        removeDeadPlayer(deadPlayer);
+        BanList<PlayerProfile> banList = Bukkit.getBanList(BanList.Type.PROFILE);
+
+        banList.pardon(deadPlayer.getPlayerProfile());
     }
 
     public ArrayList<OfflinePlayer> getDeadPlayers() {

@@ -47,7 +47,6 @@ public class PlayerLifesDataSetup implements Listener {
             databaseManager.setIsRevived(player.getUniqueId(), false);
 
             player.sendMessage(ChatColor.GOLD + "Zostałes wskrzeszony!");
-            lifes = 2;
         }
 
         Bukkit.getPluginManager().callEvent(new PlayerChangeLifesEvent(player, lifes));

@@ -1,6 +1,7 @@
 package me.trololo11.lifespluginseason3.cardstuff;
 
 import me.trololo11.lifespluginseason3.utils.Utils;
+import me.trololo11.lifespluginseason3.managers.CardManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -8,6 +9,19 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * This class represents a custom item of a card that
+ * has special abilities that can do a lot of stuff. <br>
+ * <b>Every CardClass should be registered in {@link CardManager} to get recognised by this plugin</b>
+ * This class stores:
+ * <ul>
+ *     <li>The name of this card</li>
+ *     <li>The {@link CardType} of this card</li>
+ *     <li>The custom model data of this card</li>
+ *     <li>The chance to get this card stored in percentage</li>
+ *     <li>The item of a card</li>
+ * </ul>
+ */
 public abstract class CardClass {
 
     private ItemStack cardItem;

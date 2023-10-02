@@ -6,6 +6,7 @@ import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.listeners.CustomItemsCraftingFix;
 import me.trololo11.lifespluginseason3.listeners.MenuManager;
 import me.trololo11.lifespluginseason3.listeners.QuestFinishedListener;
+import me.trololo11.lifespluginseason3.listeners.cardlisteners.GiveLifeCardUseListener;
 import me.trololo11.lifespluginseason3.listeners.cardlisteners.TakeLifeCardListener;
 import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsAwardsDataSetup;
 import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsProgressDataSetup;
@@ -41,6 +42,7 @@ public final class LifesPlugin extends JavaPlugin {
     private QuestsAwardsManager questsAwardsManager;
     private CardManager cardManager;
 
+
     private boolean detailedErrors;
     private int tier=1;
     public int dailyQuestsCount=6;
@@ -48,6 +50,7 @@ public final class LifesPlugin extends JavaPlugin {
     public int cardQuestsCount=11;
     public Properties globalDbProperties;
     public Logger logger;
+    public final String loggerPerfix = "[LifesPluginS3]";
 
     @Override
     public void onEnable() {
@@ -65,7 +68,7 @@ public final class LifesPlugin extends JavaPlugin {
 
         try {
             databaseManager.initialize();
-            lifesManager = new LifesManager(databaseManager.getAllDeadPlayers());
+            lifesManager = new LifesManager(databaseManager.getAllDeadPlayers(), databaseManager);
 
         } catch (SQLException e) {
             logger.severe("Error while connecting to the database");
@@ -103,6 +106,7 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new QuestFinishedListener(questManager), this);
 
         getServer().getPluginManager().registerEvents(new TakeLifeCardListener(cardManager, lifesManager, recipesManager), this);
+        getServer().getPluginManager().registerEvents(new GiveLifeCardUseListener(cardManager, lifesManager), this);
 
         try {
             setupData();
