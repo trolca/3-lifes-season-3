@@ -157,7 +157,7 @@ public class WeeklyQuestsAwardsMenu extends Menu {
                 questsAwardsManager.setAwardsTakenForPlayer(player, QuestType.WEEKLY, questsAwardsManager.getMaxAmountOfAwards(QuestType.WEEKLY));
                 player.getInventory().addItem(new ItemStack(Material.GHAST_TEAR));
                 player.playSound(player, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
-                setMenuItems(player);
+                player.closeInventory();
             }
 
         }

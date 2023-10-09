@@ -99,10 +99,27 @@ public class Quest {
         return targets;
     }
 
+    /**
+     * Sets a player's progress for this quest. <br>
+     * This function show a message in chat if a player finished this quest
+     * @param player The player to set the progress for
+     * @param progress The progress to set
+     */
     public void setPlayerProgress(Player player, int progress){
         boolean isInital = playerProgress.containsKey(player) && !hasFinished(player);
         playerProgress.put(player, progress);
-        if(hasFinished(player) && isInital) Bukkit.getServer().getPluginManager().callEvent(new QuestFinishedEvent(player, this));
+        if(hasFinished(player) && isInital) Bukkit.getServer().getPluginManager().callEvent(new QuestFinishedEvent(player, this, true));
+    }
+
+    /**
+     * Sets the players progress but if player finishes this quest
+     * it doesn't show the message in chat
+     * @param player The player to set the progress for
+     * @param progress The new progress
+     */
+    public void setSilentPlayerProgress(Player player, int progress){
+        playerProgress.put(player, progress);
+        if(hasFinished(player)) Bukkit.getServer().getPluginManager().callEvent(new QuestFinishedEvent(player, this, false));
     }
 
     public void removePlayerProgress(Player player){

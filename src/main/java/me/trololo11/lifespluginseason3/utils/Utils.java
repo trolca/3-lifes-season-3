@@ -1,14 +1,12 @@
 package me.trololo11.lifespluginseason3.utils;
 
+import me.trololo11.lifespluginseason3.cardstuff.CardType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.CraftingInventory;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -16,6 +14,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Utils {
 
@@ -103,6 +102,14 @@ public class Utils {
         return item;
     }
 
+    public static ItemStack createItem(Material material, String name, String localizedName, List<String> lore){
+        ItemStack item = new ItemStack(material);
+
+        item.setItemMeta(getItemMeta(item.getItemMeta(), name, localizedName, lore));
+
+        return item;
+    }
+
     public static ItemStack createPlayerHead(OfflinePlayer owner, String name, String localizedName, String... lore){
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
 
@@ -165,11 +172,12 @@ public class Utils {
     }
 
 
-    private static ItemMeta getItemMeta(ItemMeta itemMeta, String displayName, String localizedName, ArrayList<String> lore){
+    private static ItemMeta getItemMeta(ItemMeta itemMeta, String displayName, String localizedName, List<String> lore){
 
         itemMeta.setDisplayName(Utils.chat(displayName));
         itemMeta.setLocalizedName(localizedName);
         itemMeta.setLore(lore);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
 
         return itemMeta;
     }
@@ -230,6 +238,14 @@ public class Utils {
             inventory.addItem(itemStack);
         }
 
+    }
+
+    public static boolean checkCardItem(ItemStack item, CardType cardType){
+        if(item.getType() == Material.AIR) return false;
+        if(!item.hasItemMeta()) return false;
+        if(!item.getItemMeta().hasLocalizedName()) return false;
+
+        return item.getItemMeta().getLocalizedName().startsWith(cardType.toString().toLowerCase());
     }
 
 

@@ -36,18 +36,27 @@ public class MainLifesMenu extends Menu {
 
     @Override
     public void setMenuItems(Player player) {
+
+        boolean hasFinishedWeekly = questManager.getPlayerFinishedQuests(player, QuestType.WEEKLY) >= questManager.getCorrespondingQuestArray(QuestType.WEEKLY).size();
+        boolean hasFinishedDaily = questManager.getPlayerFinishedQuests(player, QuestType.DAILY) >= questManager.getCorrespondingQuestArray(QuestType.DAILY).size();
+        boolean hasFinishedCard = questManager.getPlayerFinishedQuests(player, QuestType.CARD) >= questManager.getCorrespondingQuestArray(QuestType.CARD).size();
+
         ItemStack whiteFiller = Utils.createItem(Material.WHITE_STAINED_GLASS_PANE, " ", "filler");
         ItemStack blackFiller = Utils.createItem(Material.BLACK_STAINED_GLASS_PANE, " ", "filler");
         ItemStack dailyQuests = Utils.createItem(Material.ENCHANTED_BOOK, "&c&lQuesty dzienne", "daily",
                 "&fQuesty które sie restartują codziennie!", "&f&o(Dostajesz z nich kawałek życia)", "",
-                "&bPozostały czas: "+ questManager.getQuestPageTimeText(QuestType.DAILY));
+                "&bPozostały czas: "+ questManager.getQuestPageTimeText(QuestType.DAILY),
+                hasFinishedDaily ? "&a&lSkończone!" : "&2&lProgress: "+ questManager.getPlayerFinishedQuests(player, QuestType.DAILY) + "/" + questManager.getActiveDailyQuests().size());
+
         ItemStack weeklyQuests = Utils.createItem(Material.ENCHANTED_BOOK, "&e&lQuesty tygodniowe", "weekly",
                 "&fQuesty które sie restartują co tydzień!", "&f&o(Dostajesz z nich kawałek karty odrodzenia)", "",
-                "&bPozostały czas: " + questManager.getQuestPageTimeText(QuestType.WEEKLY));
+                "&bPozostały czas: " + questManager.getQuestPageTimeText(QuestType.WEEKLY),
+                hasFinishedWeekly ? "&a&lSkończone!" : "&2&lProgress: "+ questManager.getPlayerFinishedQuests(player, QuestType.WEEKLY) + "/" + questManager.getActiveWeeklyQuests().size());
 
         ItemStack cardQuests = Utils.createItem(Material.PAPER, "&b&lQuesty do karty", "card",
                 "&fQuesty za które dostajesz randomową karte ulepszenia!", "&f&o(Restartują sie co tydzień)", "",
-                "&bPozostały czas: "+ questManager.getQuestPageTimeText(QuestType.CARD));
+                "&bPozostały czas: "+ questManager.getQuestPageTimeText(QuestType.CARD),
+                hasFinishedCard ? "&a&lSkończone!" : "&2&lProgress: "+ questManager.getPlayerFinishedQuests(player, QuestType.CARD) + "/" + questManager.getActiveCardQuests().size());
 
         ItemStack statistics = Utils.createPlayerHead(player, "&2Statystyki "+ player.getName(), "statistics");
         ItemStack back = Utils.createItem(Material.RED_DYE, "&c&lPowrót", "back");

@@ -12,9 +12,12 @@ public class QuestFinishedEvent extends Event {
     private final Player player;
     private final Quest quest;
 
-    public QuestFinishedEvent(Player player, Quest quest){
+    private final boolean showMessage;
+
+    public QuestFinishedEvent(Player player, Quest quest, boolean showMessage){
         this.player = player;
         this.quest = quest;
+        this.showMessage = showMessage;
     }
 
     public Player getPlayer() {
@@ -23,6 +26,10 @@ public class QuestFinishedEvent extends Event {
 
     public Quest getQuest() {
         return quest;
+    }
+
+    public boolean getShowMessage() {
+        return showMessage;
     }
 
     @Override

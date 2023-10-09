@@ -45,6 +45,10 @@ public abstract class CardClass {
         cardItem.setItemMeta(cardMeta);
     }
 
+    /**
+     * Creates the description for the card item. <br>
+     * <b>You should use the {@link CardClass#description} array list!</b>
+     */
     protected abstract void createDescription();
 
     public abstract String getName();

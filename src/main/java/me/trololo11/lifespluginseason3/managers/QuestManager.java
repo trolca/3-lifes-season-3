@@ -234,7 +234,7 @@ public class QuestManager {
             throw new RuntimeException();
         }
 
-        if(ranQuestsLenght > count) count = ranQuestsLenght;
+        if(ranQuestsLenght < count) count = ranQuestsLenght;
 
         String activeQuestsPath = plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/active-quests";
         resetAllActiveQuestFiles(currQuestArray, plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType), activeQuestsPath);
