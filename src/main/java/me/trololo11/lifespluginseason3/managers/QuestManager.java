@@ -43,6 +43,7 @@ public class QuestManager {
     private final HashMap<Quest, String> questFilePaths = new HashMap<>();
     private final HashMap<Player, HashMap<QuestType, Integer> > playerAmountOfFinishedQuests = new HashMap<>();
     private final HashMap<QuestType, Integer> questsPerAwards = new HashMap<>();
+    private final HashMap<QuestType, HashMap<String, Quest>> databaseNameQuestsHashMap = new HashMap<>();
 
     private final ArrayList<Quest> allQuests = new ArrayList<>();
     private final ArrayList<Quest> allActiveQuests = new ArrayList<>();
@@ -52,12 +53,18 @@ public class QuestManager {
 
 
     public QuestManager(DatabaseManager databaseManager, QuestsTimingsManager questsTimingsManager, QuestsAwardsManager questsAwardsManager){
+
+        for(QuestType questType : QuestType.values()){
+            databaseNameQuestsHashMap.put(questType, new HashMap<>());
+        }
+
         this.databaseManager = databaseManager;
         this.questsTimingsManager = questsTimingsManager;
         this.questsAwardsManager = questsAwardsManager;
         setupAllQuests();
         try {
             checkPageQuestTimings();
+            checkQuests();
         } catch (IOException | SQLException e) {
             plugin.logger.warning("Error while getting the page timings for quests!");
             if(plugin.isDetailedErrors()) e.printStackTrace(System.out);
@@ -97,6 +104,43 @@ public class QuestManager {
     }
 
     /**
+     * This function checks all of the active quests if they have a
+     * coressponding column in the sql database
+     * @throws SQLException On error with the connection to the database
+     * @throws IOException On error while getting the tier of the quests
+     */
+    private void checkQuests() throws SQLException, IOException {
+
+        ArrayList<Quest> questsToDeletion = new ArrayList<>();
+
+        for(QuestType questType : QuestType.values()){
+            ArrayList<Quest> questArray = getCorrespondingQuestArray(questType);
+            ArrayList<String> columns = databaseManager.getAllQuestColumnNames(questType);
+
+            String questsFolder = plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType);
+            String activeQuestsPath = plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/active-quests";
+
+            for(Quest quest : questArray){
+
+                if(!columns.contains(quest.getDatabaseName())) {
+                    moveQuest(quest, questsFolder, activeQuestsPath);
+                    questsToDeletion.add(quest);
+                }
+            }
+
+        }
+
+        //We have to remove these quests seperetly because we cannot modify and go through the array at the same time
+        for(Quest quest : questsToDeletion){
+            allQuests.add(quest);
+            listenerTypesQuests.get(quest.getListenerType()).remove(quest);
+            getCorrespondingQuestArray(quest.getQuestType()).remove(quest);
+            allActiveQuests.remove(quest);
+        }
+
+    }
+
+    /**
      * This function sorts quests by their {@link ListenerType} to ArrayLists and
      * puts them into an internal array to make the listening for quests
      * easier
@@ -115,7 +159,6 @@ public class QuestManager {
      */
     public void calculatePlayerFinishedQuests(Player player){
 
-        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
         HashMap<QuestType, Integer> playerAmountCompleted = playerAmountOfFinishedQuests.getOrDefault(player, new HashMap<>());
 
         for(QuestType questType : QuestType.values()){
@@ -237,9 +280,11 @@ public class QuestManager {
         if(ranQuestsLenght < count) count = ranQuestsLenght;
 
         String activeQuestsPath = plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/active-quests";
+
         resetAllActiveQuestFiles(currQuestArray, plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType), activeQuestsPath);
         databaseManager.removeQuestTable(questType);
         databaseManager.resetPlayerTakenAwards(questType);
+        databaseManager.removeAllSkippedQuests(questType);
         currQuestArray.clear();
 
         for(int i=0; i < count; i++){
@@ -294,19 +339,38 @@ public class QuestManager {
      */
     private void resetAllActiveQuestFiles(ArrayList<Quest> activeQuests, String questsFolderPath, String activeQuestsPath) throws IOException {
 
+        for(Quest quest : activeQuests){
+            moveQuest(quest, questsFolderPath, activeQuestsPath);
+        }
+        //We clone the array list bcs we are gonna be modifing this array list
+        @SuppressWarnings("unchecked")
+        ArrayList<Quest> cloneActiveQuests = (ArrayList<Quest>) activeQuests.clone();
+
+        for(Quest quest : cloneActiveQuests){
+            allQuests.add(quest);
+            listenerTypesQuests.get(quest.getListenerType()).remove(quest);
+            getCorrespondingQuestArray(quest.getQuestType()).remove(quest);
+            allActiveQuests.remove(quest);
+        }
+
+    }
+
+    /**
+     * Moves the provided quest from the active quests folder to the normal quest folder. <br>
+     * <b> This doesn't remove it from the active quests arrayLists and adds it to the allQuests array list! </b>
+     * @param quest The quest to move
+     * @param questsFolderPath The folder of the type of quests
+     * @param activeQuestsPath The active folder of the quests
+     * @throws IOException While getting the tier of the quests finds unsucessfull
+     */
+    private void moveQuest(Quest quest, String questsFolderPath, String activeQuestsPath) throws IOException {
         YamlConfiguration tierConfig = YamlConfiguration.loadConfiguration(new File(activeQuestsPath + "/curr-tier.yml"));
         int tier = tierConfig.getInt("tier");
         if(tier == 0) tier = 1;
 
-        for(Quest quest : activeQuests){
-            allQuests.add(quest);
-            listenerTypesQuests.get(quest.getListenerType()).remove(quest);
-            allActiveQuests.remove(quest);
-            File file = new File(questFilePaths.get(quest));
-            Files.copy(file.toPath(), Path.of(questsFolderPath + "/tier-" + tier + "/" + file.getName()), StandardCopyOption.REPLACE_EXISTING);
-            file.delete();
-        }
-
+        File file = new File(questFilePaths.get(quest));
+        Files.copy(file.toPath(), Path.of(questsFolderPath + "/tier-" + tier + "/" + file.getName()), StandardCopyOption.REPLACE_EXISTING);
+        file.delete();
     }
 
     /**
@@ -326,6 +390,7 @@ public class QuestManager {
             if(file.getName().equalsIgnoreCase("curr-tier.yml")) continue;
 
             Quest quest = createQuest(file, questType);
+            if(quest == null) continue;
             createdQuests.add(quest);
         }
 
@@ -344,10 +409,20 @@ public class QuestManager {
         String name = config.getString("quest-name");
         ArrayList<String> description = (ArrayList<String>) config.getStringList("description");
         String databaseName = config.getString("database-name");
+
+        //wrong format of database name is very dangerous so we need to check it
         if(databaseName == null || databaseName.isBlank()){
             plugin.logger.severe("Couldn't find the database name for the quest " + questFile.getName());
             throw new RuntimeException();
+        }else if(databaseName.length() > 100){
+            plugin.logger.warning("[3LifesPluginS3] The database name for the quest "+ questFile.getName() + " is too long! (100 characters max)");
+            return null;
+        }else if(databaseName.contains("-") || databaseName.contains(" ") || databaseName.contains("uuid")){
+            plugin.logger.warning("[3LifesPluginS3] The database name for the quest "+ questFile.getName() + " contains illegal characters!");
+            plugin.logger.warning("[3LifesPluginS3] Illegal characters: (- and space and the word \"uuid\")");
+            return null;
         }
+
         Material icon;
         try {
            icon = Material.valueOf(config.getString("icon").toUpperCase());
@@ -355,6 +430,7 @@ public class QuestManager {
             plugin.logger.warning("Couldn't find the icon for the quest "+ databaseName);
             icon = Material.RED_DYE;
         }
+
         boolean showProgress = config.getBoolean("show-progress");
         int maxProgress = config.getInt("max-progress");
         ListenerType listenerType;
@@ -374,8 +450,17 @@ public class QuestManager {
 
         ArrayList<Object> targets = getTargets(listenerType, stringTargets);
 
+        //And also there cannot be any duplicates lol
+        if(databaseNameQuestsHashMap.get(questType).containsKey(databaseName)){
+            plugin.logger.warning("[3LifesPluginS3] The database name of quest "+ questFile.getName() + " in the "+questType.toString().toLowerCase()+" folder already exists!");
+            plugin.logger.warning("[3LifesPluginS3] Please create unique database names for every quest!");
+            plugin.logger.warning("[3LifesPluginS3] The duplicate database name: \""+ databaseName+"\"");
+            return null;
+        }
+
         Quest newQuest = new Quest(name, databaseName, maxProgress, showProgress, icon, description, questType,listenerType, targets);
 
+        databaseNameQuestsHashMap.get(questType).put(databaseName, newQuest);
         questFilePaths.put(newQuest, questFile.getAbsolutePath());
 
         return newQuest;
@@ -389,6 +474,7 @@ public class QuestManager {
     /**
      * This function transforms every target which is saved as a string
      * to a specified object that the {@link ListenerType} provided requries. <br><br>
+     *
      * For example if we had a quest with the {@link ListenerType#BREAK_BLOCKS} this function would transform
      * the list of targets which are a string to a new {@link Material} object
      * @param listenerType The listener type of the quest
@@ -527,6 +613,9 @@ public class QuestManager {
         return activeCardQuests;
     }
 
+    public Quest getQuestByDatabaseName(QuestType questType, String databaseName){
+        return databaseNameQuestsHashMap.get(questType).get(databaseName);
+    }
     public int getQuestsPerAwards(QuestType questType){
         return questsPerAwards.get(questType);
     }

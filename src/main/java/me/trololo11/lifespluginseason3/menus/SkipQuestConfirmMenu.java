@@ -62,9 +62,10 @@ public class SkipQuestConfirmMenu extends Menu {
             case LIME_STAINED_GLASS_PANE -> {
                 if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("yes")) return;
 
-                quest.setSilentPlayerProgress(player, quest.getMaxProgress());
                 player.sendMessage(Utils.chat("&ePomyślnie pominięto quest &f["+quest.getName()+"&f]"));
                 player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+
+                quest.setSilentPlayerProgress(player, quest.getMaxProgress());
                 player.getInventory().setItemInMainHand(null);
                 player.closeInventory();
             }

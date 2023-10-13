@@ -72,6 +72,7 @@ public class DatabaseManager {
 
         statement.execute("CREATE TABLE IF NOT EXISTS player_lifes(uuid varchar(36) primary key not null, lifes tinyint not null, is_revived bool not null)");
         statement.execute("CREATE TABLE IF NOT EXISTS quests_awards_data(uuid varchar(36) primary key, daily_quests tinyint not null, weekly_quests tinyint not null, card_quests tinyint not null)");
+        statement.execute("CREATE TABLE IF NOT EXISTS skipped_quests(quest_name varchar(100), quest_type varchar(100))");
 
         statement.close();
 
@@ -309,6 +310,7 @@ public class DatabaseManager {
             statement.setInt( i+2, activeQuests.get(i).getPlayerProgress(player));
         }
 
+
         statement.executeUpdate();
 
         statement.close();
@@ -430,6 +432,121 @@ public class DatabaseManager {
         return awards;
     }
 
+
+    public void setQuestProgressForAll(Quest quest, int newProgress) throws SQLException {
+        String sql = "UPDATE "+getQuestTableName(quest.getQuestType()) + " SET "+quest.getDatabaseName()+" = ?";
+
+        Connection connection = getConnection();
+        PreparedStatement statement =  connection.prepareStatement(sql);
+
+        statement.setInt(1, newProgress);
+
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
+    }
+
+    /**
+     * Adds a database name of quest to the skipped quests table
+     * which represents all of the quests that are currently skipped for everyone.
+     * @param quest The quest to add to the skipped quests
+     */
+    public void addSkippedQuest(Quest quest) throws SQLException {
+        String sql = "INSERT INTO skipped_quests(quest_name, quest_type) VALUES (?, ?)";
+
+        Connection connection = getConnection();
+        PreparedStatement statement =  connection.prepareStatement(sql);
+
+        statement.setString(1, quest.getDatabaseName());
+        statement.setString(2, quest.getQuestType().toString());
+
+        statement.executeUpdate();
+
+        plugin.addSkippedQuest(quest);
+
+        statement.close();
+        connection.close();
+    }
+
+    /**
+     * Gets all of the quests that should be skipped for everyone
+     * @param questManager A instance of {@link QuestManager}
+     * @return An array list of all quest that are skipped
+     */
+    public ArrayList<Quest> getAllSkippedQuests(QuestManager questManager) throws SQLException {
+        String sql = "SELECT * FROM skipped_quests";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        ArrayList<Quest> allSkippedQuests = new ArrayList<>();
+        ResultSet results = statement.executeQuery();
+
+        while(results.next()){
+            QuestType questType = QuestType.valueOf(results.getString("quest_type"));
+            Quest quest = questManager.getQuestByDatabaseName(questType,results.getString("quest_name"));
+
+            if(quest != null) allSkippedQuests.add(quest);
+        }
+
+        return allSkippedQuests;
+    }
+
+    /**
+     * Removes every skipped quest saved in this table that have the
+     * specified {@link QuestType}.
+     * @param questType The quest type to delete
+     */
+    public void removeAllSkippedQuests(QuestType questType) throws SQLException {
+        String sql = "DELETE FROM skipped_quests WHERE quest_type = ?";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setString(1, questType.toString());
+
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
+    }
+
+    /**
+     * Removes every definition of skipped quest from the table.
+     */
+    public void removeAllSkippedQuests() throws SQLException {
+        String sql = "DELETE FROM skipped_quests";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
+    }
+
+    public ArrayList<String> getAllQuestColumnNames(QuestType questType) throws SQLException {
+        String sql = "SHOW COLUMNS FROM "+getQuestTableName(questType);
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        ResultSet results = statement.executeQuery();
+        ArrayList<String> columnNames = new ArrayList<>();
+        results.next(); //We skip the first column bcs we know its gonna be the uuid column which is uselles info
+
+        while (results.next()) {
+            columnNames.add(results.getString(1));
+        }
+
+        statement.close();
+        connection.close();
+
+        return columnNames;
+    }
+
     private String getQuestTableName(QuestType questTableType){
         switch (questTableType){
             case DAILY -> {
@@ -446,6 +563,17 @@ public class DatabaseManager {
             }
         }
     }
+
+    private String getFormattedQuestTypes(QuestType[] questTypes){
+        StringBuilder formattedString = new StringBuilder();
+
+        for(QuestType questType : questTypes){
+            formattedString.append('"').append(questType).append('"');
+        }
+
+        return formattedString.toString();
+    }
+
 
 
 }

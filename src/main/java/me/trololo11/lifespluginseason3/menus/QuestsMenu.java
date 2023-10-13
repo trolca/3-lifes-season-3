@@ -170,7 +170,8 @@ public class QuestsMenu extends Menu {
             case CARD ->{
                 int playerTaken = questsAwardsManager.getAwardsTakenForPlayer(player, questType);
                 item = new ItemStack(playerTaken >= 1 ? Material.BARRIER : Material.GHAST_TEAR );
-                if(playerTaken < 1 && questManager.getPlayerFinishedQuests(player, questType) < questManager.getQuestsPerAwards(questType)) break;
+
+                if(playerTaken < 1 && questManager.getPlayerFinishedQuests(player, questType) < questManager.getCorrespondingQuestArray(QuestType.CARD).size()) break;
 
                 if(playerTaken >= 1){
                     ItemMeta blockedMeta = item.getItemMeta();

@@ -8,6 +8,7 @@ import me.trololo11.lifespluginseason3.listeners.MenuManager;
 import me.trololo11.lifespluginseason3.listeners.QuestFinishedListener;
 import me.trololo11.lifespluginseason3.listeners.cardlisteners.GiveLifeCardUseListener;
 import me.trololo11.lifespluginseason3.listeners.cardlisteners.SkipQuestsCardListener;
+import me.trololo11.lifespluginseason3.listeners.cardlisteners.SkipRandomQuestListener;
 import me.trololo11.lifespluginseason3.listeners.cardlisteners.TakeLifeCardListener;
 import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsAwardsDataSetup;
 import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsProgressDataSetup;
@@ -19,6 +20,7 @@ import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerChangeLife
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerDeathListener;
 import me.trololo11.lifespluginseason3.listeners.datasetups.PlayerLifesDataSetup;
 import me.trololo11.lifespluginseason3.managers.*;
+import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.QuestType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -42,7 +44,7 @@ public final class LifesPlugin extends JavaPlugin {
     private QuestsProgressDataSetup questsProgressDataSetup;
     private QuestsAwardsManager questsAwardsManager;
     private CardManager cardManager;
-
+    private ArrayList<Quest> allSkippedQuests;
 
     private boolean detailedErrors;
     private int tier=1;
@@ -71,6 +73,7 @@ public final class LifesPlugin extends JavaPlugin {
             databaseManager.initialize();
             lifesManager = new LifesManager(databaseManager.getAllDeadPlayers(), databaseManager);
 
+
         } catch (SQLException e) {
             logger.severe("Error while connecting to the database");
             logger.severe("Make sure the info in config is accurate!");
@@ -92,6 +95,12 @@ public final class LifesPlugin extends JavaPlugin {
         questsProgressDataSetup = new QuestsProgressDataSetup(databaseManager, questManager);
         cardManager = new CardManager();
 
+        try{
+            allSkippedQuests = databaseManager.getAllSkippedQuests(questManager);
+        }catch (SQLException e){
+            throw new RuntimeException("Error while getting the skipped quests from the database");
+        }
+
         teamsManager.registerEverything();
 
         getServer().getPluginManager().registerEvents(new PlayerChangeLifesListener(lifesManager, teamsManager), this);
@@ -109,6 +118,7 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new TakeLifeCardListener(cardManager, lifesManager, recipesManager), this);
         getServer().getPluginManager().registerEvents(new GiveLifeCardUseListener(cardManager, lifesManager), this);
         getServer().getPluginManager().registerEvents(new SkipQuestsCardListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new SkipRandomQuestListener(questManager, databaseManager), this);
 
         try {
             setupData();
@@ -126,7 +136,7 @@ public final class LifesPlugin extends JavaPlugin {
         getCommand("lifesmenu").setExecutor(new LifesMenuCommand(questManager, recipesManager, questsAwardsManager));
         getCommand("setprogress").setExecutor(new SetProgressCommand(questManager));
         getCommand("getallcards").setExecutor(new GetAllCardsItems(cardManager));
-        getCommand("isinvfull").setExecutor(new InvFullCommand());
+        getCommand("isinvfull").setExecutor(new InvFullCommand(databaseManager));
 
         getCommand("setlifes").setTabCompleter(new SetLifesTabCompleter());
 
@@ -263,6 +273,14 @@ public final class LifesPlugin extends JavaPlugin {
         if(tier < 1) tier = 1;
         else if (tier > 3) tier = 3;
         this.tier = tier;
+    }
+
+    public ArrayList<Quest> getAllSkippedQuests(){
+        return allSkippedQuests;
+    }
+
+    public void addSkippedQuest(Quest quest){
+        allSkippedQuests.add(quest);
     }
 
     public static LifesPlugin getPlugin(){

@@ -9,6 +9,8 @@ commands:
     description: "Sets player's amount of lifes"
   takelife:
     description: "Takes your life!"
+    aliases:
+      - "kys"
   lifesmenu:
     description: "Opens the main lifes menu"
   setprogress:

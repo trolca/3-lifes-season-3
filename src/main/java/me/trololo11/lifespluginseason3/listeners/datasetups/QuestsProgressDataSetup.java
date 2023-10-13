@@ -1,9 +1,13 @@
 package me.trololo11.lifespluginseason3.listeners.datasetups;
 
+import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.managers.DatabaseManager;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.QuestType;
+import me.trololo11.lifespluginseason3.utils.Utils;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,11 +21,13 @@ import java.util.HashMap;
 
 public class QuestsProgressDataSetup implements Listener {
 
+    private LifesPlugin plugin = LifesPlugin.getPlugin();
     private DatabaseManager databaseManager;
     private QuestManager questManager;
     public QuestsProgressDataSetup(DatabaseManager databaseManager, QuestManager questManager){
         this.databaseManager = databaseManager;
         this.questManager = questManager;
+
     }
 
     @EventHandler
@@ -31,6 +37,19 @@ public class QuestsProgressDataSetup implements Listener {
             setupPlayerQuestsProgress(questType, player);
         }
         questManager.calculatePlayerFinishedQuests(player);
+
+        //Skips all of the quests that are skipped for everyone
+        for(Quest quest : plugin.getAllSkippedQuests()){
+
+            if(!quest.hasFinished(player)){
+                quest.setSilentPlayerProgress(player, quest.getMaxProgress());
+                player.sendMessage(Utils.chat("&eQuest &f["+quest.getName()+"&f] &ezostał pominięty!"));
+                player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+            }
+
+        }
+
+
     }
 
     @EventHandler

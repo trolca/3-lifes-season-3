@@ -29,9 +29,12 @@ public class SkipQuestMenu extends Menu {
     public SkipQuestMenu(String title, QuestType questType, QuestManager questManager){
         this.title = title;
         this.questManager = questManager;
+        this.questType = questType;
         //We are 100% sure that it's gonna be an array list of quest so the warning was useless lol
         if(questType != null) questSkip = (ArrayList<Quest>) questManager.getCorrespondingQuestArray(questType).clone();
         else questSkip = (ArrayList<Quest>) questManager.getAllActiveQuests().clone();
+
+
     }
 
     @Override
@@ -45,6 +48,7 @@ public class SkipQuestMenu extends Menu {
     }
     @Override
     public void setMenuItems(Player player) {
+
         ItemStack darkFiller = Utils.createItem(Material.GRAY_STAINED_GLASS_PANE, " ", "filler");
         ItemStack back = Utils.createItem(Material.RED_DYE, "&c&lWyjdź", "back");
 
@@ -96,7 +100,7 @@ public class SkipQuestMenu extends Menu {
         }
 
         if(localizedName.startsWith("quest")){
-            Quest quest = getQuestFromDatabaseName(localizedName.substring(6));
+            Quest quest = questManager.getQuestByDatabaseName(questType ,localizedName.substring(6));
 
             if(quest == null){
                 player.closeInventory();
@@ -109,12 +113,4 @@ public class SkipQuestMenu extends Menu {
 
     }
 
-    private Quest getQuestFromDatabaseName(String name){
-
-        for(Quest quest : questSkip){
-            if(quest.getDatabaseName().equalsIgnoreCase(name)) return quest;
-        }
-
-        return null;
-    }
 }

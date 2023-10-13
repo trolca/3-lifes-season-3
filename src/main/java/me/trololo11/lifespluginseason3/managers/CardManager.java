@@ -2,10 +2,7 @@ package me.trololo11.lifespluginseason3.managers;
 
 import me.trololo11.lifespluginseason3.cardstuff.CardClass;
 import me.trololo11.lifespluginseason3.cardstuff.CardType;
-import me.trololo11.lifespluginseason3.cardstuff.cardtypes.DailyQuestSkipCard;
-import me.trololo11.lifespluginseason3.cardstuff.cardtypes.GiveLifeCard;
-import me.trololo11.lifespluginseason3.cardstuff.cardtypes.TakeLifeCard;
-import me.trololo11.lifespluginseason3.cardstuff.cardtypes.WeeklyQuestSkipCard;
+import me.trololo11.lifespluginseason3.cardstuff.cardtypes.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +21,7 @@ public class CardManager {
         allCards.add(new TakeLifeCard());
         allCards.add(new DailyQuestSkipCard());
         allCards.add(new WeeklyQuestSkipCard());
+        allCards.add(new RandomQuestSkipCard());
 
         for(CardClass card : allCards){
             cardClassHashMap.put(card.getCardType(), card);
