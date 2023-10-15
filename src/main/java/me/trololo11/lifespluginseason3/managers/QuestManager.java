@@ -342,7 +342,7 @@ public class QuestManager {
         for(Quest quest : activeQuests){
             moveQuest(quest, questsFolderPath, activeQuestsPath);
         }
-        //We clone the array list bcs we are gonna be modifing this array list
+        //We clone the array list bcs we are gonna be modifing the other array list
         @SuppressWarnings("unchecked")
         ArrayList<Quest> cloneActiveQuests = (ArrayList<Quest>) activeQuests.clone();
 

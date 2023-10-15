@@ -23,14 +23,9 @@ public class InvFullCommand implements CommandExecutor {
 
         if(!(sender instanceof Player)) return true;
 
-        try {
-            databaseManager.getAllQuestColumnNames(QuestType.WEEKLY);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-//        Player player = (Player) sender;
-//
-//        player.sendMessage(Utils.isPlayerInvFull(player.getInventory()) + "");
+        Player player = (Player) sender;
+
+        player.openInventory(player.getInventory());
 
         return true;
     }

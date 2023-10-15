@@ -6,5 +6,6 @@ public enum CardType {
     TAKE_LIFE,
     DAILY_SKIP,
     WEEKLY_SKIP,
-    RANDOM_SKIP
+    RANDOM_SKIP,
+    GOLD_CARD
 }
