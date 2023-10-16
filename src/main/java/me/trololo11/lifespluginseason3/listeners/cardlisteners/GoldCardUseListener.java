@@ -1,6 +1,7 @@
 package me.trololo11.lifespluginseason3.listeners.cardlisteners;
 
 import me.trololo11.lifespluginseason3.cardstuff.CardType;
+import me.trololo11.lifespluginseason3.menus.GetLifeMenu;
 import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,6 +23,6 @@ public class GoldCardUseListener implements Listener {
         if(!Utils.checkCardItem(item, CardType.GOLD_CARD)) return;
 
 
-
+        new GetLifeMenu().open(player);
     }
 }

@@ -248,5 +248,18 @@ public class Utils {
         return item.getItemMeta().getLocalizedName().startsWith(cardType.toString().toLowerCase());
     }
 
+    public static boolean containsIntArray(int[] array, int checkInt){
+
+        for(int i=0; i < array.length; i++){
+            int num = array[i];
+
+            if(num == checkInt) return true;
+
+        }
+
+        return false;
+
+    }
+
 
 }

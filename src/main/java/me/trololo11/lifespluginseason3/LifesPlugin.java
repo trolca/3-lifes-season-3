@@ -6,10 +6,7 @@ import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.listeners.CustomItemsCraftingFix;
 import me.trololo11.lifespluginseason3.listeners.MenuManager;
 import me.trololo11.lifespluginseason3.listeners.QuestFinishedListener;
-import me.trololo11.lifespluginseason3.listeners.cardlisteners.GiveLifeCardUseListener;
-import me.trololo11.lifespluginseason3.listeners.cardlisteners.SkipQuestsCardListener;
-import me.trololo11.lifespluginseason3.listeners.cardlisteners.SkipRandomQuestListener;
-import me.trololo11.lifespluginseason3.listeners.cardlisteners.TakeLifeCardListener;
+import me.trololo11.lifespluginseason3.listeners.cardlisteners.*;
 import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsAwardsDataSetup;
 import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsProgressDataSetup;
 import me.trololo11.lifespluginseason3.listeners.questslisteners.BreakBlocksListener;
@@ -119,6 +116,7 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GiveLifeCardUseListener(cardManager, lifesManager), this);
         getServer().getPluginManager().registerEvents(new SkipQuestsCardListener(questManager), this);
         getServer().getPluginManager().registerEvents(new SkipRandomQuestListener(questManager, databaseManager), this);
+        getServer().getPluginManager().registerEvents(new GoldCardUseListener(), this);
 
         try {
             setupData();
