@@ -34,6 +34,7 @@ public class RecipesManager {
     private ItemStack reviveCardItem;
     private ItemStack lifeShardItem;
     private ItemStack reviveShardItem;
+    private ItemStack goldLifeItem;
 
     private ShapedRecipe lifesRecipe;
     private ShapedRecipe reviveCardRecipe;
@@ -56,6 +57,7 @@ public class RecipesManager {
         reviveCardItem = new ItemStack(Material.SCUTE);
         lifeShardItem = new ItemStack(Material.GOLD_NUGGET);
         reviveShardItem = new ItemStack(Material.IRON_NUGGET);
+        goldLifeItem = new ItemStack(Material.SCUTE);
 
         ItemMeta heartMeta = lifeItem.getItemMeta();
         heartMeta.setDisplayName(ChatColor.RED + ChatColor.BOLD.toString() + "Życie");
@@ -69,6 +71,17 @@ public class RecipesManager {
         playerHeartMeta.setLore(lore);
         playerHeartMeta.setCustomModelData(8760002);
         playerHeartMeta.setLocalizedName("player_life");
+
+        ItemMeta goldLifeMeta = goldLifeItem.getItemMeta();
+        goldLifeMeta.setDisplayName(ChatColor.YELLOW + ChatColor.BOLD.toString() + "Złote życie");
+
+        lore.clear();
+        lore.add(ChatColor.WHITE + "Dodaje 2 życia");
+        lore.add(ChatColor.WHITE + "Użyj PPM by użyć!");
+
+        goldLifeMeta.setLore(lore);
+        goldLifeMeta.setCustomModelData(8760003);
+        goldLifeMeta.setLocalizedName("gold_life");
 
         ItemMeta reviveMeta = reviveCardItem.getItemMeta();
         reviveMeta.setDisplayName(ChatColor.AQUA + ChatColor.BOLD.toString() + "Karta odrodzenia");
@@ -96,6 +109,7 @@ public class RecipesManager {
         playerLifeItem.setItemMeta(playerHeartMeta);
         lifeShardItem.setItemMeta(heartShardMeta);
         reviveShardItem.setItemMeta(reviveCardShardMeta);
+        goldLifeItem.setItemMeta(goldLifeMeta);
     }
 
     /**
@@ -162,15 +176,15 @@ public class RecipesManager {
      * @return The new non-stackable revive card.
      */
     public ItemStack getReviveCardItem() {
-        ItemStack reviveItemCopy = reviveCardItem.clone();
-        ItemMeta reviveMeta = reviveItemCopy.getItemMeta();
-        reviveMeta.setLocalizedName(reviveMeta.getLocalizedName()+"_"+UUID.randomUUID());
-
-        reviveItemCopy.setItemMeta(reviveMeta);
-
-        return reviveItemCopy;
+        return getReviveCardItem(UUID.randomUUID());
     }
 
+    /**
+     * Returns a new revive card item with the specified uuid in it's
+     * localized name.
+     * @param uuid The uuid to set
+     * @return The new revive card item
+     */
     public ItemStack getReviveCardItem(UUID uuid) {
         ItemStack reviveItemCopy = reviveCardItem.clone();
         ItemMeta reviveMeta = reviveItemCopy.getItemMeta();
@@ -179,6 +193,16 @@ public class RecipesManager {
         reviveItemCopy.setItemMeta(reviveMeta);
 
         return reviveItemCopy;
+    }
+
+    public ItemStack getGoldLifeItem(){
+        ItemStack goldLifeCopy = goldLifeItem.clone();
+        ItemMeta goldLifeMeta = goldLifeCopy.getItemMeta();
+        goldLifeMeta.setLocalizedName(goldLifeMeta.getLocalizedName() + "_" + UUID.randomUUID());
+
+        goldLifeCopy.setItemMeta(goldLifeMeta);
+
+        return goldLifeCopy;
     }
 
     public ItemStack getLifeShardItem() {

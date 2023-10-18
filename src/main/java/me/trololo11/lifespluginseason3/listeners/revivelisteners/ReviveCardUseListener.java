@@ -4,6 +4,7 @@ import me.trololo11.lifespluginseason3.managers.DatabaseManager;
 import me.trololo11.lifespluginseason3.managers.LifesManager;
 import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,9 +36,14 @@ public class ReviveCardUseListener implements Listener {
         String playerName = reviveCard.getItemMeta().getLocalizedName().split("_")[2].split(":")[1];
         Player player = e.getPlayer();
 
-        if(playerName.equalsIgnoreCase("null")){
+        Block playerTargetBlock = player.getTargetBlockExact(5);
+
+
+        if(playerName.equalsIgnoreCase("null") && ( playerTargetBlock == null || playerTargetBlock.getType() != Material.ANVIL) ){
             player.sendMessage(ChatColor.RED + "Ta karta nie ma nikogo przypisanego!");
             player.sendMessage(ChatColor.RED + "Zmień nazwe w kowadle na gracza którego chcesz wskrzesić i użyj tej karty!");
+            return;
+        }else if(playerTargetBlock != null && playerTargetBlock.getType() == Material.ANVIL ){
             return;
         }
 

@@ -4,6 +4,7 @@ import me.trololo11.lifespluginseason3.commands.*;
 import me.trololo11.lifespluginseason3.commands.tabcompleters.SetLifesTabCompleter;
 import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.listeners.CustomItemsCraftingFix;
+import me.trololo11.lifespluginseason3.listeners.GoldLifeMenuExitEvent;
 import me.trololo11.lifespluginseason3.listeners.MenuManager;
 import me.trololo11.lifespluginseason3.listeners.QuestFinishedListener;
 import me.trololo11.lifespluginseason3.listeners.cardlisteners.*;
@@ -111,12 +112,13 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(questsProgressDataSetup, this);
         getServer().getPluginManager().registerEvents(new QuestsAwardsDataSetup(questsAwardsManager, databaseManager), this);
         getServer().getPluginManager().registerEvents(new QuestFinishedListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new GoldLifeMenuExitEvent(recipesManager), this);
 
         getServer().getPluginManager().registerEvents(new TakeLifeCardListener(cardManager, lifesManager, recipesManager), this);
         getServer().getPluginManager().registerEvents(new GiveLifeCardUseListener(cardManager, lifesManager), this);
         getServer().getPluginManager().registerEvents(new SkipQuestsCardListener(questManager), this);
         getServer().getPluginManager().registerEvents(new SkipRandomQuestListener(questManager, databaseManager), this);
-        getServer().getPluginManager().registerEvents(new GoldCardUseListener(), this);
+        getServer().getPluginManager().registerEvents(new GoldCardUseListener(recipesManager), this);
 
         try {
             setupData();
