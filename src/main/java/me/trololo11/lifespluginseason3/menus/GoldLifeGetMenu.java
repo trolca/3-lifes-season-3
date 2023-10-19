@@ -17,10 +17,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.Random;
 
-public class GetLifeMenu extends Menu {
+public class GoldLifeGetMenu extends Menu {
 
     private LifesPlugin plugin = LifesPlugin.getPlugin();
     private Random r = new Random();
@@ -41,7 +40,7 @@ public class GetLifeMenu extends Menu {
     private final ItemStack notGet = Utils.createItem(Material.WHITE_STAINED_GLASS_PANE, " ", "not-get");
     private final ItemStack get = Utils.createItem(Material.YELLOW_STAINED_GLASS_PANE, " ", "get");
 
-    public GetLifeMenu(RecipesManager recipesManager){
+    public GoldLifeGetMenu(RecipesManager recipesManager){
         this.recipesManager = recipesManager;
     }
 
@@ -60,7 +59,7 @@ public class GetLifeMenu extends Menu {
         ItemStack filler = Utils.createItem(Material.GRAY_STAINED_GLASS_PANE, " ", "filler");
         ItemStack setLife = Utils.createItem(Material.RED_STAINED_GLASS_PANE, "&cWybierz życie ze swojego ekwipunku", "set-item");
         ItemStack cantConfirm = Utils.createItem(Material.RED_DYE, "&cWybierz najpierw zycie!", "confirm-nonactive");
-        ItemStack confirm = Utils.createItem(Material.GREEN_DYE, "&2Naciśnij tutaj by zacząć hazard", "confirm");
+        ItemStack confirm = Utils.createItem(Material.GREEN_DYE, "&2&lNaciśnij tutaj by zacząć hazard", "confirm");
         ItemStack exit = Utils.createItem(Material.RED_DYE, "&c&lWyjście", "back");
 
         ItemStack afterFiller = hasWon ? Utils.createItem(Material.YELLOW_STAINED_GLASS_PANE, " ", "won-filler") :

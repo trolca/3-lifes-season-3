@@ -10,6 +10,7 @@ import me.trololo11.lifespluginseason3.utils.QuestUtils;
 import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsProgressDataSetup;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -44,6 +45,7 @@ public class QuestManager {
     private final HashMap<Player, HashMap<QuestType, Integer> > playerAmountOfFinishedQuests = new HashMap<>();
     private final HashMap<QuestType, Integer> questsPerAwards = new HashMap<>();
     private final HashMap<QuestType, HashMap<String, Quest>> databaseNameQuestsHashMap = new HashMap<>();
+    private final HashMap<String, Quest> allDatabaseNameQuestsHashMap = new HashMap<>();
 
     private final ArrayList<Quest> allQuests = new ArrayList<>();
     private final ArrayList<Quest> allActiveQuests = new ArrayList<>();
@@ -105,7 +107,8 @@ public class QuestManager {
 
     /**
      * This function checks all of the active quests if they have a
-     * coressponding column in the sql database
+     * coressponding column in the sql database and if they do not
+     * it moves them to the unactivated quests folder
      * @throws SQLException On error with the connection to the database
      * @throws IOException On error while getting the tier of the quests
      */
@@ -117,13 +120,16 @@ public class QuestManager {
             ArrayList<Quest> questArray = getCorrespondingQuestArray(questType);
             ArrayList<String> columns = databaseManager.getAllQuestColumnNames(questType);
 
-            String questsFolder = plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType);
-            String activeQuestsPath = plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/active-quests";
+            String currTierPath = plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/active-quests/curr-tier.yml";
+
+            FileConfiguration tierConfig = YamlConfiguration.loadConfiguration(new File(currTierPath));
+
+            String questsFolder = plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/tier-"+tierConfig.getInt("tier");
 
             for(Quest quest : questArray){
 
                 if(!columns.contains(quest.getDatabaseName())) {
-                    moveQuest(quest, questsFolder, activeQuestsPath);
+                    moveQuest(quest, questsFolder);
                     questsToDeletion.add(quest);
                 }
             }
@@ -268,7 +274,6 @@ public class QuestManager {
         ArrayList<Quest> currQuestArray = getCorrespondingQuestArray(questType);
         ArrayList<String> existingNames = new ArrayList<>();
 
-
         int count = QuestUtils.getQuestsCount(questType);
         int ranQuestsLenght = randomizedQuests.size();
 
@@ -339,8 +344,13 @@ public class QuestManager {
      */
     private void resetAllActiveQuestFiles(ArrayList<Quest> activeQuests, String questsFolderPath, String activeQuestsPath) throws IOException {
 
+        FileConfiguration tierConfig = YamlConfiguration.loadConfiguration(new File(activeQuestsPath + "/curr-tier.yml"));
+        int tier = tierConfig.getInt("tier");
+
+        questsFolderPath += "/tier-"+tier;
+
         for(Quest quest : activeQuests){
-            moveQuest(quest, questsFolderPath, activeQuestsPath);
+            moveQuest(quest, questsFolderPath);
         }
         //We clone the array list bcs we are gonna be modifing the other array list
         @SuppressWarnings("unchecked")
@@ -359,18 +369,58 @@ public class QuestManager {
      * Moves the provided quest from the active quests folder to the normal quest folder. <br>
      * <b> This doesn't remove it from the active quests arrayLists and adds it to the allQuests array list! </b>
      * @param quest The quest to move
-     * @param questsFolderPath The folder of the type of quests
-     * @param activeQuestsPath The active folder of the quests
+     * @param moveToPath The path to move the quest to
      * @throws IOException While getting the tier of the quests finds unsucessfull
      */
-    private void moveQuest(Quest quest, String questsFolderPath, String activeQuestsPath) throws IOException {
-        YamlConfiguration tierConfig = YamlConfiguration.loadConfiguration(new File(activeQuestsPath + "/curr-tier.yml"));
-        int tier = tierConfig.getInt("tier");
-        if(tier == 0) tier = 1;
+    private void moveQuest(Quest quest, String moveToPath) throws IOException {
+        File questFile = new File(questFilePaths.get(quest));
+        Files.copy(questFile.toPath(), Path.of(moveToPath + "/"+ questFile.getName()), StandardCopyOption.REPLACE_EXISTING);
+        questFilePaths.put(quest, moveToPath);
+        questFile.delete();
+    }
 
-        File file = new File(questFilePaths.get(quest));
-        Files.copy(file.toPath(), Path.of(questsFolderPath + "/tier-" + tier + "/" + file.getName()), StandardCopyOption.REPLACE_EXISTING);
-        file.delete();
+    /**
+     * This function swaps the specified quests. <br>
+     * It moves their files to the coressponding location and
+     * removes and adds them to specific arrays to move them
+     * in real-time. It also changes the sql tables
+     * to make them compatible for this new quest.
+     * @param quest The quest to change
+     * @param changeToQuest The quest to change the pervious quest into
+     * @throws IOException When it doesnt find a quest file
+     * @throws SQLException When theres an error while renaming the sql tables
+     */
+    public void changeQuest(Quest quest, Quest changeToQuest) throws IOException, SQLException {
+
+        if(quest.getQuestType() != changeToQuest.getQuestType()){
+            plugin.logger.warning("[3LifesPluginS3] Tried to change quests that do not have the same quest type!");
+            return;
+        }
+        QuestType questType = quest.getQuestType();
+
+        String activeQuestsPath = plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/active-quests";
+        String currTierFilePath = activeQuestsPath + "/curr-tier.yml";
+        FileConfiguration fileConfig = YamlConfiguration.loadConfiguration(new File(currTierFilePath));
+        String moveQuestTierPath =  plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/tier-"+fileConfig.getInt("tier");
+
+
+        //Bassicaly swaps these files of quests
+        moveQuest(quest, moveQuestTierPath);
+        moveQuest(changeToQuest, activeQuestsPath);
+
+        databaseManager.changeNameOfQuestColumn(questType, quest.getDatabaseName(), changeToQuest.getDatabaseName());
+
+        ArrayList<Quest> correspondingArray = getCorrespondingQuestArray(questType);
+
+        correspondingArray.remove(quest);
+        correspondingArray.add(changeToQuest);
+        allActiveQuests.remove(quest);
+        allActiveQuests.add(changeToQuest);
+
+        allQuests.remove(changeToQuest);
+        allQuests.add(quest);
+
+
     }
 
     /**
@@ -461,6 +511,7 @@ public class QuestManager {
         Quest newQuest = new Quest(name, databaseName, maxProgress, showProgress, icon, description, questType,listenerType, targets);
 
         databaseNameQuestsHashMap.get(questType).put(databaseName, newQuest);
+        allDatabaseNameQuestsHashMap.put(databaseName, newQuest);
         questFilePaths.put(newQuest, questFile.getAbsolutePath());
 
         return newQuest;
@@ -611,6 +662,18 @@ public class QuestManager {
 
     public ArrayList<Quest> getActiveCardQuests() {
         return activeCardQuests;
+    }
+
+    /**
+     * Returns an array of all unactive quests
+     * @return All unactive quests
+     */
+    public ArrayList<Quest> getAllQuests() {
+        return allQuests;
+    }
+
+    public Quest getQuestByDatabaseName(String databaseName){
+        return allDatabaseNameQuestsHashMap.get(databaseName);
     }
 
     public Quest getQuestByDatabaseName(QuestType questType, String databaseName){

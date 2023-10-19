@@ -513,10 +513,15 @@ public class DatabaseManager {
     }
 
     /**
-     * Removes every definition of skipped quest from the table.
+     * Changes the name of a column in the corresponding quest database. <br>
+     * It should be only used to change the name of a quest progress column
+     * @param questType The {@link QuestType} of the table to modify
+     * @param perviousName The pervious name of a quest
+     * @param newName The name to change the column to
+     * @throws SQLException On error with the database
      */
-    public void removeAllSkippedQuests() throws SQLException {
-        String sql = "DELETE FROM skipped_quests";
+    public void changeNameOfQuestColumn(QuestType questType, String perviousName, String newName) throws SQLException {
+        String sql = "ALTER TABLE "+getQuestTableName(questType) + " CHANGE "+perviousName + " " + newName + " int";
 
         Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement(sql);

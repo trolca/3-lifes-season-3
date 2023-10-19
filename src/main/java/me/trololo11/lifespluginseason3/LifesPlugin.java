@@ -4,12 +4,13 @@ import me.trololo11.lifespluginseason3.commands.*;
 import me.trololo11.lifespluginseason3.commands.tabcompleters.SetLifesTabCompleter;
 import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.listeners.CustomItemsCraftingFix;
-import me.trololo11.lifespluginseason3.listeners.GoldLifeMenuExitEvent;
+import me.trololo11.lifespluginseason3.listeners.GoldLifeMenuExitListener;
 import me.trololo11.lifespluginseason3.listeners.MenuManager;
 import me.trololo11.lifespluginseason3.listeners.QuestFinishedListener;
 import me.trololo11.lifespluginseason3.listeners.cardlisteners.*;
 import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsAwardsDataSetup;
 import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsProgressDataSetup;
+import me.trololo11.lifespluginseason3.listeners.lifeslisteners.GoldLifeUseListener;
 import me.trololo11.lifespluginseason3.listeners.questslisteners.BreakBlocksListener;
 import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardRenameListener;
 import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardUseListener;
@@ -112,13 +113,15 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(questsProgressDataSetup, this);
         getServer().getPluginManager().registerEvents(new QuestsAwardsDataSetup(questsAwardsManager, databaseManager), this);
         getServer().getPluginManager().registerEvents(new QuestFinishedListener(questManager), this);
-        getServer().getPluginManager().registerEvents(new GoldLifeMenuExitEvent(recipesManager), this);
+        getServer().getPluginManager().registerEvents(new GoldLifeMenuExitListener(recipesManager), this);
+        getServer().getPluginManager().registerEvents(new GoldLifeUseListener(lifesManager), this);
 
         getServer().getPluginManager().registerEvents(new TakeLifeCardListener(cardManager, lifesManager, recipesManager), this);
         getServer().getPluginManager().registerEvents(new GiveLifeCardUseListener(cardManager, lifesManager), this);
         getServer().getPluginManager().registerEvents(new SkipQuestsCardListener(questManager), this);
         getServer().getPluginManager().registerEvents(new SkipRandomQuestListener(questManager, databaseManager), this);
         getServer().getPluginManager().registerEvents(new GoldCardUseListener(recipesManager), this);
+        getServer().getPluginManager().registerEvents(new ChangeQuestCardUseListener(questManager), this);
 
         try {
             setupData();

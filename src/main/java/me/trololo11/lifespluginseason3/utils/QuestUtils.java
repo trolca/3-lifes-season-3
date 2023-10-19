@@ -40,6 +40,7 @@ public class QuestUtils {
      * @param awardTaken The item to put if the award has been already taken by a player
      * @param normalMeta The item meta to put if the award cannot be taken by a player
      * @param takeMeta The item meta to put if the player can take this award but hasn't already
+     * @param otherAwardsMeta The item meta to put if the player didnt take the awards before this awards
      * @param howMuchShouldTake How much awards should the player take based of it's finished quests
      * @param howManyTaken How much awards the player has already taken
      * @param allQuestsSize The amount of all quests in this type of quests
@@ -49,10 +50,12 @@ public class QuestUtils {
      * @param questsPerAward How many quests the player has to do for 1 award
      * @return The appropriate item
      */
-    public static ItemStack getAwardItem(ItemStack orginalItem,ItemStack awardTaken, ItemMeta normalMeta, ItemMeta takeMeta, int howMuchShouldTake, int howManyTaken, int allQuestsSize, int playerFinishedQuests, int numOfTheItem, int maxAmountAwards, int questsPerAward){
+    public static ItemStack getAwardItem(ItemStack orginalItem,ItemStack awardTaken, ItemMeta normalMeta, ItemMeta takeMeta,ItemMeta otherAwardsMeta, int howMuchShouldTake, int howManyTaken, int allQuestsSize, int playerFinishedQuests, int numOfTheItem, int maxAmountAwards, int questsPerAward){
 
-        if(howMuchShouldTake >= numOfTheItem && howManyTaken < numOfTheItem ){
+        if(howMuchShouldTake >= numOfTheItem && howManyTaken+1 == numOfTheItem ){
             orginalItem.setItemMeta(takeMeta);
+        }else if(numOfTheItem > howManyTaken && howMuchShouldTake >= numOfTheItem){
+            orginalItem.setItemMeta(otherAwardsMeta);
         } else if (howManyTaken >= numOfTheItem) {
             orginalItem = awardTaken;
         }else{

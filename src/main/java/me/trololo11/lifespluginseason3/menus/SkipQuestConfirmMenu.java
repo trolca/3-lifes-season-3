@@ -13,11 +13,11 @@ import org.bukkit.inventory.ItemStack;
 public class SkipQuestConfirmMenu extends Menu {
 
     private Quest quest;
-    private SkipQuestMenu skipQuestMenu;
+    private QuestSelectMenu questSelectMenu;
 
-    public SkipQuestConfirmMenu(Quest quest, SkipQuestMenu skipQuestMenu){
+    public SkipQuestConfirmMenu(Quest quest, QuestSelectMenu questSelectMenu){
         this.quest = quest;
-        this.skipQuestMenu = skipQuestMenu;
+        this.questSelectMenu = questSelectMenu;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class SkipQuestConfirmMenu extends Menu {
             case RED_STAINED_GLASS_PANE -> {
                 if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("no")) return;
 
-                skipQuestMenu.open(player);
+                questSelectMenu.open(player);
             }
 
             case LIME_STAINED_GLASS_PANE -> {

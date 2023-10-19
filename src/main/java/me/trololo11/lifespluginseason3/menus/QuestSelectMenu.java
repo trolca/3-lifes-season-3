@@ -1,32 +1,42 @@
 package me.trololo11.lifespluginseason3.menus;
 
 import me.trololo11.lifespluginseason3.managers.QuestManager;
-import me.trololo11.lifespluginseason3.utils.Menu;
-import me.trololo11.lifespluginseason3.utils.Quest;
-import me.trololo11.lifespluginseason3.utils.QuestType;
-import me.trololo11.lifespluginseason3.utils.Utils;
+import me.trololo11.lifespluginseason3.utils.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
-public class SkipQuestMenu extends Menu {
+/**
+ * This menu shows all of the quests that are in the QuestType,
+ * and allows you to select them and do something with them.
+ */
+public class QuestSelectMenu extends Menu {
 
     private final String title;
     private QuestType questType;
     private QuestManager questManager;
     private final ArrayList<Quest> questSkip;
+    private QuestSelectFunction questSelectFunction;
 
-
+    /**
+     * This menu shows you all of the quests that you specified and
+     * allows you to select them.
+     * @param title The title of this menu
+     * @param questType The quest type of the quests that are gonna show in this menu
+     * @param questManager The questManager class
+     * @param questSelectFunction
+     */
     @SuppressWarnings("unchecked")
-    public SkipQuestMenu(String title, QuestType questType, QuestManager questManager){
+    public QuestSelectMenu(String title, QuestType questType, QuestManager questManager, QuestSelectFunction questSelectFunction){
+        this.questSelectFunction = questSelectFunction;
         this.title = title;
         this.questManager = questManager;
         this.questType = questType;
@@ -100,7 +110,8 @@ public class SkipQuestMenu extends Menu {
         }
 
         if(localizedName.startsWith("quest")){
-            Quest quest = questManager.getQuestByDatabaseName(questType ,localizedName.substring(6));
+             Quest quest = questType != null ? questManager.getQuestByDatabaseName(questType ,localizedName.substring(6)) :
+                     questManager.getQuestByDatabaseName(localizedName.substring(6));
 
             if(quest == null){
                 player.closeInventory();
@@ -108,7 +119,7 @@ public class SkipQuestMenu extends Menu {
                 return;
             }
 
-            new SkipQuestConfirmMenu(quest, this).open(player);
+            questSelectFunction.run(quest, player, this);
         }
 
     }

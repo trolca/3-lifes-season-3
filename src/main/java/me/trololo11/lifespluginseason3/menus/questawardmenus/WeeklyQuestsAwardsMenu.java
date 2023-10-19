@@ -78,13 +78,17 @@ public class WeeklyQuestsAwardsMenu extends Menu {
         normalMeta.setDisplayName(ChatColor.AQUA + "Zrób jeszcze <num> questy by odebrać!");
         normalMeta.setLocalizedName("revive-shard-blocked");
 
-        reviveCardShard1 = QuestUtils.getAwardItem(reviveCardTemplate.clone(), awardTaken, normalMeta.clone(), takeMeta.clone(), howMuchShouldTake, howManyTaken,
+        ItemMeta otherMeta = reviveCardTemplate.getItemMeta();
+        otherMeta.setDisplayName(ChatColor.AQUA + "Odbierz najpierw poprzednie nagrody!" );
+        otherMeta.setLocalizedName("revive-shard-blocked");
+
+        reviveCardShard1 = QuestUtils.getAwardItem(reviveCardTemplate.clone(), awardTaken, normalMeta.clone(), takeMeta.clone(), otherMeta.clone(), howMuchShouldTake, howManyTaken,
                 allQuestsSize, playerFinishedQuests, 1, maxAmountOfAwards, questsPerAward);
 
-        reviveCardShard2 = QuestUtils.getAwardItem(reviveCardTemplate.clone(), awardTaken, normalMeta.clone(), takeMeta.clone(), howMuchShouldTake, howManyTaken,
+        reviveCardShard2 = QuestUtils.getAwardItem(reviveCardTemplate.clone(), awardTaken, normalMeta.clone(), takeMeta.clone(), otherMeta.clone(), howMuchShouldTake, howManyTaken,
                 allQuestsSize, playerFinishedQuests, 2, maxAmountOfAwards, questsPerAward);
 
-        reviveCardShard3 = QuestUtils.getAwardItem(reviveCardTemplate.clone(), awardTaken, normalMeta.clone(), takeMeta.clone(), howMuchShouldTake, howManyTaken,
+        reviveCardShard3 = QuestUtils.getAwardItem(reviveCardTemplate.clone(), awardTaken, normalMeta.clone(), takeMeta.clone(), otherMeta.clone(), howMuchShouldTake, howManyTaken,
                 allQuestsSize, playerFinishedQuests, 3, maxAmountOfAwards, questsPerAward);
 
         ItemMeta cardMeta = cardItem.getItemMeta();

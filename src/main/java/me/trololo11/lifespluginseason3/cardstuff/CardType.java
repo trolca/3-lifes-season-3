@@ -7,5 +7,6 @@ public enum CardType {
     DAILY_SKIP,
     WEEKLY_SKIP,
     RANDOM_SKIP,
-    GOLD_CARD
+    GOLD_CARD,
+    QUEST_CHANGE
 }

@@ -1,21 +1,20 @@
 package me.trololo11.lifespluginseason3.listeners;
 
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
-import me.trololo11.lifespluginseason3.menus.GetLifeMenu;
+import me.trololo11.lifespluginseason3.menus.GoldLifeGetMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-public class GoldLifeMenuExitEvent implements Listener  {
+public class GoldLifeMenuExitListener implements Listener  {
 
     private RecipesManager recipesManager;
 
-    public GoldLifeMenuExitEvent(RecipesManager recipesManager){
+    public GoldLifeMenuExitListener(RecipesManager recipesManager){
         this.recipesManager = recipesManager;
     }
 
@@ -24,22 +23,22 @@ public class GoldLifeMenuExitEvent implements Listener  {
         InventoryHolder inventoryHolder = e.getInventory().getHolder();
         Player player = (Player) e.getPlayer();
 
-        if(inventoryHolder instanceof GetLifeMenu getLifeMenu){
+        if(inventoryHolder instanceof GoldLifeGetMenu goldLifeGetMenu){
 
-            if(getLifeMenu.currLife == null) return;
+            if(goldLifeGetMenu.currLife == null) return;
 
-            if(getLifeMenu.getRandomizingStage() == 0) player.getInventory().addItem(getLifeMenu.currLife);
+            if(goldLifeGetMenu.getRandomizingStage() == 0) player.getInventory().addItem(goldLifeGetMenu.currLife);
 
-            if(getLifeMenu.getRandomizingStage() == 1) {
-                player.getInventory().addItem(getLifeMenu.currLife);
+            if(goldLifeGetMenu.getRandomizingStage() == 1) {
+                player.getInventory().addItem(goldLifeGetMenu.currLife);
 
-                Bukkit.getScheduler().cancelTask(getLifeMenu.getThisGoldLifeRouletteTask().getTaskId());
-                getLifeMenu.getThisGoldLifeRouletteTask().stop();
+                Bukkit.getScheduler().cancelTask(goldLifeGetMenu.getThisGoldLifeRouletteTask().getTaskId());
+                goldLifeGetMenu.getThisGoldLifeRouletteTask().stop();
 
                 player.sendMessage(ChatColor.RED + "Właśnie wyszłeś z losowania na złote życie i niestety straciłeś karte :<");
                 player.sendMessage(ChatColor.GRAY + ChatColor.ITALIC.toString() + "(Nastepnym razem nie wychodz)");
 
-            }else if(getLifeMenu.getRandomizingStage() == 2 && getLifeMenu.hasWon()){
+            }else if(goldLifeGetMenu.getRandomizingStage() == 2 && goldLifeGetMenu.hasWon()){
 
                 player.getInventory().addItem(recipesManager.getGoldLifeItem());
 

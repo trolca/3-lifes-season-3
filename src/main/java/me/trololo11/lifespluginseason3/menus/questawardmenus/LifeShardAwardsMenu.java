@@ -69,12 +69,16 @@ public class LifeShardAwardsMenu extends Menu {
         lifeShardStandardMeta.setDisplayName(Utils.chat("&4Zrób jeszcze <num> questy by odebrać!"));
         lifeShardStandardMeta.setLocalizedName("lifes-shard-not-take");
 
+        ItemMeta otherMeta = lifeShard1.getItemMeta();
+        otherMeta.setDisplayName(ChatColor.DARK_RED + "Odbierz najpierw poprzednie nagrody!" );
+        otherMeta.setLocalizedName("life-shard-blocked");
+
         int activeQuestsSize = questManager.getCorrespondingQuestArray(QuestType.DAILY).size();
 
-        lifeShard1 = QuestUtils.getAwardItem(lifeShard1, awardTaken, lifeShardStandardMeta.clone(), lifeShardTakeMeta, howMuchShouldTake, howManyTaken,
+        lifeShard1 = QuestUtils.getAwardItem(lifeShard1, awardTaken, lifeShardStandardMeta.clone(), lifeShardTakeMeta, otherMeta.clone(), howMuchShouldTake, howManyTaken,
                 activeQuestsSize, playerFinishedQuests, 1, maxAmountOfAwards, questsPerAward);
 
-       lifeShard2 = QuestUtils.getAwardItem(lifeShard2, awardTaken, lifeShardStandardMeta.clone(), lifeShardTakeMeta, howMuchShouldTake, howManyTaken,
+       lifeShard2 = QuestUtils.getAwardItem(lifeShard2, awardTaken, lifeShardStandardMeta.clone(), lifeShardTakeMeta, otherMeta.clone(), howMuchShouldTake, howManyTaken,
                activeQuestsSize, playerFinishedQuests, 2, maxAmountOfAwards, questsPerAward);
 
         if(howManyTaken == 2){

@@ -23,6 +23,7 @@ public class CardManager {
         allCards.add(new WeeklyQuestSkipCard());
         allCards.add(new RandomQuestSkipCard());
         allCards.add(new GoldLifeCard());
+        allCards.add(new ChangeGlobalQuestCard());
 
         for(CardClass card : allCards){
             cardClassHashMap.put(card.getCardType(), card);
