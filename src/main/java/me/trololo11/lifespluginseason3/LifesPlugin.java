@@ -122,6 +122,7 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SkipRandomQuestListener(questManager, databaseManager), this);
         getServer().getPluginManager().registerEvents(new GoldCardUseListener(recipesManager), this);
         getServer().getPluginManager().registerEvents(new ChangeQuestCardUseListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new RequirementsCardListener(questManager), this);
 
         try {
             setupData();
@@ -140,6 +141,7 @@ public final class LifesPlugin extends JavaPlugin {
         getCommand("setprogress").setExecutor(new SetProgressCommand(questManager));
         getCommand("getallcards").setExecutor(new GetAllCardsItems(cardManager));
         getCommand("isinvfull").setExecutor(new InvFullCommand(databaseManager));
+        getCommand("ping").setExecutor(new PingCommand());
 
         getCommand("setlifes").setTabCompleter(new SetLifesTabCompleter());
 
@@ -174,6 +176,18 @@ public final class LifesPlugin extends JavaPlugin {
 
 
 
+
+        }
+
+        for(Quest quest : questManager.getAllActiveQuests()){
+
+            if(quest.isHalfed()) {
+                try {
+                    databaseManager.addRequirementsQuests(quest);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
         }
 

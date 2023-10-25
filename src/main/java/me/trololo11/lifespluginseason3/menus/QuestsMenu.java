@@ -3,6 +3,7 @@ package me.trololo11.lifespluginseason3.menus;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
+import me.trololo11.lifespluginseason3.menus.MainLifesMenu;
 import me.trololo11.lifespluginseason3.menus.questawardmenus.LifeShardAwardsMenu;
 import me.trololo11.lifespluginseason3.menus.questawardmenus.WeeklyQuestsAwardsMenu;
 import me.trololo11.lifespluginseason3.utils.Menu;
@@ -90,14 +91,19 @@ public class QuestsMenu extends Menu {
 
             ArrayList<String> lore = new ArrayList<>(quest.getDescription());
 
-            //fixed it less go
+
             lore.add("");
-            lore.add( quest.hasFinished(player) ?
-                    Utils.chat("&a&lSkończony!") :
-                        quest.getShowProgress() ?
-                        Utils.chat("&2&lProgress: " + quest.getPlayerProgress(player) + "/" + quest.getMaxProgress())  :
-                    Utils.chat("&c&lNie skończony!")
-                    );
+
+            if(quest.getShowProgress() && !quest.hasFinished(player)){
+
+                lore.add(quest.isHalfed() ? Utils.chat("&2&lProgress: "+quest.getPlayerProgress(player) + " / &6&m"+quest.getMaxProgress()+ "&a&l " + (quest.getMaxProgress()/2) )
+                        : Utils.chat("&2&lProgress: " + quest.getPlayerProgress(player) + "/" + quest.getMaxProgress()));
+
+            }else if(!quest.hasFinished(player)){
+                lore.add(Utils.chat("&c&lNie skończony!"));
+            }else{
+                lore.add(Utils.chat("&a&lSkończony!"));
+            }
 
             questMeta.setLocalizedName(quest.getDatabaseName());
             questMeta.setLore(lore);
@@ -205,4 +211,5 @@ public class QuestsMenu extends Menu {
         return item;
 
     }
+
 }

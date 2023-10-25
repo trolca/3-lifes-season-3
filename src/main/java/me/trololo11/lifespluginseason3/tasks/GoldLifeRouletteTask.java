@@ -1,6 +1,6 @@
 package me.trololo11.lifespluginseason3.tasks;
 
-import me.trololo11.lifespluginseason3.menus.GoldLifeGetMenu;
+import me.trololo11.lifespluginseason3.menus.cardmenus.GoldLifeGetMenu;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;

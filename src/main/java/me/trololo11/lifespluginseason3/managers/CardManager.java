@@ -24,6 +24,7 @@ public class CardManager {
         allCards.add(new RandomQuestSkipCard());
         allCards.add(new GoldLifeCard());
         allCards.add(new ChangeGlobalQuestCard());
+        allCards.add(new ReduceRequirementsQuestsCard());
 
         for(CardClass card : allCards){
             cardClassHashMap.put(card.getCardType(), card);

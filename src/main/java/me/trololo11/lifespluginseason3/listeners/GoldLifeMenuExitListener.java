@@ -1,7 +1,7 @@
 package me.trololo11.lifespluginseason3.listeners;
 
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
-import me.trololo11.lifespluginseason3.menus.GoldLifeGetMenu;
+import me.trololo11.lifespluginseason3.menus.cardmenus.GoldLifeGetMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

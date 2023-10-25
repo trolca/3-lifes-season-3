@@ -73,6 +73,7 @@ public class DatabaseManager {
         statement.execute("CREATE TABLE IF NOT EXISTS player_lifes(uuid varchar(36) primary key not null, lifes tinyint not null, is_revived bool not null)");
         statement.execute("CREATE TABLE IF NOT EXISTS quests_awards_data(uuid varchar(36) primary key, daily_quests tinyint not null, weekly_quests tinyint not null, card_quests tinyint not null)");
         statement.execute("CREATE TABLE IF NOT EXISTS skipped_quests(quest_name varchar(100), quest_type varchar(100))");
+        statement.execute("CREATE TABLE IF NOT EXISTS requ_quests(quest_name varchar(100), quest_type varchar(100))");
 
         statement.close();
 
@@ -552,6 +553,80 @@ public class DatabaseManager {
         return columnNames;
     }
 
+    /**
+     * Adds this quest as having halfed requirements to the database
+     * @param quest The quest to add
+     * @throws SQLException On database connection error
+     */
+    public void addRequirementsQuests(Quest quest) throws SQLException {
+        String sql = "INSERT INTO requ_quests(quest_name, quest_type) VALUES (?, ?)";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setString(1, quest.getDatabaseName());
+        statement.setString(2, quest.getQuestType().toString());
+
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
+    }
+
+    /**
+     * Removes every occurence of a quest of the specified quest type from the database
+     * @param questType The quest type to check
+     * @throws SQLException On database connection error
+     */
+    public void removeAllRequrementsType(QuestType questType) throws SQLException {
+        String sql = "DELETE FROM requ_quests WHERE quest_type = ?";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setString(1, questType.toString());
+
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
+    }
+
+
+    /**
+     * Gets all of the quests that have their max progress cut in half. <br>
+     * @return A hashMap where the key is the quest type of the specified quests and it's
+     *         value is an array list of all of the database names that have been halfed
+     * @throws SQLException On database connection error
+     */
+    public HashMap<QuestType, ArrayList<String>> getAllQuestHalfed() throws SQLException {
+        String sql = "SELECT * FROM requ_quests";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        ResultSet results = statement.executeQuery();
+        HashMap<QuestType, ArrayList<String>> databaseNamesMap = new HashMap<>();
+
+        for(QuestType questType : QuestType.values()){
+            databaseNamesMap.put(questType, new ArrayList<>());
+        }
+
+        while (results.next()){
+
+            databaseNamesMap.get( QuestType.valueOf(results.getString("quest_type")) ).add( results.getString("quest_name") );
+
+        }
+
+        return databaseNamesMap;
+    }
+
+    public void removeAllQuestValues(QuestType questType) throws SQLException {
+        removeAllSkippedQuests(questType);
+        removeAllRequrementsType(questType);
+        removeQuestTable(questType);
+    }
+
     private String getQuestTableName(QuestType questTableType){
         switch (questTableType){
             case DAILY -> {
@@ -567,16 +642,6 @@ public class DatabaseManager {
                 return  "generic_quests";
             }
         }
-    }
-
-    private String getFormattedQuestTypes(QuestType[] questTypes){
-        StringBuilder formattedString = new StringBuilder();
-
-        for(QuestType questType : questTypes){
-            formattedString.append('"').append(questType).append('"');
-        }
-
-        return formattedString.toString();
     }
 
 

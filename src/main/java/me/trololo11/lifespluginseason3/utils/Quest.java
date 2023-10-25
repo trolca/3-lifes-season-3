@@ -39,12 +39,17 @@ public class Quest {
     private final int maxProgress;
 
     private boolean showProgress;
+    private boolean isHalfed = false;
     private Material icon;
 
     private ListenerType listenerType;
     private QuestType questType;
     private final ArrayList<Object> targets;
 
+    /**
+     * A hashMap that stores all of the player's quests progress which are online on the server.
+     * When a player leaves or the server stopes the progress is saved to the database from this hashMap
+     */
     private final HashMap<Player, Integer> playerProgress = new HashMap<>();
 
     public Quest(String name, String databaseName, int maxProgress, boolean showProgress, Material icon, ArrayList<String> description, QuestType questType, ListenerType listenerType, ArrayList<Object> targets) {
@@ -53,6 +58,7 @@ public class Quest {
         this.showProgress = showProgress;
         this.icon = icon;
         this.maxProgress = maxProgress;
+        this.isHalfed = isHalfed;
         ArrayList<String> realDescription = new ArrayList<>();
         for(String str : description){
             realDescription.add(Utils.chat("&f" + str));
@@ -96,7 +102,20 @@ public class Quest {
     }
 
     public ArrayList<Object> getTargets() {
-        return targets;
+        return new ArrayList<>(targets);
+    }
+
+    /**
+     * Returns wheather or not the quest has it's max progress cut into half or not. <br>
+     * (Player can do this with the lower requirements card)
+     * @return Are requrements halfed
+     */
+    public boolean isHalfed() {
+        return isHalfed;
+    }
+
+    public void setHalfed(boolean halfed) {
+        isHalfed = halfed;
     }
 
     /**
@@ -122,6 +141,7 @@ public class Quest {
         if(hasFinished(player)) Bukkit.getServer().getPluginManager().callEvent(new QuestFinishedEvent(player, this, false));
     }
 
+
     public void removePlayerProgress(Player player){
         playerProgress.remove(player);
     }
@@ -131,7 +151,7 @@ public class Quest {
     }
 
     public boolean hasFinished(Player player){
-        return getPlayerProgress(player) >= getMaxProgress();
+        return isHalfed ? getPlayerProgress(player) >= getMaxProgress()/2 : getPlayerProgress(player) >= getMaxProgress();
     }
 
 

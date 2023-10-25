@@ -20,6 +20,8 @@ commands:
     description: "Gives you all the cards lol"
   isinvfull:
     description: "IS inv full?"
+  ping:
+    description: "Get your ping!"
 permissions:
   3lifes3.admin:
     description: "A administator perm for the 3LifesPluginSeason3"

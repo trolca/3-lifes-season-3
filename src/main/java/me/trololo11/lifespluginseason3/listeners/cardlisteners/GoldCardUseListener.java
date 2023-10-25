@@ -2,7 +2,7 @@ package me.trololo11.lifespluginseason3.listeners.cardlisteners;
 
 import me.trololo11.lifespluginseason3.cardstuff.CardType;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
-import me.trololo11.lifespluginseason3.menus.GoldLifeGetMenu;
+import me.trololo11.lifespluginseason3.menus.cardmenus.GoldLifeGetMenu;
 import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

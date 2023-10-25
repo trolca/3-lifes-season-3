@@ -12,8 +12,9 @@ import java.util.HashMap;
 public class QuestsAwardsManager {
 
     private final HashMap<QuestType, Byte> numAwards = new HashMap<>();
-
     private final HashMap<QuestType, HashMap<Player, Byte>> numTakenAwardsPlayers = new HashMap<>();
+
+    private HashMap<QuestType, Integer> questsPerAwards = new HashMap<>();
 
     public QuestsAwardsManager(){
         numAwards.put(QuestType.DAILY, (byte) 3);
@@ -65,6 +66,14 @@ public class QuestsAwardsManager {
         for(QuestType questType : QuestType.values()){
             numTakenAwardsPlayers.get(questType).remove(player);
         }
+    }
+
+    public HashMap<QuestType, Integer> getQuestsPerAwards() {
+        return questsPerAwards;
+    }
+
+    public void setQuestsPerAwards(HashMap<QuestType, Integer> questsPerAwards) {
+        this.questsPerAwards = questsPerAwards;
     }
 
 }

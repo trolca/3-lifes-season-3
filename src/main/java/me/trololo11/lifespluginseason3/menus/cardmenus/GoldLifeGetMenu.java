@@ -1,4 +1,4 @@
-package me.trololo11.lifespluginseason3.menus;
+package me.trololo11.lifespluginseason3.menus.cardmenus;
 
 import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
@@ -142,11 +142,10 @@ public class GoldLifeGetMenu extends Menu {
 
                 randomizedNum = r.nextInt(1000)+1; //We write the chance in hundreds bcs we want the 0.1 perecentage. So 123 is 12.3%
 
-                int additionalSpins = randomizedNum/125;
-                if(randomizedNum >= 503 && randomizedNum < 555 ) additionalSpins--;
-                additionalSpins += ( 6 - ( (additionalSpins-1)*2 ) )+1;
+                int additionalSpins = (randomizedNum/125)+2;
+                if(randomizedNum > 445 && randomizedNum < 500 ) additionalSpins++;
 
-                hasWon = randomizedNum >= chance;
+                hasWon = randomizedNum <= chance;
 
                 goldLifeRouletteTask = new GoldLifeRouletteTask(this, player, additionalSpins);
                 goldLifeRouletteTask.runTaskAsynchronously(plugin);

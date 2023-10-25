@@ -1,8 +1,9 @@
-package me.trololo11.lifespluginseason3.menus;
+package me.trololo11.lifespluginseason3.menus.cardmenus.confirmmenus;
 
 import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.managers.LifesManager;
+import me.trololo11.lifespluginseason3.menus.cardmenus.PlayerReviveMenu;
 import me.trololo11.lifespluginseason3.utils.Menu;
 import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.*;

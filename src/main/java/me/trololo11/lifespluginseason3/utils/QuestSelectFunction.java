@@ -1,6 +1,6 @@
 package me.trololo11.lifespluginseason3.utils;
 
-import me.trololo11.lifespluginseason3.menus.QuestSelectMenu;
+import me.trololo11.lifespluginseason3.menus.cardmenus.QuestSelectMenu;
 import org.bukkit.entity.Player;
 
 /**

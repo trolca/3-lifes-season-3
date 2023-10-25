@@ -39,6 +39,7 @@ public class QuestManager {
     private final QuestsTimingsManager questsTimingsManager;
     private final QuestsAwardsManager questsAwardsManager;
 
+
     private final HashMap<ListenerType, ArrayList<Quest>> listenerTypesQuests = new HashMap<>();
     private final HashMap<QuestType, String> pageTimingText = new HashMap<>();
     private final HashMap<Quest, String> questFilePaths = new HashMap<>();
@@ -46,6 +47,7 @@ public class QuestManager {
     private final HashMap<QuestType, Integer> questsPerAwards = new HashMap<>();
     private final HashMap<QuestType, HashMap<String, Quest>> databaseNameQuestsHashMap = new HashMap<>();
     private final HashMap<String, Quest> allDatabaseNameQuestsHashMap = new HashMap<>();
+
 
     private final ArrayList<Quest> allQuests = new ArrayList<>();
     private final ArrayList<Quest> allActiveQuests = new ArrayList<>();
@@ -56,15 +58,15 @@ public class QuestManager {
 
     public QuestManager(DatabaseManager databaseManager, QuestsTimingsManager questsTimingsManager, QuestsAwardsManager questsAwardsManager){
 
-        for(QuestType questType : QuestType.values()){
+        for(QuestType questType : QuestType.values()) {
             databaseNameQuestsHashMap.put(questType, new HashMap<>());
         }
 
         this.databaseManager = databaseManager;
         this.questsTimingsManager = questsTimingsManager;
         this.questsAwardsManager = questsAwardsManager;
-        setupAllQuests();
         try {
+            setupAllQuests();
             checkPageQuestTimings();
             checkQuests();
         } catch (IOException | SQLException e) {
@@ -77,18 +79,20 @@ public class QuestManager {
      * This function gets all of the quests and adds them to a internal array. <br>
      * It also sorts the active quests to their own arrays.
      */
-    private void setupAllQuests(){
+    private void setupAllQuests() throws SQLException {
         String mainFolder = plugin.getDataFolder() + "/quests-data";
         int tier = plugin.getTier();
+
+        HashMap<QuestType, ArrayList<String>> halfedQuestMap = databaseManager.getAllQuestHalfed();
 
         allQuests.addAll(getAllQuestsInFolder(mainFolder + "/daily-quests/tier-"+tier, QuestType.DAILY));
         allQuests.addAll(getAllQuestsInFolder(mainFolder + "/weekly-quests/tier-"+tier, QuestType.WEEKLY));
         allQuests.addAll(getAllQuestsInFolder(mainFolder + "/card-quests/tier-"+tier, QuestType.CARD));
 
 
-        activeDailyQuests.addAll(getAllQuestsInFolder(mainFolder + "/daily-quests/active-quests", QuestType.DAILY));
-        activeWeeklyQuests.addAll(getAllQuestsInFolder(mainFolder + "/weekly-quests/active-quests", QuestType.WEEKLY));
-        activeCardQuests.addAll(getAllQuestsInFolder(mainFolder + "/card-quests/active-quests", QuestType.CARD));
+        activeDailyQuests.addAll(getAllQuestsInFolder(mainFolder + "/daily-quests/active-quests", QuestType.DAILY, halfedQuestMap));
+        activeWeeklyQuests.addAll(getAllQuestsInFolder(mainFolder + "/weekly-quests/active-quests", QuestType.WEEKLY, halfedQuestMap));
+        activeCardQuests.addAll(getAllQuestsInFolder(mainFolder + "/card-quests/active-quests", QuestType.CARD, halfedQuestMap));
 
         allActiveQuests.addAll(activeDailyQuests);
         allActiveQuests.addAll(activeWeeklyQuests);
@@ -287,9 +291,8 @@ public class QuestManager {
         String activeQuestsPath = plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/active-quests";
 
         resetAllActiveQuestFiles(currQuestArray, plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType), activeQuestsPath);
-        databaseManager.removeQuestTable(questType);
+        databaseManager.removeAllQuestValues(questType);
         databaseManager.resetPlayerTakenAwards(questType);
-        databaseManager.removeAllSkippedQuests(questType);
         currQuestArray.clear();
 
         for(int i=0; i < count; i++){
@@ -423,14 +426,20 @@ public class QuestManager {
 
     }
 
+    private ArrayList<Quest> getAllQuestsInFolder(String folderPath, QuestType questType){
+        return getAllQuestsInFolder(folderPath, questType, null);
+    }
+
     /**
      * Gets all the YML files of quests in the specified folder and turns them to
      * a {@link Quest} objects using the {@link QuestManager#createQuest(File, QuestType)} function.
      * @param folderPath The path to get all of the quests from
      * @param questType The type of the quests
+     * @param halfedQuestMap The hashMap ov every quest that has it's max progress cut in half.
+     *                        The key is the quest type of the quest and the array list has all of these quests database name.
      * @return An {@link ArrayList} of Quests that were in the specified folder
      */
-    private ArrayList<Quest> getAllQuestsInFolder(String folderPath, QuestType questType){
+    private ArrayList<Quest> getAllQuestsInFolder(String folderPath, QuestType questType, HashMap<QuestType, ArrayList<String>> halfedQuestMap){
         ArrayList<Quest> createdQuests = new ArrayList<>();
         File listFiles = new File(folderPath);
         File[] listedFileQuests = listFiles.listFiles();
@@ -439,7 +448,7 @@ public class QuestManager {
         for(File file : listedFileQuests){
             if(file.getName().equalsIgnoreCase("curr-tier.yml")) continue;
 
-            Quest quest = createQuest(file, questType);
+            Quest quest = createQuest(file, questType, halfedQuestMap);
             if(quest == null) continue;
             createdQuests.add(quest);
         }
@@ -450,11 +459,25 @@ public class QuestManager {
     /**
      * This function creates a new {@link Quest} object based from the YML file
      * provided. (The blueprint and how to create the quest YML files is located in questHelp.txt)
+     * <i>(This function automaticly sets the quests isHalfed value to false)</i>
      * @param questFile The YML file to create the Quest from
      * @param questType The type of the quest to create
      * @return A new {@link Quest} object
      */
     private Quest createQuest(File questFile, QuestType questType){
+        return createQuest(questFile, questType, null);
+    }
+
+    /**
+     * This function creates a new {@link Quest} object based from the YML file
+     * provided. (The blueprint and how to create the quest YML files is located in questHelp.txt)
+     * @param questFile The YML file to create the Quest from
+     * @param questType The type of the quest to create
+     * @param halfedQuestsMap The hashMap ov every quest that has it's max progress cut in half.
+     *                        The key is the quest type of the quest and the array list has all of these quests database name.
+     * @return A new {@link Quest} object
+     */
+    private Quest createQuest(File questFile, QuestType questType, HashMap<QuestType, ArrayList<String>> halfedQuestsMap){
         YamlConfiguration config = YamlConfiguration.loadConfiguration(questFile);
         String name = config.getString("quest-name");
         ArrayList<String> description = (ArrayList<String>) config.getStringList("description");
@@ -509,6 +532,8 @@ public class QuestManager {
         }
 
         Quest newQuest = new Quest(name, databaseName, maxProgress, showProgress, icon, description, questType,listenerType, targets);
+
+        if(halfedQuestsMap != null && halfedQuestsMap.get(questType).contains(databaseName)) newQuest.setHalfed(true);
 
         databaseNameQuestsHashMap.get(questType).put(databaseName, newQuest);
         allDatabaseNameQuestsHashMap.put(databaseName, newQuest);

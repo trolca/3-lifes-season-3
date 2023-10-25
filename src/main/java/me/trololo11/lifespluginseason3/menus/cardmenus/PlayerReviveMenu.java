@@ -1,6 +1,7 @@
-package me.trololo11.lifespluginseason3.menus;
+package me.trololo11.lifespluginseason3.menus.cardmenus;
 
 import me.trololo11.lifespluginseason3.managers.LifesManager;
+import me.trololo11.lifespluginseason3.menus.cardmenus.confirmmenus.PlayerReviveConfirmMenu;
 import me.trololo11.lifespluginseason3.utils.Menu;
 import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.Bukkit;
@@ -10,7 +11,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;

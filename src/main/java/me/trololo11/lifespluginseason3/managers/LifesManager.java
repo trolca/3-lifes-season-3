@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * This class manages how much lifes a plyer has on the server side. <br>
+ * This class manages how much lifes a player has on the server side. <br>
  * This data is stored in a hashMap.
  * @see PlayerLifesDataSetup
  */
