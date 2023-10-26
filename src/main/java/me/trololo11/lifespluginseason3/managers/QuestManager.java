@@ -44,7 +44,6 @@ public class QuestManager {
     private final HashMap<QuestType, String> pageTimingText = new HashMap<>();
     private final HashMap<Quest, String> questFilePaths = new HashMap<>();
     private final HashMap<Player, HashMap<QuestType, Integer> > playerAmountOfFinishedQuests = new HashMap<>();
-    private final HashMap<QuestType, Integer> questsPerAwards = new HashMap<>();
     private final HashMap<QuestType, HashMap<String, Quest>> databaseNameQuestsHashMap = new HashMap<>();
     private final HashMap<String, Quest> allDatabaseNameQuestsHashMap = new HashMap<>();
 
@@ -544,7 +543,7 @@ public class QuestManager {
 
     private void calculateQuestsPerAward(QuestType questType){
         int questsPerAward = (int) Math.ceil((double) getCorrespondingQuestArray(questType).size()/ (questsAwardsManager.getMaxAmountOfAwards(questType)-1));
-        questsPerAwards.put(questType, questsPerAward);
+        questsAwardsManager.setQuestsPerAwards(questType, questsPerAward);
     }
 
     /**
@@ -703,9 +702,6 @@ public class QuestManager {
 
     public Quest getQuestByDatabaseName(QuestType questType, String databaseName){
         return databaseNameQuestsHashMap.get(questType).get(databaseName);
-    }
-    public int getQuestsPerAwards(QuestType questType){
-        return questsPerAwards.get(questType);
     }
 
 }

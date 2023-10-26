@@ -3,6 +3,7 @@ package me.trololo11.lifespluginseason3.listeners;
 import me.trololo11.lifespluginseason3.cardstuff.CardType;
 import me.trololo11.lifespluginseason3.events.QuestFinishedEvent;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
+import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.QuestType;
 import me.trololo11.lifespluginseason3.utils.Utils;
@@ -15,9 +16,11 @@ import org.bukkit.event.Listener;
 public class QuestFinishedListener implements Listener {
 
     private QuestManager questManager;
+    private QuestsAwardsManager questsAwardsManager;
 
-    public QuestFinishedListener(QuestManager questManager){
+    public QuestFinishedListener(QuestManager questManager, QuestsAwardsManager questsAwardsManager){
         this.questManager = questManager;
+        this.questsAwardsManager = questsAwardsManager;
     }
     @EventHandler
     public void onFinish(QuestFinishedEvent e){
@@ -32,7 +35,7 @@ public class QuestFinishedListener implements Listener {
             player.sendMessage(Utils.chat("&aWłaśnie ukończyłeś quest &f[" + quest.getName() + "&f]"));
         }
         int playerFinishedQuests = questManager.getPlayerFinishedQuests(player, questType);
-        int questsPerAward = questManager.getQuestsPerAwards(questType);
+        int questsPerAward = questsAwardsManager.getQuestsPerAward(questType);
 
         boolean isAward = playerFinishedQuests % questsPerAward == 0 || playerFinishedQuests >= questManager.getCorrespondingQuestArray(questType).size();
 

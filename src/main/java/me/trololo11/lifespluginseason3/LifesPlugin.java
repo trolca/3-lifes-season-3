@@ -2,6 +2,7 @@ package me.trololo11.lifespluginseason3;
 
 import me.trololo11.lifespluginseason3.commands.*;
 import me.trololo11.lifespluginseason3.commands.tabcompleters.SetLifesTabCompleter;
+import me.trololo11.lifespluginseason3.commands.tabcompleters.SetProgressTabCompleter;
 import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.listeners.CustomItemsCraftingFix;
 import me.trololo11.lifespluginseason3.listeners.GoldLifeMenuExitListener;
@@ -112,7 +113,7 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ReviveCardUseListener(lifesManager, databaseManager), this);
         getServer().getPluginManager().registerEvents(questsProgressDataSetup, this);
         getServer().getPluginManager().registerEvents(new QuestsAwardsDataSetup(questsAwardsManager, databaseManager), this);
-        getServer().getPluginManager().registerEvents(new QuestFinishedListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new QuestFinishedListener(questManager, questsAwardsManager), this);
         getServer().getPluginManager().registerEvents(new GoldLifeMenuExitListener(recipesManager), this);
         getServer().getPluginManager().registerEvents(new GoldLifeUseListener(lifesManager), this);
 
@@ -144,6 +145,7 @@ public final class LifesPlugin extends JavaPlugin {
         getCommand("ping").setExecutor(new PingCommand());
 
         getCommand("setlifes").setTabCompleter(new SetLifesTabCompleter());
+        getCommand("setprogress").setTabCompleter(new SetProgressTabCompleter(questManager));
 
 
 

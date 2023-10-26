@@ -59,7 +59,7 @@ public class WeeklyQuestsAwardsMenu extends Menu {
             inventory.setItem(i, filler);
         }
 
-        int questsPerAward = questManager.getQuestsPerAwards(QuestType.WEEKLY);
+        int questsPerAward = questsAwardsManager.getQuestsPerAward(QuestType.WEEKLY);
         int playerFinishedQuests = questManager.getPlayerFinishedQuests(player, QuestType.WEEKLY);
         byte howManyTaken = questsAwardsManager.getAwardsTakenForPlayer(player, QuestType.WEEKLY);
         int howMuchShouldTake = playerFinishedQuests >= questManager.getActiveWeeklyQuests().size() ? (questsAwardsManager.getMaxAmountOfAwards(QuestType.WEEKLY)-1) : playerFinishedQuests/questsPerAward;

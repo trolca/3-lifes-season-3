@@ -112,7 +112,15 @@ public class QuestSelectMenu extends Menu {
             addLore.add(ChatColor.GRAY + ChatColor.ITALIC.toString() + "(Kliknij by pominąć)");
             if(questType == null) addLore.add(ChatColor.GOLD + ChatColor.ITALIC.toString() + "("+getQuestTypeName(quest.getQuestType()) + ")");
             addLore.add("");
-            addLore.add( quest.getShowProgress() ? Utils.chat("&2&l(Twój progress: "+quest.getPlayerProgress(player)+ "/"+quest.getMaxProgress()+")") : Utils.chat("&c&l(Nie skończony!)") );
+
+            if(quest.getShowProgress() && !quest.isHalfed()){
+                addLore.add(Utils.chat("&2&l(Twój progress: "+quest.getPlayerProgress(player)+ "/"+quest.getMaxProgress()+")"));
+            }else if (quest.isHalfed()){
+                addLore.add(Utils.chat("&2&l(Twój progress: "+quest.getPlayerProgress(player)+ "/"+(quest.getMaxProgress()/2)+")"));
+            }else{
+                addLore.add(Utils.chat("&c&l(Nie skończony!)"));
+            }
+
             questMeta.setLore(addLore);
             questMeta.addItemFlags(ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS);
             questMeta.setLocalizedName("quest_"+quest.getDatabaseName());

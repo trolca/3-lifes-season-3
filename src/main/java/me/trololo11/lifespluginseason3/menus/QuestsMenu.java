@@ -96,7 +96,7 @@ public class QuestsMenu extends Menu {
 
             if(quest.getShowProgress() && !quest.hasFinished(player)){
 
-                lore.add(quest.isHalfed() ? Utils.chat("&2&lProgress: "+quest.getPlayerProgress(player) + " / &6&m"+quest.getMaxProgress()+ "&a&l " + (quest.getMaxProgress()/2) )
+                lore.add(quest.isHalfed() ? Utils.chat("&2&lProgress: "+quest.getPlayerProgress(player) + " / &2&m"+quest.getMaxProgress()+ "&a&l " + (quest.getMaxProgress()/2) )
                         : Utils.chat("&2&lProgress: " + quest.getPlayerProgress(player) + "/" + quest.getMaxProgress()));
 
             }else if(!quest.hasFinished(player)){

@@ -30,9 +30,9 @@ public class LifesStackCheckTask extends BukkitRunnable {
         for(ItemStack item : p.getInventory().getContents()  ) {
 
             if (item != null && item.hasItemMeta() && item.getItemMeta().hasLocalizedName()
-                    && (item.getItemMeta().getLocalizedName().equalsIgnoreCase("life") || item.getItemMeta().getLocalizedName().equalsIgnoreCase("revive_card"))
+                    && (item.getItemMeta().getLocalizedName().equalsIgnoreCase("life_item") || item.getItemMeta().getLocalizedName().equalsIgnoreCase("revive_card"))
                     && item.getAmount() > 1) {
-                isLife = item.getItemMeta().getLocalizedName().equalsIgnoreCase("life");
+                isLife = item.getItemMeta().getLocalizedName().equalsIgnoreCase("life_item");
 
                 p.getInventory().remove(item);
 

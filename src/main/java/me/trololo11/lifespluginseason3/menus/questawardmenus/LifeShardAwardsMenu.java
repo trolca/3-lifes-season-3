@@ -52,7 +52,7 @@ public class LifeShardAwardsMenu extends Menu {
             inventory.setItem(i, filler);
         }
 
-        int questsPerAward = questManager.getQuestsPerAwards(QuestType.DAILY);
+        int questsPerAward = questsAwardsManager.getQuestsPerAward(QuestType.DAILY);
         int playerFinishedQuests = questManager.getPlayerFinishedQuests(player, QuestType.DAILY);
         byte howManyTaken = questsAwardsManager.getAwardsTakenForPlayer(player, QuestType.DAILY);
         int howMuchShouldTake = playerFinishedQuests >= questManager.getActiveDailyQuests().size() ? (questsAwardsManager.getMaxAmountOfAwards(QuestType.DAILY)-1) : playerFinishedQuests/questsPerAward;

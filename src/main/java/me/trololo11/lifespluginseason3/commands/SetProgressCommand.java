@@ -60,16 +60,9 @@ public class SetProgressCommand implements CommandExecutor {
             return true;
         }
 
-        Quest setProgressQuest = null;
+        Quest setProgressQuest = questManager.getQuestByDatabaseName(args[2]);
 
-        for(Quest quest : questManager.getAllActiveQuests()){
-            if(quest.getDatabaseName().equalsIgnoreCase(args[2]) && quest.getQuestType().equals(questType)){
-                setProgressQuest = quest;
-                break;
-            }
-        }
-
-        if(setProgressQuest == null){
+        if(setProgressQuest == null || !questManager.getAllActiveQuests().contains(setProgressQuest)){
             sender.sendMessage(ChatColor.RED + "Ten quest nie istnieje!");
             return true;
         }
