@@ -93,7 +93,7 @@ public final class LifesPlugin extends JavaPlugin {
         questsAwardsManager = new QuestsAwardsManager();
         questManager = new QuestManager(databaseManager, questsTimingsManager, questsAwardsManager);
         questsProgressDataSetup = new QuestsProgressDataSetup(databaseManager, questManager);
-        cardManager = new CardManager();
+        cardManager = new CardManager(databaseManager);
 
         try{
             allSkippedQuests = databaseManager.getAllSkippedQuests(questManager);
@@ -143,6 +143,7 @@ public final class LifesPlugin extends JavaPlugin {
         getCommand("getallcards").setExecutor(new GetAllCardsItems(cardManager));
         getCommand("isinvfull").setExecutor(new InvFullCommand(databaseManager));
         getCommand("ping").setExecutor(new PingCommand());
+        getCommand("getcard").setExecutor(new GetRandomCardCommand(cardManager));
 
         getCommand("setlifes").setTabCompleter(new SetLifesTabCompleter());
         getCommand("setprogress").setTabCompleter(new SetProgressTabCompleter(questManager));

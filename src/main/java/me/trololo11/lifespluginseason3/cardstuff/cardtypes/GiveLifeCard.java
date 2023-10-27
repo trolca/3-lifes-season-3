@@ -29,7 +29,7 @@ public class GiveLifeCard extends CardClass {
     }
 
     @Override
-    public float getPercentageChance() {
+    public int getPercentageChance() {
         return 0;
     }
 

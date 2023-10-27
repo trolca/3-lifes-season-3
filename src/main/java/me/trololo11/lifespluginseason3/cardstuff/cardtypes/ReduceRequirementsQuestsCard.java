@@ -26,7 +26,7 @@ public class ReduceRequirementsQuestsCard extends CardClass {
     }
 
     @Override
-    public float getPercentageChance() {
-        return 0.25f;
+    public int getPercentageChance() {
+        return 25;
     }
 }

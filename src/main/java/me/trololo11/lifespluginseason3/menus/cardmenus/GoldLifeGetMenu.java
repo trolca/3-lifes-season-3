@@ -198,7 +198,7 @@ public class GoldLifeGetMenu extends Menu {
 
     /**
      * The stage of the randomizing animation. <br>
-     * The nums mean:
+     * The num mean:
      * <ul>
      *     <li>0 - The animation hasn't started</li>
      *     <li>1 - The animation is playing right now</li>

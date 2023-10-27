@@ -74,6 +74,7 @@ public class DatabaseManager {
         statement.execute("CREATE TABLE IF NOT EXISTS quests_awards_data(uuid varchar(36) primary key, daily_quests tinyint not null, weekly_quests tinyint not null, card_quests tinyint not null)");
         statement.execute("CREATE TABLE IF NOT EXISTS skipped_quests(quest_name varchar(100), quest_type varchar(100))");
         statement.execute("CREATE TABLE IF NOT EXISTS requ_quests(quest_name varchar(100), quest_type varchar(100))");
+        statement.execute("CREATE TABLE IF NOT EXISTS players_taken_card(uuid char(36))");
 
         statement.close();
 
@@ -619,6 +620,38 @@ public class DatabaseManager {
         }
 
         return databaseNamesMap;
+    }
+
+    public void addGotCardPlayer(UUID uuid) throws SQLException {
+        String sql = "INSERT INTO players_taken_card VALUES (?)";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setString(1, uuid.toString());
+
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
+    }
+
+    public ArrayList<UUID> getAllPlayerTakenCard() throws SQLException {
+        String sql = "SELECT * FROM players_taken_card";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        ResultSet results = statement.executeQuery();
+        ArrayList<UUID> allPlayers = new ArrayList<>();
+
+        while(results.next()){
+
+            allPlayers.add( UUID.fromString(results.getString("uuid")) );
+
+        }
+
+        return allPlayers;
     }
 
     public void removeAllQuestValues(QuestType questType) throws SQLException {

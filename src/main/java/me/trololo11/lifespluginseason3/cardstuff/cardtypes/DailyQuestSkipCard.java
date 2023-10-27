@@ -28,7 +28,7 @@ public class DailyQuestSkipCard extends CardClass {
     }
 
     @Override
-    public float getPercentageChance() {
-        return 0.3f;
+    public int getPercentageChance() {
+        return 30;
     }
 }

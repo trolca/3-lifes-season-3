@@ -57,7 +57,7 @@ public abstract class CardClass {
 
     public abstract CardType getCardType();
 
-    public abstract float getPercentageChance();
+    public abstract int getPercentageChance();
 
     public ItemStack getCardItem(){
 

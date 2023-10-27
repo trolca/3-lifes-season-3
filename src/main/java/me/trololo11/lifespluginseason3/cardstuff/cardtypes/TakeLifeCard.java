@@ -26,7 +26,7 @@ public class TakeLifeCard extends CardClass {
     }
 
     @Override
-    public float getPercentageChance() {
-        return 0.6f;
+    public int getPercentageChance() {
+        return 60;
     }
 }
