@@ -11,7 +11,6 @@ import java.util.Date;
 
 public class ChangePageTimeTask extends BukkitRunnable {
 
-    private LifesPlugin plugin = LifesPlugin.getPlugin();
     private QuestManager questsManager;
     private final char whatChange;
     private final QuestType questType;

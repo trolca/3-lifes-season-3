@@ -15,6 +15,8 @@ public abstract class ConfirmMenu extends Menu{
 
     protected abstract ItemStack getIcon();
 
+    protected abstract String getNameSoundIcon();
+
     protected abstract void onConfirm(InventoryClickEvent e, Player player);
 
     protected abstract void onCancel(InventoryClickEvent e, Player player);
@@ -47,6 +49,14 @@ public abstract class ConfirmMenu extends Menu{
 
         if(material == getConfirmItem() && localizedName.equalsIgnoreCase("yes")) onConfirm(e, player);
         else if(material == getCancelItem() && localizedName.equalsIgnoreCase("no")) onCancel(e, player);
+        else if(material == getIcon().getType() && localizedName.equalsIgnoreCase(getIcon().getItemMeta().getLocalizedName())){
+
+            if(getNameSoundIcon() == null) return;
+
+            player.stopAllSounds();
+            player.playSound(player, getNameSoundIcon(), 1f, 1f);
+
+        }
 
 
     }

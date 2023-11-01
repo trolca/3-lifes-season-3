@@ -65,6 +65,13 @@ public class PlayerReviveConfirmMenu extends Menu {
                 playerReviveMenu.open(player);
             }
 
+            case PLAYER_HEAD -> {
+                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("text-confirm")) return;
+
+                player.stopAllSounds();
+                player.playSound(player, "secret.szumiszumi", 1f, 1f);
+            }
+
             case LIME_STAINED_GLASS_PANE -> {
                 if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("yes")) return;
 

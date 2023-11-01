@@ -49,6 +49,11 @@ public class ChangeQuestConfirmMenu extends ConfirmMenu {
     }
 
     @Override
+    protected String getNameSoundIcon() {
+        return "secret.vine_boom";
+    }
+
+    @Override
     protected void onConfirm(InventoryClickEvent e, Player player) {
         Random random = new Random();
         QuestType questType = quest.getQuestType();

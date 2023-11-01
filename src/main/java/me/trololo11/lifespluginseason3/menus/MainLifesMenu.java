@@ -80,6 +80,7 @@ public class MainLifesMenu extends Menu {
         Player player = (Player) e.getWhoClicked();
         ItemStack item = e.getCurrentItem();
 
+
         switch (item.getType()){
 
             case ENCHANTED_BOOK -> {

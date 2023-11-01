@@ -44,6 +44,11 @@ public class QuestHalfConfirmMenu extends ConfirmMenu {
     }
 
     @Override
+    protected String getNameSoundIcon() {
+        return "secret.sus_music";
+    }
+
+    @Override
     protected void onConfirm(InventoryClickEvent e, Player player) {
         quest.setHalfed(true);
         player.getInventory().setItemInMainHand(null);

@@ -27,3 +27,5 @@ commands:
 permissions:
   3lifes3.admin:
     description: "A administator perm for the 3LifesPluginSeason3"
+  3lifes3.stats:
+    description: "A perm that allows you to see the stats of quests in 3LifesPluginS3"

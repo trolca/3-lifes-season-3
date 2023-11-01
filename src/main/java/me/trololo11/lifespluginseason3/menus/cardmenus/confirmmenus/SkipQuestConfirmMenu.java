@@ -42,6 +42,11 @@ public class SkipQuestConfirmMenu extends ConfirmMenu {
     }
 
     @Override
+    protected String getNameSoundIcon() {
+        return "secret.szumiszumi";
+    }
+
+    @Override
     protected void onConfirm(InventoryClickEvent e, Player player) {
         player.sendMessage(Utils.chat("&ePomyślnie pominięto quest &f["+quest.getName()+"&f]"));
         player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
