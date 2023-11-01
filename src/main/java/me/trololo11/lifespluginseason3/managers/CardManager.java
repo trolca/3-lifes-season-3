@@ -4,6 +4,7 @@ import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.cardstuff.CardClass;
 import me.trololo11.lifespluginseason3.cardstuff.CardType;
 import me.trololo11.lifespluginseason3.cardstuff.cardtypes.*;
+import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,10 +19,8 @@ public class CardManager {
 
     private HashMap<CardType, CardClass> cardClassHashMap = new HashMap<>();
     private ArrayList<CardClass> allCards = new ArrayList<>();
-    private ArrayList<UUID> allPlayersTakenCards;
-    private LifesPlugin plugin = LifesPlugin.getPlugin();
 
-    public CardManager(DatabaseManager databaseManager){
+    public CardManager(){
         allCards.add(new GiveLifeCard());
         allCards.add(new TakeLifeCard());
         allCards.add(new DailyQuestSkipCard());
@@ -34,18 +33,6 @@ public class CardManager {
         for(CardClass card : allCards){
             cardClassHashMap.put(card.getCardType(), card);
         }
-
-        try {
-            allPlayersTakenCards = databaseManager.getAllPlayerTakenCard();
-        } catch (SQLException e) {
-            plugin.logger.severe("[3LifesS3] Error while getting all of the players who have taken card from the database!");
-            if (plugin.isDetailedErrors()) throw new RuntimeException(e);
-            else throw new RuntimeException("Check your sql database");
-        }
-    }
-
-    public ArrayList<UUID> getAllPlayersTakenCards(){
-        return allPlayersTakenCards;
     }
 
     /**

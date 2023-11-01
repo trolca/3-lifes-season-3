@@ -20,6 +20,7 @@ import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerChangeLife
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerDeathListener;
 import me.trololo11.lifespluginseason3.listeners.datasetups.PlayerLifesDataSetup;
 import me.trololo11.lifespluginseason3.managers.*;
+import me.trololo11.lifespluginseason3.tasks.WeeklyCardResetTask;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.QuestType;
 import org.bukkit.Bukkit;
@@ -30,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -44,6 +46,7 @@ public final class LifesPlugin extends JavaPlugin {
     private QuestsProgressDataSetup questsProgressDataSetup;
     private QuestsAwardsManager questsAwardsManager;
     private CardManager cardManager;
+    private CardTimingsManager cardTimingsManager;
     private ArrayList<Quest> allSkippedQuests;
 
     private boolean detailedErrors;
@@ -67,7 +70,13 @@ public final class LifesPlugin extends JavaPlugin {
         setupDbProperties();
         logger = Bukkit.getLogger();
 
+        try {
+            cardTimingsManager = new CardTimingsManager();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         databaseManager = new DatabaseManager();
+
 
         try {
             databaseManager.initialize();
@@ -83,6 +92,7 @@ public final class LifesPlugin extends JavaPlugin {
 
         try {
             setupDirs();
+            cardTimingsManager = new CardTimingsManager();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -93,7 +103,8 @@ public final class LifesPlugin extends JavaPlugin {
         questsAwardsManager = new QuestsAwardsManager();
         questManager = new QuestManager(databaseManager, questsTimingsManager, questsAwardsManager);
         questsProgressDataSetup = new QuestsProgressDataSetup(databaseManager, questManager);
-        cardManager = new CardManager(databaseManager);
+        cardManager = new CardManager();
+
 
         try{
             allSkippedQuests = databaseManager.getAllSkippedQuests(questManager);
@@ -103,6 +114,7 @@ public final class LifesPlugin extends JavaPlugin {
 
         teamsManager.registerEverything();
 
+        //Registering general listeners used in plugin
         getServer().getPluginManager().registerEvents(new PlayerChangeLifesListener(lifesManager, teamsManager), this);
         getServer().getPluginManager().registerEvents(new PlayerLifesDataSetup(lifesManager, databaseManager), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(lifesManager), this);
@@ -117,6 +129,7 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GoldLifeMenuExitListener(recipesManager), this);
         getServer().getPluginManager().registerEvents(new GoldLifeUseListener(lifesManager), this);
 
+        //Registering the listeners that are used for cards
         getServer().getPluginManager().registerEvents(new TakeLifeCardListener(cardManager, lifesManager, recipesManager), this);
         getServer().getPluginManager().registerEvents(new GiveLifeCardUseListener(cardManager, lifesManager), this);
         getServer().getPluginManager().registerEvents(new SkipQuestsCardListener(questManager), this);
@@ -125,12 +138,19 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ChangeQuestCardUseListener(questManager), this);
         getServer().getPluginManager().registerEvents(new RequirementsCardListener(questManager), this);
 
+
+
         try {
             setupData();
         } catch (SQLException e) {
             logger.warning("[LifesPluginS3] Error while setting up data!");
             if(detailedErrors) e.printStackTrace();
         }
+
+        long timeWeeklyReset = (cardTimingsManager.getCardEndTime()-new Date().getTime())/50 ;
+        if(timeWeeklyReset < 0 ) timeWeeklyReset = 0; //We cannot have negite delay in tasks so we need to check if it is
+
+        new WeeklyCardResetTask(cardTimingsManager, databaseManager).runTaskLater(this, timeWeeklyReset);
 
 
         getServer().getPluginManager().registerEvents(new BreakBlocksListener(questManager), this);
@@ -143,7 +163,7 @@ public final class LifesPlugin extends JavaPlugin {
         getCommand("getallcards").setExecutor(new GetAllCardsItems(cardManager));
         getCommand("isinvfull").setExecutor(new InvFullCommand(databaseManager));
         getCommand("ping").setExecutor(new PingCommand());
-        getCommand("getcard").setExecutor(new GetRandomCardCommand(cardManager));
+        getCommand("getcard").setExecutor(new GetRandomCardCommand(cardManager, databaseManager));
 
         getCommand("setlifes").setTabCompleter(new SetLifesTabCompleter());
         getCommand("setprogress").setTabCompleter(new SetProgressTabCompleter(questManager));

@@ -120,6 +120,7 @@ public class GoldLifeGetMenu extends Menu {
         switch (item.getType()){
 
             case SCUTE -> {
+                if(randomizingStage != 0) return;
                 if(item.getItemMeta().getLocalizedName().startsWith("life_item") || item.getItemMeta().getLocalizedName().startsWith("player_life") ) {
                     if (e.getClick() == ClickType.NUMBER_KEY) return;
 

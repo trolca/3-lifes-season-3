@@ -63,7 +63,7 @@ public class DatabaseManager {
 
     /**
      * Mostly initalizes the main data source.
-     * @throws SQLException If there was an error to connect to the sql database
+     * @throws SQLException If there was an error while connecting to the sql database
      */
     public void initialize() throws SQLException {
         Connection connection = getConnection();
@@ -71,10 +71,9 @@ public class DatabaseManager {
         Statement statement = connection.createStatement();
 
         statement.execute("CREATE TABLE IF NOT EXISTS player_lifes(uuid varchar(36) primary key not null, lifes tinyint not null, is_revived bool not null)");
-        statement.execute("CREATE TABLE IF NOT EXISTS quests_awards_data(uuid varchar(36) primary key, daily_quests tinyint not null, weekly_quests tinyint not null, card_quests tinyint not null)");
+        statement.execute("CREATE TABLE IF NOT EXISTS quests_awards_data(uuid varchar(36) primary key, daily_quests tinyint not null, weekly_quests tinyint not null, card_quests tinyint not null, weekly_card_taken bool not null)");
         statement.execute("CREATE TABLE IF NOT EXISTS skipped_quests(quest_name varchar(100), quest_type varchar(100))");
         statement.execute("CREATE TABLE IF NOT EXISTS requ_quests(quest_name varchar(100), quest_type varchar(100))");
-        statement.execute("CREATE TABLE IF NOT EXISTS players_taken_card(uuid char(36))");
 
         statement.close();
 
@@ -242,7 +241,7 @@ public class DatabaseManager {
             sqlBuilder.append(" ").append(quest.getDatabaseName()).append(" int not null,");
         }
 
-        String sql = sqlBuilder.toString().substring(0, sqlBuilder.length()-1) + ")";
+        String sql = sqlBuilder.substring(0, sqlBuilder.length()-1) + ")";
         Connection connection = getConnection();
 
         PreparedStatement statement = connection.prepareStatement(sql);
@@ -291,7 +290,7 @@ public class DatabaseManager {
         ArrayList<Quest> activeQuests = questManager.getCorrespondingQuestArray(questType);
 
         for(Quest quest : activeQuests){
-            sql.append(quest.getDatabaseName() + ", ");
+            sql.append(quest.getDatabaseName()).append(", ");
             endSql.append("?, ");
         }
 
@@ -325,7 +324,7 @@ public class DatabaseManager {
 
         ArrayList<Quest> allActiveQuests = questManager.getCorrespondingQuestArray(questType);
         for(Quest quest : allActiveQuests){
-            sql.append(quest.getDatabaseName() + " = ?, ");
+            sql.append(quest.getDatabaseName()).append(" = ?, ");
         }
 
 
@@ -395,7 +394,7 @@ public class DatabaseManager {
     }
 
     public void addPlayerTakenAwards(UUID uuid) throws SQLException {
-        String sql = "INSERT INTO quests_awards_data(uuid, daily_quests, weekly_quests, card_quests) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO quests_awards_data(uuid, daily_quests, weekly_quests, card_quests, weekly_card_taken) VALUES (?, ?, ?, ?, ?)";
 
         Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement(sql);
@@ -404,11 +403,67 @@ public class DatabaseManager {
         statement.setByte(2, (byte) 0);
         statement.setByte(3, (byte) 0);
         statement.setByte(4, (byte) 0);
+        statement.setBoolean(5, false);
 
         statement.executeUpdate();
 
         statement.close();
         connection.close();
+    }
+
+    public void setTakenWeeklyCard(UUID uuid, boolean taken) throws SQLException{
+        String sql = "UPDATE quests_awards_data SET weekly_card_taken = ? WHERE uuid = ?";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setBoolean(1, taken);
+        statement.setString(2, uuid.toString());
+
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
+    }
+
+    public void resetTakenWeeklyCardForAll() throws SQLException{
+        String sql = "UPDATE quests_awards_data SET weekly_card_taken = ?";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setBoolean(1, false);
+
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
+    }
+
+
+    public boolean hasTakenWeeklyCard(UUID uuid) throws SQLException {
+        String sql = "SELECT weekly_card_taken FROM quests_awards_data WHERE uuid = ?";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setString(1, uuid.toString());
+
+        ResultSet results = statement.executeQuery();
+
+        if(results.next()){
+            boolean hasTaken = results.getBoolean("weekly_card_taken");
+
+            connection.close();
+            statement.close();
+
+            return hasTaken;
+        }
+
+        connection.close();
+        statement.close();
+
+        return false;
     }
 
     public ArrayList<Byte> getPlayerTakenAwards(UUID uuid) throws SQLException {
@@ -622,38 +677,6 @@ public class DatabaseManager {
         return databaseNamesMap;
     }
 
-    public void addGotCardPlayer(UUID uuid) throws SQLException {
-        String sql = "INSERT INTO players_taken_card VALUES (?)";
-
-        Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql);
-
-        statement.setString(1, uuid.toString());
-
-        statement.executeUpdate();
-
-        statement.close();
-        connection.close();
-    }
-
-    public ArrayList<UUID> getAllPlayerTakenCard() throws SQLException {
-        String sql = "SELECT * FROM players_taken_card";
-
-        Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql);
-
-        ResultSet results = statement.executeQuery();
-        ArrayList<UUID> allPlayers = new ArrayList<>();
-
-        while(results.next()){
-
-            allPlayers.add( UUID.fromString(results.getString("uuid")) );
-
-        }
-
-        return allPlayers;
-    }
-
     public void removeAllQuestValues(QuestType questType) throws SQLException {
         removeAllSkippedQuests(questType);
         removeAllRequrementsType(questType);
@@ -680,5 +703,3 @@ public class DatabaseManager {
 
 
 }
-
-
