@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class ChangeQuestConfirmMenu extends ConfirmMenu {
@@ -60,6 +61,8 @@ public class ChangeQuestConfirmMenu extends ConfirmMenu {
 
         ArrayList<Quest> allQuests = questManager.getAllQuests();
         ArrayList<Quest> allThisTypesQuests = new ArrayList<>();
+
+
 
         //this only adds quests that are this type cus we can only change quests for the same type
         allQuests.forEach(quest1 -> { if(quest1.getQuestType() == questType) allThisTypesQuests.add(quest1); });

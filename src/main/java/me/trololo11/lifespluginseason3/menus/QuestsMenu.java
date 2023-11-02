@@ -84,11 +84,8 @@ public class QuestsMenu extends Menu {
             Quest quest = quests.get(i);
 
             ItemStack questItem = new ItemStack(quest.getIcon());
-
             ItemMeta questMeta = questItem.getItemMeta();
-
             questMeta.setDisplayName(Utils.chat(quest.getName()));
-
             ArrayList<String> lore = new ArrayList<>(quest.getDescription());
 
 

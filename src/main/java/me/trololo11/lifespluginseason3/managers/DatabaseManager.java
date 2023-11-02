@@ -318,6 +318,41 @@ public class DatabaseManager {
         connection.close();
     }
 
+    /**
+     * This function returns the progress for a specific quests for all of the
+     * offline players
+     * @return A hash map of all the player's progress
+     */
+    public HashMap<OfflinePlayer, Integer> getProgressOfAllOfflinePlayers(Quest quest) throws SQLException {
+        StringBuilder notInStringBuilder = new StringBuilder("(");
+        HashMap<OfflinePlayer, Integer> offlineProgressHashMap = new HashMap<>();
+
+        for(Player player : Bukkit.getOnlinePlayers()){
+            notInStringBuilder.append("'").append(player.getUniqueId()).append("', ");
+        }
+
+        String notInString = notInStringBuilder.substring(0, notInStringBuilder.length()-2);
+
+        notInStringBuilder.append(")");
+
+
+        String sql = "SELECT uuid,"+quest.getDatabaseName()+" FROM "+getQuestTableName(quest.getQuestType())+" WHERE uuid NOT IN "+notInString+")";
+
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        ResultSet results = statement.executeQuery();
+
+        while(results.next()){
+            OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(results.getString("uuid")));
+
+            offlineProgressHashMap.put(player, results.getInt(quest.getDatabaseName()));
+        }
+
+        return offlineProgressHashMap;
+    }
+
     public void updateQuestDataForPlayer(QuestType questType, Player player, QuestManager questManager) throws SQLException {
         StringBuilder sql = new StringBuilder("UPDATE ");
         sql.append(getQuestTableName(questType)).append(" SET ");

@@ -58,7 +58,6 @@ public class Quest {
         this.showProgress = showProgress;
         this.icon = icon;
         this.maxProgress = maxProgress;
-        this.isHalfed = isHalfed;
         ArrayList<String> realDescription = new ArrayList<>();
         for(String str : description){
             realDescription.add(Utils.chat("&f" + str));

@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -102,6 +103,22 @@ public class Utils {
         return item;
     }
 
+    public static ItemStack createEnchantedItem(Material material, String name, String localizedName, Enchantment enchantment, String... lore){
+        ItemStack item = new ItemStack(material);
+
+        ArrayList<String> loreArray = new ArrayList<>();
+
+        for(String string : lore){
+            loreArray.add(Utils.chat(string));
+        }
+
+        item.setItemMeta(getItemMeta(item.getItemMeta(), name, localizedName, loreArray));
+
+        item.addUnsafeEnchantment(enchantment, 1);
+
+        return item;
+    }
+
     public static ItemStack createItem(Material material, String name, String localizedName, List<String> lore){
         ItemStack item = new ItemStack(material);
 
@@ -128,13 +145,6 @@ public class Utils {
         return item;
     }
 
-    public boolean checkByUUID(ArrayList<OfflinePlayer> checkArray, OfflinePlayer player){
-        for(OfflinePlayer checkPlayer : checkArray){
-            if(player.getUniqueId().equals(checkPlayer.getUniqueId())) return true;
-        }
-
-        return false;
-    }
 
     /**
      * Tries to add an item to a player's inventory if it's full it drops the item on the ground
@@ -183,29 +193,6 @@ public class Utils {
     }
 
     /**
-     * Returns a time in string based type. <br>
-     * For ex. "1h3m3s"
-     * @param time The time to format to string. <b>The time must be provided in seconds</b>
-     * @return A formated string based from the time param. <br>
-     * For a param 63 it would return "1m3s"
-     */
-    public static String getStringTime(int time){
-        int days = time/85400;
-        int hours = (time/3600)-(days*24);
-        int minutes = (time/60)-(hours*60);
-        int seconds = time-(minutes*60);
-        StringBuilder stringBuilder = new StringBuilder();
-
-        if(days != 0) stringBuilder.append(days+"d");
-        if(hours != 0) stringBuilder.append(hours+"h");
-        if(minutes != 0) stringBuilder.append(minutes+"m");
-        if(seconds != 0) stringBuilder.append(seconds+"s");
-
-        return stringBuilder.toString();
-
-    }
-
-    /**
      * Checks the inventory for an item that has a localized name which starts the same as the one provided
      * and returns the index of the slot of this item. <br><br>
      * If no item is found it returns -1
@@ -246,19 +233,6 @@ public class Utils {
         if(!item.getItemMeta().hasLocalizedName()) return false;
 
         return item.getItemMeta().getLocalizedName().startsWith(cardType.toString().toLowerCase());
-    }
-
-    public static boolean containsIntArray(int[] array, int checkInt){
-
-        for(int i=0; i < array.length; i++){
-            int num = array[i];
-
-            if(num == checkInt) return true;
-
-        }
-
-        return false;
-
     }
 
 

@@ -161,7 +161,7 @@ public final class LifesPlugin extends JavaPlugin {
         getCommand("lifesmenu").setExecutor(new LifesMenuCommand(questManager, recipesManager, questsAwardsManager));
         getCommand("setprogress").setExecutor(new SetProgressCommand(questManager));
         getCommand("getallcards").setExecutor(new GetAllCardsItems(cardManager));
-        getCommand("isinvfull").setExecutor(new InvFullCommand(databaseManager));
+        getCommand("isinvfull").setExecutor(new InvFullCommand());
         getCommand("ping").setExecutor(new PingCommand());
         getCommand("getcard").setExecutor(new GetRandomCardCommand(cardManager, databaseManager));
 

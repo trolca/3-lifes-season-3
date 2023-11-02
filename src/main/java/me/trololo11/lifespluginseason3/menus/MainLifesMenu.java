@@ -8,6 +8,8 @@ import me.trololo11.lifespluginseason3.utils.QuestType;
 import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -17,6 +19,8 @@ public class MainLifesMenu extends Menu {
     private QuestManager questManager;
     private RecipesManager recipesManager;
     private QuestsAwardsManager questsAwardsManager;
+
+    public boolean developerMode = false;
 
     public MainLifesMenu(QuestManager questManager, RecipesManager recipesManager, QuestsAwardsManager questsAwardsManager){
         this.questManager = questManager;
@@ -43,6 +47,9 @@ public class MainLifesMenu extends Menu {
 
         ItemStack whiteFiller = Utils.createItem(Material.WHITE_STAINED_GLASS_PANE, " ", "filler");
         ItemStack blackFiller = Utils.createItem(Material.BLACK_STAINED_GLASS_PANE, " ", "filler");
+        ItemStack devMode = developerMode ? Utils.createEnchantedItem(Material.GLOWSTONE_DUST, "&a&lDeveloper mode active", "dev-mode", Enchantment.MENDING) :
+                Utils.createItem(Material.REDSTONE, "&cDeveloper mode", "dev-mode");
+
         ItemStack dailyQuests = Utils.createItem(Material.ENCHANTED_BOOK, "&c&lQuesty dzienne", "daily",
                 "&fQuesty które sie restartują codziennie!", "&f&o(Dostajesz z nich kawałek życia)", "",
                 "&bPozostały czas: "+ questManager.getQuestPageTimeText(QuestType.DAILY),
@@ -68,6 +75,7 @@ public class MainLifesMenu extends Menu {
         }
 
         inventory.setItem(4, statistics);
+        if(player.hasPermission("3lifes3.stats")) inventory.setItem(7, devMode);
         inventory.setItem(8, back);
         inventory.setItem(19, dailyQuests);
         inventory.setItem(22, cardQuests);
@@ -103,6 +111,23 @@ public class MainLifesMenu extends Menu {
                 if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("back")) return;
                 player.closeInventory();
             }
+
+            case REDSTONE, GLOWSTONE_DUST -> {
+                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("dev-mode")) return;
+
+                if(!player.hasPermission("3lifes3.stats")){
+                    player.sendMessage(ChatColor.RED + "How did you what?!!?!?");
+                    player.playSound(player, Sound.ENTITY_VILLAGER_NO, 1f, 1f);
+                    player.closeInventory();
+                    return;
+                }
+
+                developerMode = !developerMode;
+                setMenuItems(player);
+
+            }
+
+
 
         }
 
