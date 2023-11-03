@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -49,6 +50,7 @@ public final class LifesPlugin extends JavaPlugin {
     private CardTimingsManager cardTimingsManager;
     private ArrayList<Quest> allSkippedQuests;
 
+    private HashMap<Player, Boolean> developerModePlayers = new HashMap<>();
     private boolean detailedErrors;
     private int tier=1;
     public int dailyQuestsCount=6;
@@ -325,6 +327,18 @@ public final class LifesPlugin extends JavaPlugin {
 
     public static LifesPlugin getPlugin(){
         return LifesPlugin.getPlugin(LifesPlugin.class);
+    }
+
+    public boolean getIsDeveloperMode(Player player){
+        return developerModePlayers.getOrDefault(player, false);
+    }
+
+    public void setDeveloperMode(Player player, boolean isDev){
+        developerModePlayers.put(player, isDev);
+    }
+
+    public void removeDeveloperMode(Player player){
+        developerModePlayers.remove(player);
     }
 
     public boolean isDetailedErrors() {

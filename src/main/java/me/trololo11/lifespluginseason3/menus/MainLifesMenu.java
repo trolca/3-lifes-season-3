@@ -1,5 +1,6 @@
 package me.trololo11.lifespluginseason3.menus;
 
+import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.managers.DatabaseManager;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
@@ -21,6 +22,7 @@ public class MainLifesMenu extends Menu {
     private RecipesManager recipesManager;
     private QuestsAwardsManager questsAwardsManager;
     private DatabaseManager databaseManager;
+    private LifesPlugin plugin = LifesPlugin.getPlugin();
 
     public boolean developerMode = false;
 
@@ -43,6 +45,8 @@ public class MainLifesMenu extends Menu {
 
     @Override
     public void setMenuItems(Player player) {
+
+        developerMode = plugin.getIsDeveloperMode(player); //We initalize the value only when the items are set because we cannot do it in the initializer and it's gonna fire anyways
 
         boolean hasFinishedWeekly = questManager.getPlayerFinishedQuests(player, QuestType.WEEKLY) >= questManager.getCorrespondingQuestArray(QuestType.WEEKLY).size();
         boolean hasFinishedDaily = questManager.getPlayerFinishedQuests(player, QuestType.DAILY) >= questManager.getCorrespondingQuestArray(QuestType.DAILY).size();
@@ -125,7 +129,7 @@ public class MainLifesMenu extends Menu {
                     return;
                 }
 
-                developerMode = !developerMode;
+                plugin.setDeveloperMode(player, !developerMode);
                 setMenuItems(player);
 
             }

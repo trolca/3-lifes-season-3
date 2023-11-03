@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Properties;
 import java.util.UUID;
 
 /**
@@ -349,6 +348,9 @@ public class DatabaseManager {
 
             offlineProgressHashMap.put(player, results.getInt(quest.getDatabaseName()));
         }
+
+        statement.close();
+        connection.close();
 
         return offlineProgressHashMap;
     }

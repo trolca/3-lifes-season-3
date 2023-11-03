@@ -2,12 +2,10 @@ package me.trololo11.lifespluginseason3.menus;
 
 import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.managers.DatabaseManager;
-import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.utils.Menu;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -17,22 +15,18 @@ import org.bukkit.inventory.ItemStack;
 import java.sql.SQLException;
 import java.util.*;
 
-public class CardStatisticsMenu extends Menu  {
+public class QuestsStatisticsMenu extends Menu  {
 
     private QuestsMenu questsMenu;
-    private QuestManager questManager;
-    private DatabaseManager databaseManager;
     private Quest quest;
 
     private LinkedHashMap<OfflinePlayer, Integer> playerQuestProgressMap;
 
-    public CardStatisticsMenu(QuestsMenu questsMenu, Quest quest, DatabaseManager databaseManager, QuestManager questManager){
+    public QuestsStatisticsMenu(QuestsMenu questsMenu, Quest quest, DatabaseManager databaseManager){
         LifesPlugin plugin = LifesPlugin.getPlugin();
 
         this.questsMenu = questsMenu;
         this.quest = quest;
-        this.databaseManager = databaseManager;
-        this.questManager = questManager;
 
         HashMap<OfflinePlayer, Integer> playerQuestProgressHashMap;
 
@@ -52,11 +46,19 @@ public class CardStatisticsMenu extends Menu  {
             playerQuestProgressHashMap.put(player, quest.getPlayerProgress(player));
         }
 
-        List<Integer> playerProgress = new ArrayList<>(playerQuestProgressHashMap.values());
+        //We setup the list off all of the entires that are in the hashMap
+        List<Map.Entry<OfflinePlayer, Integer> > playerProgress = new LinkedList<>(playerQuestProgressHashMap.entrySet());
 
-        playerProgress.sort((o1, o2) -> o2 - o1);
+        //We sort them by their value
+        playerProgress.sort((o1, o2) -> o2.getValue() - o1.getValue());
 
-        playerProgress.forEach(System.out::println);
+        playerQuestProgressMap = new LinkedHashMap<>();
+
+        //We add them to the real hash map so we have them sorted
+        for(Map.Entry<OfflinePlayer, Integer> entry : playerProgress){
+            playerQuestProgressMap.put(entry.getKey(), entry.getValue());
+        }
+
 
     }
 
@@ -82,20 +84,19 @@ public class CardStatisticsMenu extends Menu  {
         inventory.setItem(8, back);
 
         int i = 0;
-        int addI = 0;
+        //int addI = 0;
 
+        //we dont do a for loop bcs a hash map returns a Set
         for(OfflinePlayer questPlayer : playerQuestProgressMap.keySet()){
             int progress = playerQuestProgressMap.get(questPlayer);
 
             ItemStack playerHead = Utils.createPlayerHead(questPlayer, Utils.chat(
                     (player.getUniqueId() == questPlayer.getUniqueId() ? "&2&l" : "&6&l") + (i+1)+". "+
-                    questPlayer.getName() + "&a&l" +
-                            (quest.getMaxProgress() >= progress ? "Skończył!" : progress + "/" + quest.getMaxProgress()))
+                    questPlayer.getName() + "&a&l " +
+                            (progress >= quest.getMaxProgress() ? "Skończył!" : progress + "/" + quest.getMaxProgress()))
                     , questPlayer.getName());
 
-            if(i % 5 == 0) addI++;
-
-            inventory.setItem(( addI + (9 * ( ( (i - 5 * addI )+ 1) ) ) )  , playerHead );
+            inventory.setItem((i+1)*9-( (i/5) * 45 )   , playerHead );
 
             i++;
 
@@ -105,6 +106,15 @@ public class CardStatisticsMenu extends Menu  {
 
     @Override
     public void handleMenu(InventoryClickEvent e) {
+        ItemStack item = e.getCurrentItem();
+        Player player = (Player) e.getWhoClicked();
+
+        if(item.getType() == Material.RED_DYE){
+            if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("back")) return;
+
+            questsMenu.open(player);
+
+        }
 
     }
 }

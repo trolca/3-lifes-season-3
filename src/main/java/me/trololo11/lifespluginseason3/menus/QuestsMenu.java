@@ -4,7 +4,6 @@ import me.trololo11.lifespluginseason3.managers.DatabaseManager;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
-import me.trololo11.lifespluginseason3.menus.MainLifesMenu;
 import me.trololo11.lifespluginseason3.menus.questawardmenus.LifeShardAwardsMenu;
 import me.trololo11.lifespluginseason3.menus.questawardmenus.WeeklyQuestsAwardsMenu;
 import me.trololo11.lifespluginseason3.utils.Menu;
@@ -15,7 +14,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -136,9 +134,9 @@ public class QuestsMenu extends Menu {
 
         String localizedName = item.getItemMeta().getLocalizedName();
 
-        if(localizedName.startsWith("quest-")){
+        if(mainLifesMenu.developerMode && localizedName.startsWith("quest-") && player.hasPermission("3lifes3.stats")){
             Quest clickedQuest = questManager.getQuestByDatabaseName(questTypeOfThisInv, localizedName.substring(6));
-            new CardStatisticsMenu(this, clickedQuest, databaseManager, questManager).open(player);
+            new QuestsStatisticsMenu(this, clickedQuest, databaseManager).open(player);
             return;
         }
 

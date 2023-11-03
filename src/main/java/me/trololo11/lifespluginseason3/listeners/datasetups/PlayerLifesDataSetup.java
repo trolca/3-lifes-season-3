@@ -1,5 +1,6 @@
 package me.trololo11.lifespluginseason3.listeners.datasetups;
 
+import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.managers.DatabaseManager;
 import me.trololo11.lifespluginseason3.managers.LifesManager;
@@ -26,6 +27,7 @@ public class PlayerLifesDataSetup implements Listener {
 
     private LifesManager lifesManager;
     private DatabaseManager databaseManager;
+    private LifesPlugin plugin = LifesPlugin.getPlugin();
 
     public PlayerLifesDataSetup(LifesManager lifesManager, DatabaseManager databaseManager){
         this.lifesManager = lifesManager;
@@ -62,6 +64,8 @@ public class PlayerLifesDataSetup implements Listener {
         databaseManager.updatePlayerLifes(player.getUniqueId(), lifes);
 
         lifesManager.removePlayerLifes(player);
+
+        plugin.removeDeveloperMode(player);
     }
 
 }
