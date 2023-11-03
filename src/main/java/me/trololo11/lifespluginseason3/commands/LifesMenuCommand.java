@@ -1,5 +1,6 @@
 package me.trololo11.lifespluginseason3.commands;
 
+import me.trololo11.lifespluginseason3.managers.DatabaseManager;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
@@ -15,11 +16,13 @@ public class LifesMenuCommand implements CommandExecutor {
     private QuestManager questManager;
     private RecipesManager recipesManager;
     private QuestsAwardsManager questsAwardsManager;
+    private DatabaseManager databaseManager;
 
-    public LifesMenuCommand(QuestManager questManager, RecipesManager recipesManager, QuestsAwardsManager questsAwardsManager){
+    public LifesMenuCommand(QuestManager questManager, RecipesManager recipesManager, QuestsAwardsManager questsAwardsManager, DatabaseManager databaseManager){
         this.questManager = questManager;
         this.recipesManager = recipesManager;
         this.questsAwardsManager = questsAwardsManager;
+        this.databaseManager = databaseManager;
     }
 
     @Override
@@ -29,7 +32,7 @@ public class LifesMenuCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        new MainLifesMenu(questManager, recipesManager, questsAwardsManager).open(player);
+        new MainLifesMenu(questManager, recipesManager, questsAwardsManager, databaseManager).open(player);
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
 
         return true;

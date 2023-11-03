@@ -7,6 +7,7 @@ import me.trololo11.lifespluginseason3.utils.Menu;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -80,6 +81,25 @@ public class CardStatisticsMenu extends Menu  {
 
         inventory.setItem(8, back);
 
+        int i = 0;
+        int addI = 0;
+
+        for(OfflinePlayer questPlayer : playerQuestProgressMap.keySet()){
+            int progress = playerQuestProgressMap.get(questPlayer);
+
+            ItemStack playerHead = Utils.createPlayerHead(questPlayer, Utils.chat(
+                    (player.getUniqueId() == questPlayer.getUniqueId() ? "&2&l" : "&6&l") + (i+1)+". "+
+                    questPlayer.getName() + "&a&l" +
+                            (quest.getMaxProgress() >= progress ? "Skończył!" : progress + "/" + quest.getMaxProgress()))
+                    , questPlayer.getName());
+
+            if(i % 5 == 0) addI++;
+
+            inventory.setItem(( addI + (9 * ( ( (i - 5 * addI )+ 1) ) ) )  , playerHead );
+
+            i++;
+
+        }
 
     }
 

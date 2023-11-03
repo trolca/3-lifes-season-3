@@ -4,6 +4,7 @@ import me.trololo11.lifespluginseason3.events.QuestFinishedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import me.trololo11.lifespluginseason3.managers.QuestManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,9 +51,26 @@ public class Quest {
      * A hashMap that stores all of the player's quests progress which are online on the server.
      * When a player leaves or the server stopes the progress is saved to the database from this hashMap
      */
-    private final HashMap<Player, Integer> playerProgress = new HashMap<>();
+    private HashMap<Player, Integer> playerProgress = null;
 
-    public Quest(String name, String databaseName, int maxProgress, boolean showProgress, Material icon, ArrayList<String> description, QuestType questType, ListenerType listenerType, ArrayList<Object> targets) {
+    /**
+     * This class represents a custom quest which should be created from a YML file. <br><br>
+     *  * It stores information such as:
+     * @param name The name of the quest that is displayed by this plugin
+     * @param databaseName The name that is used for storing the progress in the sql database.
+     *                     This name is also used for general identification
+     * @param maxProgress The progress that players are meant to get
+     * @param showProgress If this quest shows progress (how much a player has done it) in the quest menu
+     * @param icon The icon of this plugin
+     * @param description The description of this quest that is gonna be displayed
+     * @param questType The {@link QuestType} of this quest (aka in which page you can see it)
+     * @param listenerType The {@link ListenerType} of this quest.
+     *                     You can read more about this in {@link QuestManager}
+     * @param targets The targets for the specified listener type
+     * @param isActive If the quest is active aka if players can make progress in it.
+     *                 (If it's false the internal hashMap where the online players progress is stored going to be null)
+     */
+    public Quest(String name, String databaseName, int maxProgress, boolean showProgress, Material icon, ArrayList<String> description, QuestType questType, ListenerType listenerType, ArrayList<Object> targets, boolean isActive) {
         this.name = name;
         this.databaseName = databaseName;
         this.showProgress = showProgress;
@@ -66,6 +84,7 @@ public class Quest {
         this.questType = questType;
         this.listenerType = listenerType;
         this.targets = targets;
+        if(isActive) playerProgress = new HashMap<>();
     }
 
     public String getName() {
@@ -138,6 +157,21 @@ public class Quest {
     public void setSilentPlayerProgress(Player player, int progress){
         playerProgress.put(player, progress);
         if(hasFinished(player)) Bukkit.getServer().getPluginManager().callEvent(new QuestFinishedEvent(player, this, false));
+    }
+
+    /**
+     * This function "activates" this quest.
+     * Makes the hashMap that saves the online players progress
+     */
+    public void activate(){
+        playerProgress = new HashMap<>();
+    }
+
+    /**
+     * Makes the  hashMap that saves the online players progress null
+     */
+    public void unActivate(){
+        playerProgress = null;
     }
 
 

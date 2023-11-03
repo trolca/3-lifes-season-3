@@ -1,5 +1,6 @@
 package me.trololo11.lifespluginseason3.menus;
 
+import me.trololo11.lifespluginseason3.managers.DatabaseManager;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
@@ -29,17 +30,19 @@ public class QuestsMenu extends Menu {
     private QuestManager questManager;
     private QuestsAwardsManager questsAwardsManager;
     private QuestType questTypeOfThisInv;
+    private DatabaseManager databaseManager;
     private String invName;
     private RecipesManager recipesManager;
     private ArrayList<Quest> quests;
 
-    public QuestsMenu(MainLifesMenu mainLifesMenu, String invName, QuestType questType, QuestManager questManager, QuestsAwardsManager questsAwardsManager ,  RecipesManager recipesManager){
+    public QuestsMenu(MainLifesMenu mainLifesMenu, String invName, QuestType questType, QuestManager questManager, QuestsAwardsManager questsAwardsManager ,  RecipesManager recipesManager, DatabaseManager databaseManager){
         this.mainLifesMenu = mainLifesMenu;
         this.questManager = questManager;
         this.questsAwardsManager = questsAwardsManager;
         this.questTypeOfThisInv = questType;
         this.recipesManager = recipesManager;
         this.invName = invName;
+        this.databaseManager = databaseManager;
         quests = questManager.getCorrespondingQuestArray(questType);
     }
 
@@ -86,6 +89,9 @@ public class QuestsMenu extends Menu {
             ItemStack questItem = new ItemStack(quest.getIcon());
             ItemMeta questMeta = questItem.getItemMeta();
             questMeta.setDisplayName(Utils.chat(quest.getName()));
+
+            if(mainLifesMenu.developerMode) questMeta.addEnchant(Enchantment.MENDING, 1, true);
+
             ArrayList<String> lore = new ArrayList<>(quest.getDescription());
 
 
@@ -102,7 +108,7 @@ public class QuestsMenu extends Menu {
                 lore.add(Utils.chat("&a&lSkończony!"));
             }
 
-            questMeta.setLocalizedName(quest.getDatabaseName());
+            questMeta.setLocalizedName("quest-"+quest.getDatabaseName());
             questMeta.setLore(lore);
             questMeta.addItemFlags(ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES);
 
@@ -127,6 +133,14 @@ public class QuestsMenu extends Menu {
 
         Player player = (Player) e.getWhoClicked();
         ItemStack item = e.getCurrentItem();
+
+        String localizedName = item.getItemMeta().getLocalizedName();
+
+        if(localizedName.startsWith("quest-")){
+            Quest clickedQuest = questManager.getQuestByDatabaseName(questTypeOfThisInv, localizedName.substring(6));
+            new CardStatisticsMenu(this, clickedQuest, databaseManager, questManager).open(player);
+            return;
+        }
 
         switch (item.getType()){
 

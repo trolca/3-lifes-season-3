@@ -1,5 +1,6 @@
 package me.trololo11.lifespluginseason3.menus;
 
+import me.trololo11.lifespluginseason3.managers.DatabaseManager;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
@@ -19,13 +20,15 @@ public class MainLifesMenu extends Menu {
     private QuestManager questManager;
     private RecipesManager recipesManager;
     private QuestsAwardsManager questsAwardsManager;
+    private DatabaseManager databaseManager;
 
     public boolean developerMode = false;
 
-    public MainLifesMenu(QuestManager questManager, RecipesManager recipesManager, QuestsAwardsManager questsAwardsManager){
+    public MainLifesMenu(QuestManager questManager, RecipesManager recipesManager, QuestsAwardsManager questsAwardsManager, DatabaseManager databaseManager){
         this.questManager = questManager;
         this.recipesManager = recipesManager;
         this.questsAwardsManager = questsAwardsManager;
+        this.databaseManager = databaseManager;
     }
 
     @Override
@@ -99,12 +102,12 @@ public class MainLifesMenu extends Menu {
                     return;
                 }
 
-                new QuestsMenu(this, questType == QuestType.DAILY ? "&c&lQuesty dzienne" : "&e&lQuesty tygodniowe", questType, questManager,questsAwardsManager, recipesManager).open(player);
+                new QuestsMenu(this, questType == QuestType.DAILY ? "&c&lQuesty dzienne" : "&e&lQuesty tygodniowe", questType, questManager,questsAwardsManager, recipesManager, databaseManager).open(player);
             }
 
             case PAPER -> {
                 if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("card")) return;
-                new QuestsMenu(this, "&f&lQuesty do karty", QuestType.CARD, questManager,questsAwardsManager, recipesManager).open(player);
+                new QuestsMenu(this, "&f&lQuesty do karty", QuestType.CARD, questManager,questsAwardsManager, recipesManager, databaseManager).open(player);
             }
 
             case RED_DYE ->{
