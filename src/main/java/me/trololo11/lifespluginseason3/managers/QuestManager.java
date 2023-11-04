@@ -1,13 +1,13 @@
 package me.trololo11.lifespluginseason3.managers;
 
+import me.trololo11.lifespluginseason3.LifesPlugin;
+import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsProgressDataSetup;
 import me.trololo11.lifespluginseason3.menus.MainLifesMenu;
 import me.trololo11.lifespluginseason3.tasks.ChangePageTimeTask;
-import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.utils.ListenerType;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.QuestType;
 import me.trololo11.lifespluginseason3.utils.QuestUtils;
-import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsProgressDataSetup;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,7 +20,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Random;
 
 /**
  * This class stores and manages all of the object of {@link Quest} that

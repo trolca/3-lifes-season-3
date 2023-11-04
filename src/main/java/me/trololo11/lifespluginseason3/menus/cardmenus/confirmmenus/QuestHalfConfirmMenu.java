@@ -1,7 +1,7 @@
 package me.trololo11.lifespluginseason3.menus.cardmenus.confirmmenus;
 
-import me.trololo11.lifespluginseason3.menus.cardmenus.QuestSelectMenu;
 import me.trololo11.lifespluginseason3.menus.QuestsMenu;
+import me.trololo11.lifespluginseason3.menus.cardmenus.QuestSelectMenu;
 import me.trololo11.lifespluginseason3.utils.ConfirmMenu;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.Utils;

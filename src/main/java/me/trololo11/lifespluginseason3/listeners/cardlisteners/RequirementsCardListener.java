@@ -2,8 +2,8 @@ package me.trololo11.lifespluginseason3.listeners.cardlisteners;
 
 import me.trololo11.lifespluginseason3.cardstuff.CardType;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
-import me.trololo11.lifespluginseason3.menus.cardmenus.confirmmenus.QuestHalfConfirmMenu;
 import me.trololo11.lifespluginseason3.menus.cardmenus.QuestSelectMenu;
+import me.trololo11.lifespluginseason3.menus.cardmenus.confirmmenus.QuestHalfConfirmMenu;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.QuestSelectFunction;
 import me.trololo11.lifespluginseason3.utils.Utils;

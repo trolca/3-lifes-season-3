@@ -1,6 +1,5 @@
 package me.trololo11.lifespluginseason3.utils;
 
-import me.trololo11.lifespluginseason3.managers.LifesManager;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;

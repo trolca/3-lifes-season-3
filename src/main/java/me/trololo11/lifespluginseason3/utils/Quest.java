@@ -1,15 +1,13 @@
 package me.trololo11.lifespluginseason3.utils;
 
 import me.trololo11.lifespluginseason3.events.QuestFinishedEvent;
+import me.trololo11.lifespluginseason3.managers.QuestManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import me.trololo11.lifespluginseason3.managers.QuestManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * This class represents a custom quest which should be created from a YML file. <br><br>

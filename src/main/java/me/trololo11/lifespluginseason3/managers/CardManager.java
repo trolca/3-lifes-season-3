@@ -1,15 +1,11 @@
 package me.trololo11.lifespluginseason3.managers;
 
-import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.cardstuff.CardClass;
 import me.trololo11.lifespluginseason3.cardstuff.CardType;
 import me.trololo11.lifespluginseason3.cardstuff.cardtypes.*;
-import org.bukkit.entity.Player;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.UUID;
 
 /**
  * This class bassicaly stores all of the {@link CardClass} in a hash map

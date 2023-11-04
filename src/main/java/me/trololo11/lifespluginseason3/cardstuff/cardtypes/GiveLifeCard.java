@@ -3,8 +3,6 @@ package me.trololo11.lifespluginseason3.cardstuff.cardtypes;
 import me.trololo11.lifespluginseason3.cardstuff.CardClass;
 import me.trololo11.lifespluginseason3.cardstuff.CardType;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
 
 public class GiveLifeCard extends CardClass {
 

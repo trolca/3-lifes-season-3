@@ -1,6 +1,5 @@
 package me.trololo11.lifespluginseason3.listeners;
 
-import me.trololo11.lifespluginseason3.cardstuff.CardType;
 import me.trololo11.lifespluginseason3.events.QuestFinishedEvent;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;

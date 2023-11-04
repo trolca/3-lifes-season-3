@@ -1,7 +1,7 @@
 package me.trololo11.lifespluginseason3.cardstuff;
 
-import me.trololo11.lifespluginseason3.utils.Utils;
 import me.trololo11.lifespluginseason3.managers.CardManager;
+import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

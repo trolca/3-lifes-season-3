@@ -2,7 +2,10 @@ package me.trololo11.lifespluginseason3.menus.cardmenus.confirmmenus;
 
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.menus.cardmenus.QuestSelectMenu;
-import me.trololo11.lifespluginseason3.utils.*;
+import me.trololo11.lifespluginseason3.utils.ConfirmMenu;
+import me.trololo11.lifespluginseason3.utils.Quest;
+import me.trololo11.lifespluginseason3.utils.QuestType;
+import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 public class ChangeQuestConfirmMenu extends ConfirmMenu {

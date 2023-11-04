@@ -1,6 +1,5 @@
 package me.trololo11.lifespluginseason3.tasks;
 
-import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.utils.QuestType;
 import org.bukkit.scheduler.BukkitRunnable;

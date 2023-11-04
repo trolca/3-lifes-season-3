@@ -1,6 +1,5 @@
 package me.trololo11.lifespluginseason3.events;
 
-import me.trololo11.lifespluginseason3.managers.LifesManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

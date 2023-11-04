@@ -3,10 +3,7 @@ package me.trololo11.lifespluginseason3.tasks;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.UUID;
 
 /**
  * This task unstacks all of stacked lifes or revive cards in a player inventory

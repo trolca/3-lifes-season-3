@@ -1,7 +1,6 @@
 package me.trololo11.lifespluginseason3.utils;
 
 import me.trololo11.lifespluginseason3.cardstuff.CardType;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -14,7 +13,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Utils {
