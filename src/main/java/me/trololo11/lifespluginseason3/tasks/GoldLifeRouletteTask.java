@@ -20,6 +20,7 @@ public class GoldLifeRouletteTask extends BukkitRunnable  {
     private final int allSpins;
     private int currIndex = 0;
     private boolean running = true;
+    private boolean stopped = false;
 
     public GoldLifeRouletteTask(GoldLifeGetMenu goldLifeGetMenu, Player player, int finalSpins){
         random = new Random();
@@ -37,7 +38,7 @@ public class GoldLifeRouletteTask extends BukkitRunnable  {
     @Override
     public void run() {
 
-        while (running) {
+        while (running && !stopped) {
             if (currIndex % 8 == 0) currIndex = 0;
 
             goldLifeGetMenu.setPointer(currIndex, player);
@@ -71,6 +72,7 @@ public class GoldLifeRouletteTask extends BukkitRunnable  {
             }
         }
 
+        if(stopped) return;
 
         try {
             Thread.sleep(900);
@@ -83,6 +85,6 @@ public class GoldLifeRouletteTask extends BukkitRunnable  {
     }
 
     public void stop(){
-        running = false;
+        stopped = true;
     }
 }

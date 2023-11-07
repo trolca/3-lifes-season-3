@@ -16,29 +16,13 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class GetRandomCardCommand implements CommandExecutor {
-
-    private int highestChance = 0;
-    private HashMap<Integer, ArrayList<CardClass>> percentageCards = new HashMap<>();
     private DatabaseManager databaseManager;
+    private CardManager cardManager;
     private LifesPlugin plugin = LifesPlugin.getPlugin();
 
     public GetRandomCardCommand(CardManager cardManager, DatabaseManager databaseManager){
-        ArrayList<CardClass> allCards = cardManager.getAllCards();
-
-        for(CardClass card : allCards){
-
-            int percentageChance = card.getPercentageChance();
-            if(!percentageCards.containsKey(percentageChance)){
-                percentageCards.put(percentageChance, new ArrayList<>());
-            }
-
-            if(highestChance < percentageChance) highestChance = percentageChance;
-
-            percentageCards.get(percentageChance).add(card);
-
-        }
         this.databaseManager = databaseManager;
-
+        this.cardManager = cardManager;
     }
 
     @Override
@@ -60,25 +44,7 @@ public class GetRandomCardCommand implements CommandExecutor {
             if(plugin.isDetailedErrors()) e.printStackTrace(System.out);
         }
 
-        Random random = new Random();
-
-        int theChosenChance = -1;
-
-        for(int chance : percentageCards.keySet()){
-
-            int randNum = random.nextInt(100)+1;
-            if(randNum <= chance ){
-                theChosenChance = chance;
-                break;
-            }
-
-        }
-
-
-        if(theChosenChance == -1) theChosenChance = highestChance;
-
-        ArrayList<CardClass> chosenCardsArray = percentageCards.get(theChosenChance);
-        CardClass card = chosenCardsArray.get( random.nextInt(chosenCardsArray.size()) );
+        CardClass card = cardManager.getRandomCard(new Random());
 
         player.sendMessage(ChatColor.GREEN + "Pomyślnie dodano losową karte!");
         player.getInventory().addItem(card.getCardItem());
@@ -89,7 +55,6 @@ public class GetRandomCardCommand implements CommandExecutor {
             plugin.logger.warning("[3LifesPluginS3] Error while getting the player has taken weekly card data!");
             if(plugin.isDetailedErrors()) e.printStackTrace(System.out);
         }
-
 
         return true;
     }

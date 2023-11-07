@@ -146,6 +146,10 @@ public class Quest {
         if(hasFinished(player) && isInital) Bukkit.getServer().getPluginManager().callEvent(new QuestFinishedEvent(player, this, true));
     }
 
+    public HashMap<Player, Integer> getPlayerProgressHashMap(){
+        return playerProgress.isEmpty() ? new HashMap<>() :  new HashMap<>(playerProgress);
+    }
+
     /**
      * Sets the players progress but if player finishes this quest
      * it doesn't show the message in chat

@@ -120,8 +120,8 @@ public class GoldLifeGetMenu extends Menu {
         switch (item.getType()){
 
             case SCUTE -> {
-                if(randomizingStage != 0) return;
-                if(item.getItemMeta().getLocalizedName().startsWith("life_item") || item.getItemMeta().getLocalizedName().startsWith("player_life") ) {
+                if(currLife != null) return;
+                if(randomizingStage == 0 && (item.getItemMeta().getLocalizedName().startsWith("life_item") || item.getItemMeta().getLocalizedName().startsWith("player_life")) ) {
                     if (e.getClick() == ClickType.NUMBER_KEY) return;
 
                     player.getInventory().setItem(e.getSlot(), null);
@@ -157,6 +157,7 @@ public class GoldLifeGetMenu extends Menu {
 
             case RED_DYE -> {
                 if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("back")) return;
+                if(e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) return;
 
                 player.closeInventory();
             }
@@ -168,9 +169,9 @@ public class GoldLifeGetMenu extends Menu {
     }
 
     public void stoppedRandomizing(Player player){
+        randomizingStage = 2;
         Bukkit.getScheduler().cancelTask(goldLifeRouletteTask.getTaskId());
         goldLifeRouletteTask.stop();
-        randomizingStage = 2;
 
         if(hasWon){
             player.playSound(player, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);

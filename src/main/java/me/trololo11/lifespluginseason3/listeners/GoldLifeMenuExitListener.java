@@ -2,6 +2,7 @@ package me.trololo11.lifespluginseason3.listeners;
 
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
 import me.trololo11.lifespluginseason3.menus.cardmenus.GoldLifeGetMenu;
+import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -30,17 +31,17 @@ public class GoldLifeMenuExitListener implements Listener  {
             if(goldLifeGetMenu.getRandomizingStage() == 0) player.getInventory().addItem(goldLifeGetMenu.currLife);
 
             if(goldLifeGetMenu.getRandomizingStage() == 1) {
-                player.getInventory().addItem(goldLifeGetMenu.currLife);
 
-                Bukkit.getScheduler().cancelTask(goldLifeGetMenu.getThisGoldLifeRouletteTask().getTaskId());
                 goldLifeGetMenu.getThisGoldLifeRouletteTask().stop();
+                Bukkit.getScheduler().cancelTask(goldLifeGetMenu.getThisGoldLifeRouletteTask().getTaskId());
 
-                player.sendMessage(ChatColor.RED + "Właśnie wyszłeś z losowania na złote życie i niestety straciłeś karte :<");
+
+                player.sendMessage(ChatColor.RED + "Właśnie wyszłeś z losowania na złote życie i niestety straciłeś karte i życie :<");
                 player.sendMessage(ChatColor.GRAY + ChatColor.ITALIC.toString() + "(Nastepnym razem nie wychodz)");
 
             }else if(goldLifeGetMenu.getRandomizingStage() == 2 && goldLifeGetMenu.hasWon()){
 
-                player.getInventory().addItem(recipesManager.getGoldLifeItem());
+                Utils.addSafelyItem(recipesManager.getGoldLifeItem(), player);
 
             }
 

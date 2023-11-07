@@ -51,7 +51,7 @@ public class QuestManager {
     private final HashMap<String, Quest> allDatabaseNameQuestsHashMap = new HashMap<>();
 
 
-    private final ArrayList<Quest> allQuests = new ArrayList<>();
+    private final ArrayList<Quest> allUnactiveQuests = new ArrayList<>();
     private final ArrayList<Quest> allActiveQuests = new ArrayList<>();
     private final ArrayList<Quest> activeDailyQuests = new ArrayList<>();
     private final ArrayList<Quest> activeWeeklyQuests = new ArrayList<>();
@@ -87,9 +87,9 @@ public class QuestManager {
 
         HashMap<QuestType, ArrayList<String>> halfedQuestMap = databaseManager.getAllQuestHalfed();
 
-        allQuests.addAll(getAllQuestsInFolder(mainFolder + "/daily-quests/tier-"+tier, QuestType.DAILY, false));
-        allQuests.addAll(getAllQuestsInFolder(mainFolder + "/weekly-quests/tier-"+tier, QuestType.WEEKLY, false));
-        allQuests.addAll(getAllQuestsInFolder(mainFolder + "/card-quests/tier-"+tier, QuestType.CARD, false));
+        allUnactiveQuests.addAll(getAllQuestsInFolder(mainFolder + "/daily-quests/tier-"+tier, QuestType.DAILY, false));
+        allUnactiveQuests.addAll(getAllQuestsInFolder(mainFolder + "/weekly-quests/tier-"+tier, QuestType.WEEKLY, false));
+        allUnactiveQuests.addAll(getAllQuestsInFolder(mainFolder + "/card-quests/tier-"+tier, QuestType.CARD, false));
 
 
         activeDailyQuests.addAll(getAllQuestsInFolder(mainFolder + "/daily-quests/active-quests", QuestType.DAILY, halfedQuestMap, true));
@@ -144,7 +144,7 @@ public class QuestManager {
 
         //We have to remove these quests seperetly because we cannot modify and go through the array at the same time
         for(Quest quest : questsToDeletion){
-            allQuests.add(quest);
+            allUnactiveQuests.add(quest);
             listenerTypesQuests.get(quest.getListenerType()).remove(quest);
             getCorrespondingQuestArray(quest.getQuestType()).remove(quest);
             allActiveQuests.remove(quest);
@@ -275,7 +275,7 @@ public class QuestManager {
         Date todayDate = new Date();
         Date newDate = new Date(todayDate.getTime()+newTime);
         Random r = new Random();
-        ArrayList<Quest> randomizedQuests = new ArrayList<>(allQuests);
+        ArrayList<Quest> randomizedQuests = new ArrayList<>(allUnactiveQuests);
         randomizedQuests.removeIf(quest -> quest.getQuestType() != questType);
         ArrayList<Quest> currQuestArray = getCorrespondingQuestArray(questType);
         ArrayList<String> existingNames = new ArrayList<>();
@@ -317,7 +317,7 @@ public class QuestManager {
             questFilePaths.put(addQuest, newPath.toString());
             questFile.delete();
 
-            allQuests.remove(addQuest);
+            allUnactiveQuests.remove(addQuest);
         }
 
         File tierCheck = new File(plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/active-quests/curr-tier.yml");
@@ -364,7 +364,7 @@ public class QuestManager {
         ArrayList<Quest> cloneActiveQuests = (ArrayList<Quest>) activeQuests.clone();
 
         for(Quest quest : cloneActiveQuests){
-            allQuests.add(quest);
+            allUnactiveQuests.add(quest);
             listenerTypesQuests.get(quest.getListenerType()).remove(quest);
             getCorrespondingQuestArray(quest.getQuestType()).remove(quest);
             allActiveQuests.remove(quest);
@@ -381,8 +381,9 @@ public class QuestManager {
      */
     private void moveQuest(Quest quest, String moveToPath) throws IOException {
         File questFile = new File(questFilePaths.get(quest));
-        Files.copy(questFile.toPath(), Path.of(moveToPath + "/"+ questFile.getName()), StandardCopyOption.REPLACE_EXISTING);
-        questFilePaths.put(quest, moveToPath);
+        String newPath = moveToPath + "/"+ questFile.getName();
+        Files.copy(questFile.toPath(), Path.of(newPath), StandardCopyOption.REPLACE_EXISTING);
+        questFilePaths.put(quest, newPath);
         questFile.delete();
     }
 
@@ -398,7 +399,6 @@ public class QuestManager {
      * @throws SQLException When theres an error while renaming the sql tables
      */
     public void changeQuest(Quest quest, Quest changeToQuest) throws IOException, SQLException {
-
         if(quest.getQuestType() != changeToQuest.getQuestType()){
             plugin.logger.warning("[3LifesPluginS3] Tried to change quests that do not have the same quest type!");
             return;
@@ -417,6 +417,9 @@ public class QuestManager {
 
         databaseManager.changeNameOfQuestColumn(questType, quest.getDatabaseName(), changeToQuest.getDatabaseName());
 
+        quest.unActivate();
+        changeToQuest.activate();
+
         ArrayList<Quest> correspondingArray = getCorrespondingQuestArray(questType);
 
         correspondingArray.remove(quest);
@@ -424,8 +427,9 @@ public class QuestManager {
         allActiveQuests.remove(quest);
         allActiveQuests.add(changeToQuest);
 
-        allQuests.remove(changeToQuest);
-        allQuests.add(quest);
+
+        allUnactiveQuests.remove(changeToQuest);
+        allUnactiveQuests.add(quest);
 
 
     }
@@ -698,8 +702,8 @@ public class QuestManager {
      * Returns an array of all unactive quests
      * @return All unactive quests
      */
-    public ArrayList<Quest> getAllQuests() {
-        return allQuests;
+    public ArrayList<Quest> getAllUnactiveQuests() {
+        return allUnactiveQuests;
     }
 
     public Quest getQuestByDatabaseName(String databaseName){

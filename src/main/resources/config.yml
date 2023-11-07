@@ -3,6 +3,8 @@ port: '' #leave empty to use the default (1433)
 user: 'root'
 password: ''
 
+database-name: 'lifes3_database'
+
 detailed-errors: false #do true if you want to have stack traces printed
 
 quest-tier: 1 # the tier of quests that is currently set (max value: 3)

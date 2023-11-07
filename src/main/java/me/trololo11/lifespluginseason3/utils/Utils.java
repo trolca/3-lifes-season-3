@@ -151,7 +151,7 @@ public class Utils {
      */
     public static void addSafelyItem(ItemStack itemStack, Player player){
 
-        if(isInventoryFull(player.getInventory())){
+        if(isPlayerInvFull(player.getInventory())){
             player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
         }else{
             player.getInventory().addItem(itemStack);

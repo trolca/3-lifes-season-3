@@ -24,7 +24,6 @@ public class ChangeQuestCardUseListener implements Listener {
         questSelectFunction = (quest, player, questSelectMenu) -> new ChangeQuestConfirmMenu(quest, questManager, questSelectMenu).open(player);
     }
 
-
     @EventHandler
     public void onUse(PlayerInteractEvent e){
         if(e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) return;

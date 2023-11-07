@@ -36,7 +36,11 @@ public class DatabaseManager {
         String url = "jdbc:mysql://"+host+":"+port;
         String user = plugin.getConfig().getString("user");
         String password = plugin.getConfig().getString("password");
-        String databaseName = "lifes3_database";
+        String databaseName = plugin.getConfig().getString("database-name");
+
+        if(databaseName == null || databaseName.isEmpty()){
+            databaseName = "lifes3_database";
+        }
 
 
         Connection databaseCheck = DriverManager.getConnection(url, user, password);
