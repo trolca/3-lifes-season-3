@@ -2,7 +2,6 @@ package me.trololo11.lifespluginseason3.commands;
 
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.utils.Quest;
-import me.trololo11.lifespluginseason3.utils.QuestType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -45,13 +44,6 @@ public class SetProgressCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "Napisz jaki nowy ma być progress!");
             return true;
         }
-        QuestType questType = null;
-        try {
-            questType = QuestType.valueOf(args[1].toUpperCase());
-        }catch (IllegalArgumentException e){
-            sender.sendMessage(ChatColor.RED + "Niepoprawny typ questa");
-            return true;
-        }
 
 
         Player player = Bukkit.getPlayer(args[0]);
@@ -66,7 +58,7 @@ public class SetProgressCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "Ten quest nie istnieje!");
             return true;
         }
-        int newProgress = 0;
+        int newProgress;
         try {
             newProgress = Integer.parseInt(args[3]);
         }catch (NumberFormatException e){
@@ -76,7 +68,7 @@ public class SetProgressCommand implements CommandExecutor {
 
         setProgressQuest.setPlayerProgress(player, newProgress);
 
-
+        player.sendMessage(ChatColor.GREEN + "Pomyślnie ustawiono progress!");
 
         return true;
     }

@@ -1,5 +1,6 @@
 package me.trololo11.lifespluginseason3.menus.cardmenus.confirmmenus;
 
+import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.menus.cardmenus.QuestSelectMenu;
 import me.trololo11.lifespluginseason3.utils.ConfirmMenu;
@@ -26,6 +27,7 @@ public class ChangeQuestConfirmMenu extends ConfirmMenu {
     private Quest quest;
     private QuestSelectMenu questSelectMenu;
     private QuestManager questManager;
+    private LifesPlugin plugin = LifesPlugin.getPlugin();
 
     public ChangeQuestConfirmMenu(Quest quest, QuestManager questManager, QuestSelectMenu questSelectMenu){
         this.quest = quest;
@@ -34,7 +36,7 @@ public class ChangeQuestConfirmMenu extends ConfirmMenu {
     }
 
     @Override
-    public String getMenuName(Player player) {
+    public String getMenuName() {
         return ChatColor.RED + ChatColor.BOLD.toString() + "Czy na pewno zmienić?";
     }
 
@@ -93,6 +95,8 @@ public class ChangeQuestConfirmMenu extends ConfirmMenu {
         for(Map.Entry<Player, Integer> entry : playerProgress.entrySet()){
             newQuest.setPlayerProgress(entry.getKey(), entry.getValue());
         }
+
+        plugin.getPlayerStats(player).cardsUsed++;
 
 
     }

@@ -1,10 +1,7 @@
 package me.trololo11.lifespluginseason3.menus;
 
 import me.trololo11.lifespluginseason3.LifesPlugin;
-import me.trololo11.lifespluginseason3.managers.DatabaseManager;
-import me.trololo11.lifespluginseason3.managers.QuestManager;
-import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
-import me.trololo11.lifespluginseason3.managers.RecipesManager;
+import me.trololo11.lifespluginseason3.managers.*;
 import me.trololo11.lifespluginseason3.utils.Menu;
 import me.trololo11.lifespluginseason3.utils.QuestType;
 import me.trololo11.lifespluginseason3.utils.Utils;
@@ -22,19 +19,21 @@ public class MainLifesMenu extends Menu {
     private RecipesManager recipesManager;
     private QuestsAwardsManager questsAwardsManager;
     private DatabaseManager databaseManager;
+    private CardManager cardManager;
     private LifesPlugin plugin = LifesPlugin.getPlugin();
 
     public boolean developerMode = false;
 
-    public MainLifesMenu(QuestManager questManager, RecipesManager recipesManager, QuestsAwardsManager questsAwardsManager, DatabaseManager databaseManager){
+    public MainLifesMenu(QuestManager questManager, RecipesManager recipesManager, QuestsAwardsManager questsAwardsManager, DatabaseManager databaseManager, CardManager cardManager){
         this.questManager = questManager;
         this.recipesManager = recipesManager;
         this.questsAwardsManager = questsAwardsManager;
         this.databaseManager = databaseManager;
+        this.cardManager = cardManager;
     }
 
     @Override
-    public String getMenuName(Player player) {
+    public String getMenuName() {
         return ChatColor.RED + ChatColor.BOLD.toString() + "3Lifes menu";
     }
 
@@ -106,17 +105,23 @@ public class MainLifesMenu extends Menu {
                     return;
                 }
 
-                new QuestsMenu(this, questType == QuestType.DAILY ? "&c&lQuesty dzienne" : "&e&lQuesty tygodniowe", questType, questManager,questsAwardsManager, recipesManager, databaseManager).open(player);
+                new QuestsMenu(this, questType == QuestType.DAILY ? "&c&lQuesty dzienne" : "&e&lQuesty tygodniowe", questType, questManager,questsAwardsManager, recipesManager, databaseManager, cardManager).open(player);
             }
 
             case PAPER -> {
                 if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("card")) return;
-                new QuestsMenu(this, "&f&lQuesty do karty", QuestType.CARD, questManager,questsAwardsManager, recipesManager, databaseManager).open(player);
+                new QuestsMenu(this, "&f&lQuesty do karty", QuestType.CARD, questManager,questsAwardsManager, recipesManager, databaseManager, cardManager).open(player);
             }
 
             case RED_DYE ->{
                 if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("back")) return;
                 player.closeInventory();
+            }
+
+            case PLAYER_HEAD -> {
+                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("statistics")) return;
+
+                new PlayerStatisticsMenu(player, this).open(player);
             }
 
             case REDSTONE, GLOWSTONE_DUST -> {

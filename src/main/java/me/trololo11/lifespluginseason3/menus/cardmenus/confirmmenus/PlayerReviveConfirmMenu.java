@@ -27,7 +27,7 @@ public class PlayerReviveConfirmMenu extends Menu {
     }
 
     @Override
-    public String getMenuName(Player player) {
+    public String getMenuName() {
         return ChatColor.GREEN + ChatColor.BOLD.toString() + "Wskrzesić "+ deadPlayer.getName() + "?";
     }
 
@@ -87,6 +87,8 @@ public class PlayerReviveConfirmMenu extends Menu {
                     }
 
                     player.closeInventory();
+
+                    plugin.getPlayerStats(player).cardsUsed++;
 
                 }catch (SQLException ex){
                     plugin.logger.warning(plugin.loggerPerfix+ " Error while reviving player using the give life card!");

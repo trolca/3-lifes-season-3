@@ -3,6 +3,7 @@ package me.trololo11.lifespluginseason3.managers;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import me.trololo11.lifespluginseason3.LifesPlugin;
+import me.trololo11.lifespluginseason3.utils.PlayerStats;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.QuestType;
 import org.bukkit.Bukkit;
@@ -77,6 +78,9 @@ public class DatabaseManager {
         statement.execute("CREATE TABLE IF NOT EXISTS quests_awards_data(uuid varchar(36) primary key, daily_quests tinyint not null, weekly_quests tinyint not null, card_quests tinyint not null, weekly_card_taken bool not null)");
         statement.execute("CREATE TABLE IF NOT EXISTS skipped_quests(quest_name varchar(100), quest_type varchar(100))");
         statement.execute("CREATE TABLE IF NOT EXISTS requ_quests(quest_name varchar(100), quest_type varchar(100))");
+        statement.execute("CREATE TABLE IF NOT EXISTS player_stats(uuid varchar(36) primary key, kills int, lifes_crafted int, " +
+                "revives_crafted int, revived_someone int, all_quest_completed int, daily_quest_completed int, weekly_quest_completed int, card_quest_completed int," +
+                "gold_lifes_used int, cards_used int, daily_shards_reedemed int, weekly_shards_reedemed int)");
 
         statement.close();
 
@@ -716,6 +720,103 @@ public class DatabaseManager {
         }
 
         return databaseNamesMap;
+    }
+
+    public PlayerStats getPlayerStats(Player player) throws SQLException {
+        String sql = "SELECT * FROM player_stats WHERE uuid = ?";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setString(1, player.getUniqueId().toString());
+
+        ResultSet results = statement.executeQuery();
+
+        if(results.next()){
+
+            PlayerStats playerStats = new PlayerStats(
+                    player,
+                    results.getInt("kills"),
+                    results.getInt("lifes_crafted"),
+                    results.getInt("revives_crafted"),
+                    results.getInt("revived_someone"),
+                    results.getInt("all_quest_completed"),
+                    results.getInt("daily_quest_completed"),
+                    results.getInt("weekly_quest_completed"),
+                    results.getInt("card_quest_completed"),
+                    results.getInt("gold_lifes_used"),
+                    results.getInt("cards_used"),
+                    results.getInt("daily_shards_reedemed"),
+                    results.getInt("weekly_shards_reedemed")
+            );
+
+            connection.close();
+            statement.close();
+
+            return playerStats;
+
+        }
+
+        connection.close();
+        statement.close();
+
+        return null;
+
+    }
+
+    public void addPlayerStats(PlayerStats playerStats) throws SQLException {
+        String sql = "INSERT INTO player_stats VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setString(1, playerStats.owner.getUniqueId().toString());
+        statement.setInt(2, playerStats.kills);
+        statement.setInt(3, playerStats.lifesCrafted);
+        statement.setInt(4, playerStats.revivesCrafted);
+        statement.setInt(5, playerStats.revivedSomeone);
+        statement.setInt(6, playerStats.allQuestCompleted);
+        statement.setInt(7, playerStats.dailyQuestCompleted);
+        statement.setInt(8, playerStats.weeklyQuestCompleted);
+        statement.setInt(9, playerStats.cardQuestCompleted);
+        statement.setInt(10, playerStats.goldLifesUsed);
+        statement.setInt(11, playerStats.cardsUsed);
+        statement.setInt(12, playerStats.dailyShardsReedemed);
+        statement.setInt(13, playerStats.weeklyShardReedemed);
+
+        statement.executeUpdate();
+
+        connection.close();
+        statement.close();
+
+    }
+
+    public void updatePlayerStats(PlayerStats playerStats) throws SQLException {
+        String sql = "UPDATE player_stats SET kills = ?, lifes_crafted = ?, revives_crafted = ?, revived_someone = ?," +
+                "all_quest_completed = ?, daily_quest_completed = ?, weekly_quest_completed = ?, card_quest_completed = ?, gold_lifes_used = ?, cards_used = ?," +
+                "daily_shards_reedemed = ?, weekly_shards_reedemed = ? WHERE uuid = ?";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setInt(1, playerStats.kills);
+        statement.setInt(2, playerStats.lifesCrafted);
+        statement.setInt(3, playerStats.revivesCrafted);
+        statement.setInt(4, playerStats.revivedSomeone);
+        statement.setInt(5, playerStats.allQuestCompleted);
+        statement.setInt(6, playerStats.dailyQuestCompleted);
+        statement.setInt(7, playerStats.weeklyQuestCompleted);
+        statement.setInt(8, playerStats.cardQuestCompleted);
+        statement.setInt(9, playerStats.goldLifesUsed);
+        statement.setInt(10, playerStats.cardsUsed);
+        statement.setInt(11, playerStats.dailyShardsReedemed);
+        statement.setInt(12, playerStats.weeklyShardReedemed);
+        statement.setString(13, playerStats.owner.getUniqueId().toString());
+
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
     }
 
     public void removeAllQuestValues(QuestType questType) throws SQLException {

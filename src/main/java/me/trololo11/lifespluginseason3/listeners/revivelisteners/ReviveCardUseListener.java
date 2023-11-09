@@ -1,6 +1,6 @@
 package me.trololo11.lifespluginseason3.listeners.revivelisteners;
 
-import me.trololo11.lifespluginseason3.managers.DatabaseManager;
+import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.managers.LifesManager;
 import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.*;
@@ -17,11 +17,10 @@ import java.sql.SQLException;
 public class ReviveCardUseListener implements Listener {
 
     private LifesManager lifesManager;
-    private DatabaseManager databaseManager;
+    private LifesPlugin plugin = LifesPlugin.getPlugin();
 
-    public ReviveCardUseListener(LifesManager lifesManager, DatabaseManager databaseManager){
+    public ReviveCardUseListener(LifesManager lifesManager){
         this.lifesManager = lifesManager;
-        this.databaseManager = databaseManager;
     }
 
     @EventHandler
@@ -35,8 +34,10 @@ public class ReviveCardUseListener implements Listener {
         String playerName = reviveCard.getItemMeta().getLocalizedName().split("_")[2].split(":")[1];
         Player player = e.getPlayer();
 
-        Block playerTargetBlock = player.getTargetBlockExact(5);
 
+        //We check if the player is not targeting an anvil so they dont get the
+        //error message when they are trying to rename the card
+        Block playerTargetBlock = player.getTargetBlockExact(5);
 
         if(playerName.equalsIgnoreCase("null") && ( playerTargetBlock == null || playerTargetBlock.getType() != Material.ANVIL) ){
             player.sendMessage(ChatColor.RED + "Ta karta nie ma nikogo przypisanego!");
@@ -62,6 +63,8 @@ public class ReviveCardUseListener implements Listener {
 
         player.getInventory().setItemInMainHand(null);
         lifesManager.revivePlayer(deadPlayer, (byte) 2);
+
+        plugin.getPlayerStats(player).revivedSomeone++;
 
         for(Player onlinePlayer : Bukkit.getOnlinePlayers()){
 

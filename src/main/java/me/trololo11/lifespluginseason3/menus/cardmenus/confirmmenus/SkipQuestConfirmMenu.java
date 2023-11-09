@@ -1,5 +1,6 @@
 package me.trololo11.lifespluginseason3.menus.cardmenus.confirmmenus;
 
+import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.menus.cardmenus.QuestSelectMenu;
 import me.trololo11.lifespluginseason3.utils.ConfirmMenu;
 import me.trololo11.lifespluginseason3.utils.Quest;
@@ -15,6 +16,7 @@ public class SkipQuestConfirmMenu extends ConfirmMenu {
 
     private Quest quest;
     private QuestSelectMenu questSelectMenu;
+    private LifesPlugin plugin = LifesPlugin.getPlugin();
 
     public SkipQuestConfirmMenu(Quest quest, QuestSelectMenu questSelectMenu){
         this.quest = quest;
@@ -22,7 +24,7 @@ public class SkipQuestConfirmMenu extends ConfirmMenu {
     }
 
     @Override
-    public String getMenuName(Player player) {
+    public String getMenuName() {
         return ChatColor.RED + ChatColor.BOLD.toString() + "Czy napewno pominąć?";
     }
 
@@ -54,6 +56,8 @@ public class SkipQuestConfirmMenu extends ConfirmMenu {
         quest.setSilentPlayerProgress(player, quest.getMaxProgress());
         player.getInventory().setItemInMainHand(null);
         player.closeInventory();
+
+        plugin.getPlayerStats(player).cardsUsed++;
     }
 
     @Override

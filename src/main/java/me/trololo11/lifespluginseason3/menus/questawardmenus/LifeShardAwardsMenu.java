@@ -1,5 +1,6 @@
 package me.trololo11.lifespluginseason3.menus.questawardmenus;
 
+import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
@@ -23,6 +24,8 @@ public class LifeShardAwardsMenu extends Menu {
     private RecipesManager recipesManager;
     private QuestsAwardsManager questsAwardsManager;
     private QuestManager questManager;
+    private LifesPlugin plugin = LifesPlugin.getPlugin();
+
     public LifeShardAwardsMenu(QuestsMenu previousQuestMenu, RecipesManager recipesManager,QuestManager questManager, QuestsAwardsManager questsAwardsManager){
         this.questsMenu = previousQuestMenu;
         this.recipesManager = recipesManager;
@@ -31,7 +34,7 @@ public class LifeShardAwardsMenu extends Menu {
     }
 
     @Override
-    public String getMenuName(Player player) {
+    public String getMenuName() {
         return ChatColor.RED + ChatColor.BOLD.toString() + "Nagrody z questów dziennych";
      }
 
@@ -138,6 +141,8 @@ public class LifeShardAwardsMenu extends Menu {
                 player.getInventory().addItem(recipesManager.getLifeShardItem());
                 player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
                 setMenuItems(player);
+
+                plugin.getPlayerStats(player).dailyShardsReedemed++;
 
             }
 

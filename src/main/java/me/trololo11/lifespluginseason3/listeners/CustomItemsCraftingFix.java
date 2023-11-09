@@ -24,16 +24,17 @@ public class CustomItemsCraftingFix implements Listener {
     @EventHandler
     public void onCraft(CraftItemEvent e){
 
-        if(!(e.getWhoClicked() instanceof Player)) return;
+        if(!(e.getWhoClicked() instanceof Player player)) return;
 
         ItemStack currItem;
-        Player player = (Player) e.getWhoClicked();
 
 
         if(e.getRecipe().getResult().equals(recipesManager.getLifesRecipe().getResult())){
             currItem = recipesManager.getLifeItem();
+            plugin.getPlayerStats(player).lifesCrafted++;
         }else if(e.getRecipe().getResult().equals(recipesManager.getReviveCardRecipe().getResult())){
             currItem = recipesManager.getReviveCardItem();
+            plugin.getPlayerStats(player).revivesCrafted++;
         }else{
             return;
         }
@@ -45,6 +46,8 @@ public class CustomItemsCraftingFix implements Listener {
                 e.setCancelled(true);
                 return;
             }
+
+
 
             LifesStackCheckTask lifesStackCheckTask = new LifesStackCheckTask(player, recipesManager);
             lifesStackCheckTask.runTaskLater(plugin, 1L);

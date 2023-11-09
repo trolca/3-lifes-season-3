@@ -1,5 +1,6 @@
 package me.trololo11.lifespluginseason3.menus.cardmenus.confirmmenus;
 
+import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.menus.QuestsMenu;
 import me.trololo11.lifespluginseason3.menus.cardmenus.QuestSelectMenu;
 import me.trololo11.lifespluginseason3.utils.ConfirmMenu;
@@ -17,6 +18,7 @@ public class QuestHalfConfirmMenu extends ConfirmMenu {
 
     private Quest quest;
     private QuestSelectMenu questSelectMenu;
+    private LifesPlugin plugin = LifesPlugin.getPlugin();
 
     public QuestHalfConfirmMenu(Quest quest, QuestSelectMenu questSelectMenu){
         this.quest = quest;
@@ -24,7 +26,7 @@ public class QuestHalfConfirmMenu extends ConfirmMenu {
     }
 
     @Override
-    public String getMenuName(Player player) {
+    public String getMenuName() {
         return ChatColor.GREEN + "Czy napewno zmniejszyć?";
     }
 
@@ -68,6 +70,8 @@ public class QuestHalfConfirmMenu extends ConfirmMenu {
             }
 
         }
+
+        plugin.getPlayerStats(player).cardsUsed++;
 
     }
 

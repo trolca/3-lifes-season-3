@@ -1,8 +1,10 @@
 package me.trololo11.lifespluginseason3.listeners;
 
+import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.events.QuestFinishedEvent;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
+import me.trololo11.lifespluginseason3.utils.PlayerStats;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.QuestType;
 import me.trololo11.lifespluginseason3.utils.Utils;
@@ -16,6 +18,7 @@ public class QuestFinishedListener implements Listener {
 
     private QuestManager questManager;
     private QuestsAwardsManager questsAwardsManager;
+    private LifesPlugin plugin = LifesPlugin.getPlugin();
 
     public QuestFinishedListener(QuestManager questManager, QuestsAwardsManager questsAwardsManager){
         this.questManager = questManager;
@@ -33,8 +36,22 @@ public class QuestFinishedListener implements Listener {
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
             player.sendMessage(Utils.chat("&aWłaśnie ukończyłeś quest &f[" + quest.getName() + "&f]"));
         }
+
+        //Sets the stats for the player
+        PlayerStats playerStats = plugin.getPlayerStats(player);
+
+        switch (questType){
+
+            case DAILY -> playerStats.dailyQuestCompleted++;
+            case WEEKLY -> playerStats.weeklyQuestCompleted++;
+            case CARD -> playerStats.cardQuestCompleted++;
+        }
+
+        playerStats.allQuestCompleted++;
+
         int playerFinishedQuests = questManager.getPlayerFinishedQuests(player, questType);
         int questsPerAward = questsAwardsManager.getQuestsPerAward(questType);
+
 
         boolean isAward = playerFinishedQuests % questsPerAward == 0 || playerFinishedQuests >= questManager.getCorrespondingQuestArray(questType).size();
 

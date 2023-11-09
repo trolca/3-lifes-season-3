@@ -63,7 +63,7 @@ public class QuestsStatisticsMenu extends Menu  {
     }
 
     @Override
-    public String getMenuName(Player player) {
+    public String getMenuName() {
         return Utils.chat("&eStatystyki &f["+quest.getName()+"&f]");
     }
 

@@ -1,9 +1,6 @@
 package me.trololo11.lifespluginseason3.commands;
 
-import me.trololo11.lifespluginseason3.managers.DatabaseManager;
-import me.trololo11.lifespluginseason3.managers.QuestManager;
-import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
-import me.trololo11.lifespluginseason3.managers.RecipesManager;
+import me.trololo11.lifespluginseason3.managers.*;
 import me.trololo11.lifespluginseason3.menus.MainLifesMenu;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -17,22 +14,22 @@ public class LifesMenuCommand implements CommandExecutor {
     private RecipesManager recipesManager;
     private QuestsAwardsManager questsAwardsManager;
     private DatabaseManager databaseManager;
+    private CardManager cardManager;
 
-    public LifesMenuCommand(QuestManager questManager, RecipesManager recipesManager, QuestsAwardsManager questsAwardsManager, DatabaseManager databaseManager){
+    public LifesMenuCommand(QuestManager questManager, RecipesManager recipesManager, QuestsAwardsManager questsAwardsManager, DatabaseManager databaseManager, CardManager cardManager){
         this.questManager = questManager;
         this.recipesManager = recipesManager;
         this.questsAwardsManager = questsAwardsManager;
         this.databaseManager = databaseManager;
+        this.cardManager = cardManager;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if(!(sender instanceof Player)) return true;
+        if(!(sender instanceof Player player)) return true;
 
-        Player player = (Player) sender;
-
-        new MainLifesMenu(questManager, recipesManager, questsAwardsManager, databaseManager).open(player);
+        new MainLifesMenu(questManager, recipesManager, questsAwardsManager, databaseManager, cardManager).open(player);
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
 
         return true;

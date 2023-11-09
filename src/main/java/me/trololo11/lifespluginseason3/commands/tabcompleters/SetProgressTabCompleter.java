@@ -40,9 +40,18 @@ public class SetProgressTabCompleter implements TabCompleter {
             }
 
             case 3 ->{
-                for(Quest quest : questManager.getAllActiveQuests()){
+                QuestType questType;
+                try {
+                    questType = QuestType.valueOf(args[1].toUpperCase());
+                }catch (IllegalArgumentException e){
+                    list.add("Niepoprawny typ questa");
+                    return list;
+                }
+
+                for(Quest quest : questManager.getCorrespondingQuestArray(questType)){
                     list.add(quest.getDatabaseName());
                 }
+
             }
 
             case 4 -> list.add("<new progress>");

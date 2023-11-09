@@ -1,5 +1,6 @@
 package me.trololo11.lifespluginseason3.listeners.lifeslisteners;
 
+import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.managers.LifesManager;
 import org.bukkit.Bukkit;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 public class GoldLifeUseListener implements Listener {
 
     private LifesManager lifesManager;
+    private LifesPlugin plugin = LifesPlugin.getPlugin();
 
     public GoldLifeUseListener(LifesManager lifesManager){
         this.lifesManager = lifesManager;
@@ -41,6 +43,8 @@ public class GoldLifeUseListener implements Listener {
         player.getInventory().setItem(slot, null);
 
         Bukkit.getPluginManager().callEvent(new PlayerChangeLifesEvent(player, newLifes));
+
+        plugin.getPlayerStats(player).goldLifesUsed++;
 
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
         player.sendMessage(ChatColor.YELLOW + "Pomyślnie dodano życia!");

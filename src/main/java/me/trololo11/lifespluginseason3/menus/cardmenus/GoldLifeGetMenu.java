@@ -26,7 +26,6 @@ public class GoldLifeGetMenu extends Menu {
     private GoldLifeRouletteTask goldLifeRouletteTask;
     private RecipesManager recipesManager;
 
-    private int randomizedNum = -1;
     private final int chance = 445; //We write the chance in hundreds bcs we want the 0.1 perecentage. So 123 is 12.3%
     private int pointerIndex = -1; //The index of the pointer that shows if you won or not in the menu (-1 if its not active)
     public ItemStack currLife = null;
@@ -45,7 +44,7 @@ public class GoldLifeGetMenu extends Menu {
     }
 
     @Override
-    public String getMenuName(Player player) {
+    public String getMenuName() {
         return ChatColor.YELLOW + ChatColor.BOLD.toString() + "Hazard";
     }
 
@@ -120,9 +119,10 @@ public class GoldLifeGetMenu extends Menu {
         switch (item.getType()){
 
             case SCUTE -> {
-                if(currLife != null) return;
+                if(currLife != null && randomizingStage != 2) return;
                 if(randomizingStage == 0 && (item.getItemMeta().getLocalizedName().startsWith("life_item") || item.getItemMeta().getLocalizedName().startsWith("player_life")) ) {
                     if (e.getClick() == ClickType.NUMBER_KEY) return;
+
 
                     player.getInventory().setItem(e.getSlot(), null);
                     currLife = item;
@@ -141,9 +141,9 @@ public class GoldLifeGetMenu extends Menu {
                 player.getInventory().setItemInMainHand(null);
                 randomizingStage = 1;
 
-                randomizedNum = r.nextInt(1000)+1; //We write the chance in hundreds bcs we want the 0.1 perecentage. So 123 is 12.3%
+                int randomizedNum = r.nextInt(1000) + 1; //We write the chance in hundreds bcs we want the 0.1 perecentage. So 123 is 12.3%
 
-                int additionalSpins = (randomizedNum/125)+2;
+                int additionalSpins = (randomizedNum /125)+2;
                 if(randomizedNum > 445 && randomizedNum < 500 ) additionalSpins++;
 
                 hasWon = randomizedNum <= chance;
@@ -152,6 +152,8 @@ public class GoldLifeGetMenu extends Menu {
                 goldLifeRouletteTask.runTaskAsynchronously(plugin);
 
                 setMenuItems(player);
+
+                plugin.getPlayerStats(player).cardsUsed++;
 
             }
 

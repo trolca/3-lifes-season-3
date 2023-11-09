@@ -25,7 +25,7 @@ public class PlayerReviveMenu extends Menu {
     }
 
     @Override
-    public String getMenuName(Player p) {
+    public String getMenuName() {
         return ChatColor.AQUA + ChatColor.BOLD.toString() + "Wybierz osobe do wskrzeszenia";
     }
 

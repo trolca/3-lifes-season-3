@@ -72,7 +72,7 @@ public class QuestSelectMenu extends Menu {
     }
 
     @Override
-    public String getMenuName(Player player) {
+    public String getMenuName() {
         return Utils.chat(title);
     }
 
@@ -107,8 +107,7 @@ public class QuestSelectMenu extends Menu {
 
             ItemMeta questMeta = questItem.getItemMeta();
 
-            ArrayList<String> addLore = new ArrayList<>();
-            addLore.addAll(quest.getDescription());
+            ArrayList<String> addLore = new ArrayList<>(quest.getDescription());
             addLore.add(ChatColor.GRAY + ChatColor.ITALIC.toString() + "(Kliknij by pominąć)");
             if(questType == null) addLore.add(ChatColor.GOLD + ChatColor.ITALIC.toString() + "("+getQuestTypeName(quest.getQuestType()) + ")");
             addLore.add("");

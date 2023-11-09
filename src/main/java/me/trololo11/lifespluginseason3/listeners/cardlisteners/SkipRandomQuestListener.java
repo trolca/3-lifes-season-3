@@ -66,5 +66,7 @@ public class SkipRandomQuestListener implements Listener {
         databaseManager.addSkippedQuest(quest);
         plugin.addSkippedQuest(quest);
 
+        plugin.getPlayerStats(player).cardsUsed++;
+
     }
 }

@@ -9,7 +9,7 @@ import org.bukkit.inventory.InventoryHolder;
 public abstract class Menu implements InventoryHolder {
     protected Inventory inventory;
 
-    public abstract String getMenuName(Player player);
+    public abstract String getMenuName();
 
     public abstract int getSlots();
 
@@ -21,7 +21,7 @@ public abstract class Menu implements InventoryHolder {
 
     public void open(Player player) {
 
-        inventory = Bukkit.createInventory(this, getSlots(), getMenuName(player));
+        inventory = Bukkit.createInventory(this, getSlots(), getMenuName());
 
         this.setMenuItems(player);
 

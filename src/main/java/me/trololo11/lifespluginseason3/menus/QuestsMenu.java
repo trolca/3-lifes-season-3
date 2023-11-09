@@ -1,9 +1,6 @@
 package me.trololo11.lifespluginseason3.menus;
 
-import me.trololo11.lifespluginseason3.managers.DatabaseManager;
-import me.trololo11.lifespluginseason3.managers.QuestManager;
-import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
-import me.trololo11.lifespluginseason3.managers.RecipesManager;
+import me.trololo11.lifespluginseason3.managers.*;
 import me.trololo11.lifespluginseason3.menus.questawardmenus.LifeShardAwardsMenu;
 import me.trololo11.lifespluginseason3.menus.questawardmenus.WeeklyQuestsAwardsMenu;
 import me.trololo11.lifespluginseason3.utils.Menu;
@@ -21,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class QuestsMenu extends Menu {
 
@@ -31,9 +29,10 @@ public class QuestsMenu extends Menu {
     private DatabaseManager databaseManager;
     private String invName;
     private RecipesManager recipesManager;
+    private CardManager cardManager;
     private ArrayList<Quest> quests;
 
-    public QuestsMenu(MainLifesMenu mainLifesMenu, String invName, QuestType questType, QuestManager questManager, QuestsAwardsManager questsAwardsManager ,  RecipesManager recipesManager, DatabaseManager databaseManager){
+    public QuestsMenu(MainLifesMenu mainLifesMenu, String invName, QuestType questType, QuestManager questManager, QuestsAwardsManager questsAwardsManager,  RecipesManager recipesManager, DatabaseManager databaseManager, CardManager cardManager){
         this.mainLifesMenu = mainLifesMenu;
         this.questManager = questManager;
         this.questsAwardsManager = questsAwardsManager;
@@ -41,11 +40,12 @@ public class QuestsMenu extends Menu {
         this.recipesManager = recipesManager;
         this.invName = invName;
         this.databaseManager = databaseManager;
+        this.cardManager = cardManager;
         quests = questManager.getCorrespondingQuestArray(questType);
     }
 
     @Override
-    public String getMenuName(Player player) {
+    public String getMenuName() {
         return Utils.chat(invName);
     }
 
@@ -160,11 +160,11 @@ public class QuestsMenu extends Menu {
                 new WeeklyQuestsAwardsMenu(this, recipesManager, questManager, questsAwardsManager).open(player);
             }
 
-            case GHAST_TEAR -> {
+            case PAPER -> {
                 if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("card-shard-take")) return;
 
                 player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
-                player.getInventory().addItem(new ItemStack(Material.GHAST_TEAR));
+                player.getInventory().addItem(cardManager.getRandomCard(new Random()).getCardItem());
                 questsAwardsManager.setAwardsTakenForPlayer(player, QuestType.CARD, (byte) 1);
                 setMenuItems(player);
             }
@@ -184,7 +184,7 @@ public class QuestsMenu extends Menu {
             case WEEKLY -> item = recipesManager.getReviveShardItem();
             case CARD ->{
                 int playerTaken = questsAwardsManager.getAwardsTakenForPlayer(player, questType);
-                item = new ItemStack(playerTaken >= 1 ? Material.BARRIER : Material.GHAST_TEAR );
+                item = new ItemStack(playerTaken >= 1 ? Material.BARRIER : Material.PAPER );
 
                 if(playerTaken < 1 && questManager.getPlayerFinishedQuests(player, questType) < questManager.getCorrespondingQuestArray(QuestType.CARD).size()) break;
 
@@ -209,8 +209,18 @@ public class QuestsMenu extends Menu {
         }
 
         ItemMeta itemMeta = item.getItemMeta();
+        byte howManyTaken = questsAwardsManager.getAwardsTakenForPlayer(player, questTypeOfThisInv);
+        int questsPerAward = questsAwardsManager.getQuestsPerAward(questTypeOfThisInv);
+        int playerFinishedQuests = questManager.getPlayerFinishedQuests(player, questTypeOfThisInv);
+        int howMuchShouldTake = playerFinishedQuests >= questManager.getCorrespondingQuestArray(questTypeOfThisInv).size() ? (questsAwardsManager.getMaxAmountOfAwards(QuestType.DAILY)-1) : playerFinishedQuests/questsPerAward;
 
-        itemMeta.setDisplayName((questType == QuestType.DAILY ? ChatColor.RED : ChatColor.AQUA) + "Postęp w questach");
+        if(howMuchShouldTake <= howManyTaken){
+            itemMeta.setDisplayName((questType == QuestType.DAILY ? ChatColor.RED : ChatColor.AQUA) + "Postęp w questach");
+        } else {
+            itemMeta.addEnchant(Enchantment.MENDING, 1, true);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            itemMeta.setDisplayName((questType == QuestType.DAILY ? ChatColor.RED : ChatColor.AQUA) + "Kliknij by odebrać nagrody!");
+        }
 
         String localizedName = itemMeta.hasLocalizedName() ? itemMeta.getLocalizedName() : "";
 

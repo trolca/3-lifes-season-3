@@ -4,12 +4,10 @@ import me.trololo11.lifespluginseason3.commands.*;
 import me.trololo11.lifespluginseason3.commands.tabcompleters.SetLifesTabCompleter;
 import me.trololo11.lifespluginseason3.commands.tabcompleters.SetProgressTabCompleter;
 import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
-import me.trololo11.lifespluginseason3.listeners.CustomItemsCraftingFix;
-import me.trololo11.lifespluginseason3.listeners.GoldLifeMenuExitListener;
-import me.trololo11.lifespluginseason3.listeners.MenuManager;
-import me.trololo11.lifespluginseason3.listeners.QuestFinishedListener;
+import me.trololo11.lifespluginseason3.listeners.*;
 import me.trololo11.lifespluginseason3.listeners.cardlisteners.*;
 import me.trololo11.lifespluginseason3.listeners.datasetups.PlayerLifesDataSetup;
+import me.trololo11.lifespluginseason3.listeners.datasetups.PlayerStatsDataSetup;
 import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsAwardsDataSetup;
 import me.trololo11.lifespluginseason3.listeners.datasetups.QuestsProgressDataSetup;
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.GoldLifeUseListener;
@@ -21,6 +19,8 @@ import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardRenam
 import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardUseListener;
 import me.trololo11.lifespluginseason3.managers.*;
 import me.trololo11.lifespluginseason3.tasks.WeeklyCardResetTask;
+import me.trololo11.lifespluginseason3.utils.Menu;
+import me.trololo11.lifespluginseason3.utils.PlayerStats;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.QuestType;
 import org.bukkit.Bukkit;
@@ -51,6 +51,7 @@ public final class LifesPlugin extends JavaPlugin {
     private ArrayList<Quest> allSkippedQuests;
 
     private HashMap<Player, Boolean> developerModePlayers = new HashMap<>();
+    private HashMap<Player, PlayerStats> playerPlayerStatsHashMap = new HashMap<>();
     private boolean detailedErrors;
     private int tier=1;
     public int dailyQuestsCount=6;
@@ -88,7 +89,7 @@ public final class LifesPlugin extends JavaPlugin {
         } catch (SQLException e) {
             logger.severe("Error while connecting to the database");
             logger.severe("Make sure the info in config is accurate!");
-            if(detailedErrors) e.printStackTrace();
+            if(detailedErrors) e.printStackTrace(System.out);
             return;
         }
 
@@ -124,15 +125,17 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LifeUseListener(lifesManager), this);
         getServer().getPluginManager().registerEvents(new MenuManager(), this);
         getServer().getPluginManager().registerEvents(new ReviveCardRenameListener(lifesManager), this);
-        getServer().getPluginManager().registerEvents(new ReviveCardUseListener(lifesManager, databaseManager), this);
+        getServer().getPluginManager().registerEvents(new ReviveCardUseListener(lifesManager), this);
         getServer().getPluginManager().registerEvents(questsProgressDataSetup, this);
         getServer().getPluginManager().registerEvents(new QuestsAwardsDataSetup(questsAwardsManager, databaseManager), this);
         getServer().getPluginManager().registerEvents(new QuestFinishedListener(questManager, questsAwardsManager), this);
         getServer().getPluginManager().registerEvents(new GoldLifeMenuExitListener(recipesManager), this);
         getServer().getPluginManager().registerEvents(new GoldLifeUseListener(lifesManager), this);
+        getServer().getPluginManager().registerEvents(new PlayerStatsDataSetup(databaseManager), this);
+        getServer().getPluginManager().registerEvents(new PlayerKillListener(), this);
 
         //Registering the listeners that are used for cards
-        getServer().getPluginManager().registerEvents(new TakeLifeCardListener(cardManager, lifesManager, recipesManager), this);
+        getServer().getPluginManager().registerEvents(new TakeLifeCardListener(lifesManager, recipesManager), this);
         getServer().getPluginManager().registerEvents(new GiveLifeCardUseListener(cardManager, lifesManager), this);
         getServer().getPluginManager().registerEvents(new SkipQuestsCardListener(questManager), this);
         getServer().getPluginManager().registerEvents(new SkipRandomQuestListener(questManager, databaseManager), this);
@@ -146,7 +149,7 @@ public final class LifesPlugin extends JavaPlugin {
             setupData();
         } catch (SQLException e) {
             logger.warning("[LifesPluginS3] Error while setting up data!");
-            if(detailedErrors) e.printStackTrace();
+            if(detailedErrors) e.printStackTrace(System.out);
         }
 
         long timeWeeklyReset = (cardTimingsManager.getCardEndTime()-new Date().getTime())/50 ;
@@ -160,7 +163,7 @@ public final class LifesPlugin extends JavaPlugin {
         getCommand("getitems").setExecutor(new GetItemsCommand(recipesManager));
         getCommand("setlifes").setExecutor(new SetLifesCommand());
         getCommand("takelife").setExecutor(new TakeLifeCommand(lifesManager, recipesManager));
-        getCommand("lifesmenu").setExecutor(new LifesMenuCommand(questManager, recipesManager, questsAwardsManager, databaseManager));
+        getCommand("lifesmenu").setExecutor(new LifesMenuCommand(questManager, recipesManager, questsAwardsManager, databaseManager, cardManager));
         getCommand("setprogress").setExecutor(new SetProgressCommand(questManager));
         getCommand("getallcards").setExecutor(new GetAllCardsItems(cardManager));
         getCommand("isinvfull").setExecutor(new InvFullCommand());
@@ -171,7 +174,6 @@ public final class LifesPlugin extends JavaPlugin {
         getCommand("setprogress").setTabCompleter(new SetProgressTabCompleter(questManager));
 
 
-
     }
 
     @Override
@@ -179,7 +181,7 @@ public final class LifesPlugin extends JavaPlugin {
 
         for(Player player : Bukkit.getOnlinePlayers()){
 
-
+            if(player.getOpenInventory().getTopInventory().getHolder() instanceof Menu) player.closeInventory();
             byte lifes = lifesManager.getPlayerLifes(player);
 
             try {
@@ -193,6 +195,8 @@ public final class LifesPlugin extends JavaPlugin {
                         questsAwardsManager.getAwardsTakenForPlayer(player, QuestType.DAILY),
                         questsAwardsManager.getAwardsTakenForPlayer(player, QuestType.WEEKLY),
                         questsAwardsManager.getAwardsTakenForPlayer(player, QuestType.CARD));
+
+                databaseManager.updatePlayerStats(getPlayerStats(player));
 
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -252,6 +256,8 @@ public final class LifesPlugin extends JavaPlugin {
             questsAwardsManager.setAwardsTakenForPlayer(player, QuestType.DAILY, takenAwards.get(0));
             questsAwardsManager.setAwardsTakenForPlayer(player, QuestType.WEEKLY, takenAwards.get(1));
             questsAwardsManager.setAwardsTakenForPlayer(player, QuestType.CARD, takenAwards.get(2));
+
+            addPlayerStats(databaseManager.getPlayerStats(player));
         }
 
     }
@@ -339,6 +345,18 @@ public final class LifesPlugin extends JavaPlugin {
 
     public void removeDeveloperMode(Player player){
         developerModePlayers.remove(player);
+    }
+
+    public void addPlayerStats(PlayerStats playerStats){
+        playerPlayerStatsHashMap.put(playerStats.owner, playerStats);
+    }
+
+    public void removePlayerStats(Player player){
+        playerPlayerStatsHashMap.remove(player);
+    }
+
+    public PlayerStats getPlayerStats(Player player){
+        return playerPlayerStatsHashMap.get(player);
     }
 
     public boolean isDetailedErrors() {

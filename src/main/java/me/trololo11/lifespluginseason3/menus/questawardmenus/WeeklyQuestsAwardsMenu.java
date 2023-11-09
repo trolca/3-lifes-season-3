@@ -1,5 +1,6 @@
 package me.trololo11.lifespluginseason3.menus.questawardmenus;
 
+import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
@@ -24,6 +25,7 @@ public class WeeklyQuestsAwardsMenu extends Menu {
     private RecipesManager recipesManager;
     private QuestManager questManager;
     private QuestsAwardsManager questsAwardsManager;
+    private LifesPlugin plugin = LifesPlugin.getPlugin();
 
     public WeeklyQuestsAwardsMenu(QuestsMenu questsMenu, RecipesManager recipesManager, QuestManager questManager, QuestsAwardsManager questsAwardsManager){
         this.questsMenu = questsMenu;
@@ -33,7 +35,7 @@ public class WeeklyQuestsAwardsMenu extends Menu {
     }
 
     @Override
-    public String getMenuName(Player player) {
+    public String getMenuName() {
         return ChatColor.YELLOW + ChatColor.BOLD.toString() + "Nagrody z questów tygodniowych";
     }
 
@@ -153,6 +155,8 @@ public class WeeklyQuestsAwardsMenu extends Menu {
                 player.getInventory().addItem(recipesManager.getReviveShardItem());
                 player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
                 setMenuItems(player);
+
+                plugin.getPlayerStats(player).weeklyShardReedemed++;
             }
 
             case GHAST_TEAR -> {

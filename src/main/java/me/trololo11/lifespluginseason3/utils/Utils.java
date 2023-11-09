@@ -14,6 +14,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Utils {
 
@@ -123,6 +124,25 @@ public class Utils {
         item.setItemMeta(getItemMeta(item.getItemMeta(), name, localizedName, lore));
 
         return item;
+    }
+
+    public static ItemStack createCustomModelItem(Material material, int customModelData, String name, String localizedName, String... lore){
+
+        ItemStack item = new ItemStack(material);
+        ArrayList<String> loreArray = new ArrayList<>();
+
+        for(String string : lore){
+            loreArray.add(Utils.chat(string));
+        }
+
+        ItemMeta itemMeta = getItemMeta(Objects.requireNonNull(item.getItemMeta()), name, localizedName, loreArray);
+
+        itemMeta.setCustomModelData(customModelData);
+
+        item.setItemMeta(itemMeta);
+
+        return item;
+
     }
 
     public static ItemStack createPlayerHead(OfflinePlayer owner, String name, String localizedName, String... lore){

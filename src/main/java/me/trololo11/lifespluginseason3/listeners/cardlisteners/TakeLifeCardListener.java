@@ -1,8 +1,8 @@
 package me.trololo11.lifespluginseason3.listeners.cardlisteners;
 
+import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.cardstuff.CardType;
 import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
-import me.trololo11.lifespluginseason3.managers.CardManager;
 import me.trololo11.lifespluginseason3.managers.LifesManager;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
 import me.trololo11.lifespluginseason3.utils.Utils;
@@ -16,12 +16,11 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class TakeLifeCardListener implements Listener {
 
-    private CardManager cardManager;
     private LifesManager lifesManager;
     private RecipesManager recipesManager;
+    private LifesPlugin plugin = LifesPlugin.getPlugin();
 
-    public TakeLifeCardListener(CardManager cardManager, LifesManager lifesManager, RecipesManager recipesManager){
-        this.cardManager = cardManager;
+    public TakeLifeCardListener(LifesManager lifesManager, RecipesManager recipesManager){
         this.lifesManager = lifesManager;
         this.recipesManager = recipesManager;
     }
@@ -48,6 +47,8 @@ public class TakeLifeCardListener implements Listener {
 
         killer.sendMessage(ChatColor.GREEN + "Zabrano życie od "+ playerDie.getName() + "!");
         killer.playSound(killer, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+
+        plugin.getPlayerStats(killer).cardsUsed++;
 
     }
 }

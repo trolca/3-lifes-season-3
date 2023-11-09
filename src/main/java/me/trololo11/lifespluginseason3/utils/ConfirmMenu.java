@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 public abstract class ConfirmMenu extends Menu{
 
-    public abstract String getMenuName(Player player);
+    public abstract String getMenuName();
 
     protected abstract Material getConfirmItem();
 
