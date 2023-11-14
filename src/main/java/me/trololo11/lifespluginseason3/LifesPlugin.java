@@ -1,6 +1,7 @@
 package me.trololo11.lifespluginseason3;
 
 import me.trololo11.lifespluginseason3.commands.*;
+import me.trololo11.lifespluginseason3.commands.tabcompleters.LifesMenuTabCompleter;
 import me.trololo11.lifespluginseason3.commands.tabcompleters.SetLifesTabCompleter;
 import me.trololo11.lifespluginseason3.commands.tabcompleters.SetProgressTabCompleter;
 import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
@@ -172,6 +173,7 @@ public final class LifesPlugin extends JavaPlugin {
 
         getCommand("setlifes").setTabCompleter(new SetLifesTabCompleter());
         getCommand("setprogress").setTabCompleter(new SetProgressTabCompleter(questManager));
+        getCommand("lifesmenu").setTabCompleter(new LifesMenuTabCompleter());
 
 
     }

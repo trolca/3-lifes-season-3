@@ -2,6 +2,8 @@ package me.trololo11.lifespluginseason3.commands;
 
 import me.trololo11.lifespluginseason3.managers.*;
 import me.trololo11.lifespluginseason3.menus.MainLifesMenu;
+import me.trololo11.lifespluginseason3.menus.QuestsMenu;
+import me.trololo11.lifespluginseason3.utils.QuestType;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,7 +31,19 @@ public class LifesMenuCommand implements CommandExecutor {
 
         if(!(sender instanceof Player player)) return true;
 
-        new MainLifesMenu(questManager, recipesManager, questsAwardsManager, databaseManager, cardManager).open(player);
+        MainLifesMenu mainLifesMenu = new MainLifesMenu(questManager, recipesManager, questsAwardsManager, databaseManager, cardManager);
+        if(args.length > 0){
+            String text = args[0];
+
+            if(text.equalsIgnoreCase("daily")) new QuestsMenu(mainLifesMenu, "&c&lQuesty dzienne", QuestType.DAILY, questManager, questsAwardsManager, recipesManager, databaseManager, cardManager).open(player);
+            else if(text.equalsIgnoreCase("weekly")) new QuestsMenu(mainLifesMenu, "&e&lQuesty tygodniowe", QuestType.WEEKLY, questManager, questsAwardsManager, recipesManager, databaseManager, cardManager).open(player);
+            else if(text.equalsIgnoreCase("card")) new QuestsMenu(mainLifesMenu, "&f&lQuesty do karty", QuestType.CARD, questManager, questsAwardsManager, recipesManager, databaseManager, cardManager).open(player);
+            else mainLifesMenu.open(player);
+
+        }else{
+            mainLifesMenu.open(player);
+        }
+
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
 
         return true;
