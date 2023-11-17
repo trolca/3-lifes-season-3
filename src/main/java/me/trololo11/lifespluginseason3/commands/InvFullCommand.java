@@ -13,11 +13,9 @@ public class InvFullCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if(!(sender instanceof Player)) return true;
+        if(!(sender instanceof Player player)) return true;
 
-        Player player = (Player)  sender;
-
-        player.sendMessage(Utils.isPlayerInvFull(player.getInventory()) + "");
+        player.setDisplayName("Sus");
 
         return true;
     }

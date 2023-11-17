@@ -49,7 +49,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.1</version>
                 <configuration>
-                    <outputDirectory>C:\Users\szgie\Desktop\3LifesSeason3\plugins</outputDirectory>
+                    <outputDirectory>C:\Users\student\Desktop\3LifesSeason3\plugins</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>

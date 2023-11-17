@@ -62,6 +62,8 @@ public class TeamsManager {
         moreLifes.setPrefix("" + ChatColor.DARK_GREEN);
         lifesTeamList.add(moreLifes);
 
+
+
     }
 
     public ArrayList<Team> getLifesTeamList() {

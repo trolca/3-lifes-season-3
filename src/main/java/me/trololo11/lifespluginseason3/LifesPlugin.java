@@ -19,6 +19,7 @@ import me.trololo11.lifespluginseason3.listeners.questslisteners.BreakBlocksList
 import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardRenameListener;
 import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardUseListener;
 import me.trololo11.lifespluginseason3.managers.*;
+import me.trololo11.lifespluginseason3.tasks.CheckAfkPlayerTask;
 import me.trololo11.lifespluginseason3.tasks.WeeklyCardResetTask;
 import me.trololo11.lifespluginseason3.utils.Menu;
 import me.trololo11.lifespluginseason3.utils.PlayerStats;
@@ -109,6 +110,14 @@ public final class LifesPlugin extends JavaPlugin {
         questsProgressDataSetup = new QuestsProgressDataSetup(databaseManager, questManager);
         cardManager = new CardManager();
 
+        if(getConfig().getBoolean("afk-logic")) {
+            PlayerAfkManager playerAfkManager = new PlayerAfkManager(lifesManager, teamsManager);
+
+            CheckAfkPlayerTask checkAfkPlayerTask = new CheckAfkPlayerTask(playerAfkManager);
+            checkAfkPlayerTask.runTaskTimer(this, 200L, 200L);
+
+            getServer().getPluginManager().registerEvents(checkAfkPlayerTask, this);
+        }
 
         try{
             allSkippedQuests = databaseManager.getAllSkippedQuests(questManager);
