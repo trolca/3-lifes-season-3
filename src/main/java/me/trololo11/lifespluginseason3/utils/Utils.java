@@ -2,6 +2,7 @@ package me.trololo11.lifespluginseason3.utils;
 
 import me.trololo11.lifespluginseason3.cardstuff.CardType;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
@@ -101,7 +102,15 @@ public class Utils {
 
         return item;
     }
-
+    /**
+     * Creates a new enchanted {@link ItemStack} from the specified parameters
+     * @param material The material of this item
+     * @param name The display name of this item
+     * @param localizedName The localized name of this item
+     * @param enchantment The {@link Enchantment} that will be aplied to this item
+     * @param lore The LOREEE of this item
+     * @return The created {@link ItemStack}
+     */
     public static ItemStack createEnchantedItem(Material material, String name, String localizedName, Enchantment enchantment, String... lore){
         ItemStack item = new ItemStack(material);
 
@@ -118,6 +127,14 @@ public class Utils {
         return item;
     }
 
+    /**
+     * Creates a new {@link ItemStack} from the specified parameters
+     * @param material The material of this item
+     * @param name The display name of this item
+     * @param localizedName The localized name of this item
+     * @param lore The LOREEE of this item
+     * @return The created {@link ItemStack}
+     */
     public static ItemStack createItem(Material material, String name, String localizedName, List<String> lore){
         ItemStack item = new ItemStack(material);
 
@@ -126,6 +143,15 @@ public class Utils {
         return item;
     }
 
+    /**
+     * Creates a new {@link ItemStack} from the specified parameters
+     * @param material The material of this item
+     * @param customModelData The cutom model data that will be aplied to this item
+     * @param name The display name of this item
+     * @param localizedName The localized name of this item
+     * @param lore The LOREEE of this item
+     * @return The created {@link ItemStack}
+     */
     public static ItemStack createCustomModelItem(Material material, int customModelData, String name, String localizedName, String... lore){
 
         ItemStack item = new ItemStack(material);
@@ -145,6 +171,14 @@ public class Utils {
 
     }
 
+    /**
+     * Creates a new player head from the specified parameters
+     * @param owner The player that will be displayed on this head
+     * @param name The display name of this item
+     * @param localizedName The localized name of this item
+     * @param lore The LOREEE of this item
+     * @return The created {@link ItemStack}
+     */
     public static ItemStack createPlayerHead(OfflinePlayer owner, String name, String localizedName, String... lore){
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
 
@@ -251,6 +285,16 @@ public class Utils {
         if(!item.getItemMeta().hasLocalizedName()) return false;
 
         return item.getItemMeta().getLocalizedName().startsWith(cardType.toString().toLowerCase());
+    }
+
+    /**
+     * Returns how much blocks seperates the provided locations
+     * @param from The starting location
+     * @param to The end location
+     * @return Amount of blocks that seperate the provided locations
+     */
+    public static int getDistance(Location from, Location to) {
+        return Math.abs((from.getBlockX() - to.getBlockX()) + (from.getBlockZ() - to.getBlockZ()));
     }
 
 

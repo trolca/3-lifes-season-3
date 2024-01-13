@@ -10,9 +10,13 @@ import me.trololo11.lifespluginseason3.utils.QuestType;
 import me.trololo11.lifespluginseason3.utils.QuestUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.EnchantmentWrapper;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -573,8 +577,14 @@ public class QuestManager {
 
         switch (listenerType){
 
-            case BREAK_BLOCKS -> stringTargets.forEach(s -> targets.add(Material.getMaterial(s.toUpperCase())));
+            case BREAK_BLOCKS, CRAFT, EAT, PLACE_BLOCKS, BREAK_ITEM, BREAK_BLOCKS_NO_SILK, SMITHING_USE, USE_ITEM, SMELT_ITEM, VILLAGER_TRADE_SPEND, VILLAGER_TRADE_BUY->
+                    stringTargets.forEach(s -> targets.add(Material.getMaterial(s == null ? null : s.toUpperCase()))) ;
 
+            case KILL_MOBS,RIDE_DISTANCE,TAME_ANIMAL, BREED_ENTITY, RIGHT_CLICK_ENTITY, PUNCH_ENTITY -> stringTargets.forEach(s -> targets.add(s == null ? null : EntityType.valueOf(s.toUpperCase())));
+
+            case PLAYER_HEART -> stringTargets.forEach(s -> targets.add(Integer.parseInt(s)));
+
+            case PLAYER_DAMAGE -> stringTargets.forEach(s -> targets.add(s == null ? null : EntityDamageEvent.DamageCause.valueOf(s.toUpperCase())));
         }
 
 

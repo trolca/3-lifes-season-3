@@ -37,12 +37,9 @@ public class CheckAfkPlayerTask extends BukkitRunnable implements Listener {
 
             if (playerLocations.get(player).equals(player.getLocation()) && !checkPlayers.contains(player)) {
                 checkPlayers.add(player);
-                System.out.println("Not moving kinda sus");
             }else if(checkPlayers.contains(player) && playerLocations.get(player).equals(player.getLocation())){
                 playerAfkManager.setPlayerAfk(player);
                 checkPlayers.remove(player);
-
-                System.out.println("Is afk");
             }else checkPlayers.remove(player);
 
             playerLocations.put(player, player.getLocation());

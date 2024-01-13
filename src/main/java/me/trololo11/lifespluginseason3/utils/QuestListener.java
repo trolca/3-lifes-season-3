@@ -16,17 +16,7 @@ public abstract class QuestListener implements Listener {
 
     public abstract ListenerType getThisListenerType();
     protected void checkTarget(Object checkTarget, Player player){
-        ArrayList<Quest> checkQuests = questManager.getListenerTypesQuests().get(getThisListenerType());
-
-        for(Quest quest : checkQuests){
-            if ((quest.getTargets().contains(checkTarget) || quest.getTargets() == null || quest.getTargets().isEmpty()) && !quest.hasFinished(player)) {
-
-                quest.setPlayerProgress(player, quest.getPlayerProgress(player) + 1);
-
-            }
-
-        }
-
+        checkTarget(checkTarget, player, 1);
     }
 
     protected void checkTarget(Object checkTarget, Player player, int customAddProgress){

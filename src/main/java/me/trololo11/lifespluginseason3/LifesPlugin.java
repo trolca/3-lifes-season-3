@@ -15,7 +15,7 @@ import me.trololo11.lifespluginseason3.listeners.lifeslisteners.GoldLifeUseListe
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.LifeUseListener;
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerChangeLifesListener;
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerDeathListener;
-import me.trololo11.lifespluginseason3.listeners.questslisteners.BreakBlocksListener;
+import me.trololo11.lifespluginseason3.listeners.questslisteners.*;
 import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardRenameListener;
 import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardUseListener;
 import me.trololo11.lifespluginseason3.managers.*;
@@ -153,6 +153,31 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ChangeQuestCardUseListener(questManager), this);
         getServer().getPluginManager().registerEvents(new RequirementsCardListener(questManager), this);
 
+        //Registering the listener for quests
+        getServer().getPluginManager().registerEvents(new BreakBlockNoSilkListener(questManager),this);
+        getServer().getPluginManager().registerEvents(new BreakItemListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new BreedEntityListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new ChangeHealthListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new CraftItemListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new EatItemListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new InteractAtEntityListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new KillMobListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new PlaceBlockListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new PlayerDamageListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new PlayerLevelUpListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new PlayerOnFireListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new PunchEntityListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new SmeltItemListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new SmithingUseListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new SnowFoxInteract(questManager), this);
+        getServer().getPluginManager().registerEvents(new SusSandBreakListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new TameEntityListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new TotemUseListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new UseItemListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new VillagerBuyTradeListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new VillagerCureListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new VillagerPayTradeListener(questManager), this);
+
 
 
         try {
@@ -176,7 +201,6 @@ public final class LifesPlugin extends JavaPlugin {
         getCommand("lifesmenu").setExecutor(new LifesMenuCommand(questManager, recipesManager, questsAwardsManager, databaseManager, cardManager));
         getCommand("setprogress").setExecutor(new SetProgressCommand(questManager));
         getCommand("getallcards").setExecutor(new GetAllCardsItems(cardManager));
-        getCommand("isinvfull").setExecutor(new InvFullCommand());
         getCommand("ping").setExecutor(new PingCommand());
         getCommand("getcard").setExecutor(new GetRandomCardCommand(cardManager, databaseManager));
 

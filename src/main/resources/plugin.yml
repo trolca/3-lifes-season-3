@@ -18,8 +18,6 @@ commands:
     description: "Sets a quest progress!"
   getallcards:
     description: "Gives you all the cards lol"
-  isinvfull:
-    description: "IS inv full?"
   ping:
     description: "Get your ping!"
   getcard:
