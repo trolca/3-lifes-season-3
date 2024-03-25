@@ -17,7 +17,7 @@ public class ReduceRequirementsQuestsCard extends CardClass {
 
     @Override
     protected int getCustomModelData() {
-        return 213721;
+        return 8760007;
     }
 
     @Override

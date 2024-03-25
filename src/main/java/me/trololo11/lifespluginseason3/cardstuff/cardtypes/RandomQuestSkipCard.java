@@ -17,7 +17,7 @@ public class RandomQuestSkipCard extends CardClass {
 
     @Override
     protected int getCustomModelData() {
-        return 237321;
+        return 8760006;
     }
 
     @Override

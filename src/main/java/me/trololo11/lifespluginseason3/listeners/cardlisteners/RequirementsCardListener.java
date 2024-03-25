@@ -38,6 +38,6 @@ public class RequirementsCardListener implements Listener {
 
         if(!Utils.checkCardItem(item, CardType.REQUIREMENTS_REDUCE)) return;
 
-        new QuestSelectMenu("&2&lWybierz questa do zmniejszenia", null, questManager, questSelectFunction, questFilter).open(player);
+        new QuestSelectMenu("&2&lWybierz questa do zmniejszenia", null, questManager,"&7&o(Kliknij by zmniejszyc wymagania)" , questSelectFunction, questFilter).open(player);
     }
 }

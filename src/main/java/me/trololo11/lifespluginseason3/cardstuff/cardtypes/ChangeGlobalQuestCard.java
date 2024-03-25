@@ -17,7 +17,7 @@ public class ChangeGlobalQuestCard extends CardClass {
 
     @Override
     protected int getCustomModelData() {
-        return 6969;
+        return 8760004;
     }
 
     @Override

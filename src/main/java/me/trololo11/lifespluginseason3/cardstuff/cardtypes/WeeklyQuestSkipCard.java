@@ -17,7 +17,7 @@ public class WeeklyQuestSkipCard extends CardClass {
 
     @Override
     protected int getCustomModelData() {
-        return 3212;
+        return 8760009;
     }
 
     @Override

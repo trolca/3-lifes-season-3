@@ -17,7 +17,7 @@ public class GoldLifeCard extends CardClass {
 
     @Override
     protected int getCustomModelData() {
-        return 2312;
+        return 8760005;
     }
 
     @Override

@@ -184,7 +184,15 @@ public class QuestsMenu extends Menu {
             case WEEKLY -> item = recipesManager.getReviveShardItem();
             case CARD ->{
                 int playerTaken = questsAwardsManager.getAwardsTakenForPlayer(player, questType);
-                item = new ItemStack(playerTaken >= 1 ? Material.BARRIER : Material.PAPER );
+
+                if(playerTaken >= 1){
+                    item = new ItemStack(Material.BARRIER);
+                }else{
+                    item = new ItemStack(Material.PAPER);
+                    ItemMeta itemMeta = item.getItemMeta();
+                    itemMeta.setCustomModelData(8760002);
+                    item.setItemMeta(itemMeta);
+                }
 
                 if(playerTaken < 1 && questManager.getPlayerFinishedQuests(player, questType) < questManager.getCorrespondingQuestArray(QuestType.CARD).size()) break;
 
@@ -196,6 +204,7 @@ public class QuestsMenu extends Menu {
                 }else{
                     ItemMeta takeMeta = item.getItemMeta();
                     takeMeta.setDisplayName(ChatColor.BLUE + "Kliknij by mnie odebrać!");
+                    takeMeta.setCustomModelData(8760002);
                     takeMeta.addEnchant(Enchantment.MENDING, 1, false);
                     takeMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     takeMeta.setLocalizedName("card-shard-take");

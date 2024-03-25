@@ -17,7 +17,7 @@ public class  TakeLifeCard extends CardClass {
 
     @Override
     protected int getCustomModelData() {
-        return 7321;
+        return 8760008;
     }
 
     @Override

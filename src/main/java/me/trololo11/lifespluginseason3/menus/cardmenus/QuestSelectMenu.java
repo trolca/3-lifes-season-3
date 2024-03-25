@@ -22,6 +22,7 @@ public class QuestSelectMenu extends Menu {
     private final String title;
     private QuestType questType;
     private QuestManager questManager;
+    private String questLoreText;
     private final ArrayList<Quest> questSkip;
     private Function<Quest, Boolean> questFilterFunction = null;
     private QuestSelectFunction questSelectFunction;
@@ -33,16 +34,18 @@ public class QuestSelectMenu extends Menu {
      * @param title The title of this menu
      * @param questType The quest type of the quests that are gonna show in this menu
      * @param questManager The questManager class
+     * @param questLoreText The text that is going to show under every quest description. Should be used to indicate what'll happend when you click it
      * @param questSelectFunction A lambda function that runs after a player select a specific quest
      * @param questFilterFunction A lambda function that runs at every iteration of setting the quests in the menu.
      *                            It should be used to filter quests. When it returns false the quest doesn't show in the menu
      */
     @SuppressWarnings("unchecked")
-    public QuestSelectMenu(String title, QuestType questType, QuestManager questManager, QuestSelectFunction questSelectFunction, Function<Quest, Boolean> questFilterFunction){
+    public QuestSelectMenu(String title, QuestType questType, QuestManager questManager, String questLoreText, QuestSelectFunction questSelectFunction, Function<Quest, Boolean> questFilterFunction){
         this.questSelectFunction = questSelectFunction;
         this.title = title;
         this.questManager = questManager;
         this.questType = questType;
+        this.questLoreText = Utils.chat(questLoreText);
         //We are 100% sure that it's gonna be an array list of quest so the warning was useless lol
         if(questType != null) questSkip = (ArrayList<Quest>) questManager.getCorrespondingQuestArray(questType).clone();
         else questSkip = (ArrayList<Quest>) questManager.getAllActiveQuests().clone();
@@ -56,14 +59,16 @@ public class QuestSelectMenu extends Menu {
      * @param title The title of this menu
      * @param questType The quest type of the quests that are gonna show in this menu
      * @param questManager The questManager class
+     * @param questLoreText The text that is going to show under every quest description. Should be used to indicate what'll happend when you click i
      * @param questSelectFunction A lambda function that runs after a player select a specific quest
      */
     @SuppressWarnings("unchecked")
-    public QuestSelectMenu(String title, QuestType questType, QuestManager questManager, QuestSelectFunction questSelectFunction){
+    public QuestSelectMenu(String title, QuestType questType, QuestManager questManager, String questLoreText , QuestSelectFunction questSelectFunction){
         this.questSelectFunction = questSelectFunction;
         this.title = title;
         this.questManager = questManager;
         this.questType = questType;
+        this.questLoreText = Utils.chat(questLoreText);
         //We are 100% sure that it's gonna be an array list of quest so the warning was useless lol
         if(questType != null) questSkip = (ArrayList<Quest>) questManager.getCorrespondingQuestArray(questType).clone();
         else questSkip = (ArrayList<Quest>) questManager.getAllActiveQuests().clone();
@@ -108,7 +113,7 @@ public class QuestSelectMenu extends Menu {
             ItemMeta questMeta = questItem.getItemMeta();
 
             ArrayList<String> addLore = new ArrayList<>(quest.getDescription());
-            addLore.add(ChatColor.GRAY + ChatColor.ITALIC.toString() + "(Kliknij by pominąć)");
+            addLore.add(questLoreText);
             if(questType == null) addLore.add(ChatColor.GOLD + ChatColor.ITALIC.toString() + "("+getQuestTypeName(quest.getQuestType()) + ")");
             addLore.add("");
 

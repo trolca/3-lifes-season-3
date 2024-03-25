@@ -19,7 +19,7 @@ public class DailyQuestSkipCard extends CardClass {
 
     @Override
     protected int getCustomModelData() {
-        return 23123;
+        return 8760001;
     }
 
     @Override

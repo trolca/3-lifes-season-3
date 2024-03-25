@@ -37,7 +37,7 @@ public class SkipQuestsCardListener implements Listener {
 
 
 
-        new QuestSelectMenu("&c&lWybierz dzienny quest do pominięcia", QuestType.DAILY,  questManager, questSelectFunction ).open(player);
+        new QuestSelectMenu("&c&lWybierz dzienny quest do pominięcia", QuestType.DAILY,  questManager,"&7&o(Klknij by pominąć)", questSelectFunction ).open(player);
     }
 
     @EventHandler
@@ -49,6 +49,6 @@ public class SkipQuestsCardListener implements Listener {
 
         if(!Utils.checkCardItem(item, CardType.WEEKLY_SKIP)) return;
 
-        new QuestSelectMenu("&e&lWybierz tygodniowy quest do pominięcia", QuestType.WEEKLY, questManager, questSelectFunction).open(player);
+        new QuestSelectMenu("&e&lWybierz tygodniowy quest do pominięcia", QuestType.WEEKLY, questManager,"&7&o(Kliknij by pominąć)", questSelectFunction).open(player);
     }
 }

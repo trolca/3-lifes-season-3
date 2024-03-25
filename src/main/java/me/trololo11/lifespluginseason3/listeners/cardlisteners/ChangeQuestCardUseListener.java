@@ -33,6 +33,6 @@ public class ChangeQuestCardUseListener implements Listener {
 
         if(!Utils.checkCardItem(item, CardType.QUEST_CHANGE)) return;
 
-        new QuestSelectMenu("&6&lZmień globalnie questa na innego", null, questManager, questSelectFunction).open(player);
+        new QuestSelectMenu("&6&lZmień globalnie questa na innego", null, questManager,"&7&o(Kliknij by zmienić)", questSelectFunction).open(player);
     }
 }
