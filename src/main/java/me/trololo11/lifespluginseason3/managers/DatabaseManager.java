@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * This class manages all data saving and getting from the SQL databasel.
+ * This class manages all data saving and getting from the SQL database.
  */
 public class DatabaseManager {
 
@@ -150,7 +150,7 @@ public class DatabaseManager {
     }
 
     /**
-     * Updates already exisitng row of player lifes with the specified params
+     * Updates already existing row of player lifes with the specified params
      * @param uuid The uuid of the player
      * @param lifes The new value of lifes
      * @throws SQLException If there was an error to connect to the sql database
@@ -171,6 +171,11 @@ public class DatabaseManager {
         connection.close();
     }
 
+    /**
+     * Returns a list of all the players that have died.
+     * @return A list of {@link OfflinePlayer}s that have died in this server.
+     * @throws SQLException On database connection error.
+     */
     public ArrayList<OfflinePlayer> getAllDeadPlayers() throws SQLException {
         Connection connection = getConnection();
 
@@ -195,6 +200,14 @@ public class DatabaseManager {
 
     }
 
+    /**
+     * Sets an is revived value in the database to your choosing. <br>
+     * This value represents if the player has been revived by another player
+     * and if true it should revive them on join.
+     * @param uuid The uuid of the player to set the value for
+     * @param isRevived The value to set
+     * @throws SQLException On database connection error
+     */
     public void setIsRevived(UUID uuid, boolean isRevived) throws SQLException {
         Connection connection = getConnection();
 
@@ -211,6 +224,13 @@ public class DatabaseManager {
         connection.close();
     }
 
+    /**
+     * Gets the is_revived value from the database. <br>
+     * If true the player is going to be revived on join.
+     * @param uuid The uuid of the player to get the value from.
+     * @return The is_revived value.
+     * @throws SQLException On database connection error
+     */
     public boolean getIsRevived(UUID uuid) throws SQLException {
         Connection connection = getConnection();
 
@@ -234,7 +254,7 @@ public class DatabaseManager {
     }
 
     /**
-     * It creates a new quest table that will store all of the quests progress of players.
+     * It creates a new quest table that will store all the quests progress of players.
      * This table will have columns which represent every quest.
      * @param questType The quest type to create the table for
      * @param quests The quests to add to this table
@@ -259,6 +279,15 @@ public class DatabaseManager {
         connection.close();
     }
 
+    /**
+     * Gets all the quests progress for the specified player.
+     * @param questType The type of quests to get the progress for.
+     * @param uuid The uuid of the player to get the progress
+     * @param questManager An instance of the {@link QuestManager} class
+     * @return An HashMap where the key is the database name of the quest
+     *         and the value is the quest progress for the player.
+     * @throws SQLException On database connection error
+     */
     public HashMap<String, Integer> getQuestsDataFromTable(QuestType questType, UUID uuid, QuestManager questManager) throws SQLException{
         String sql = "SELECT * FROM "+getQuestTableName(questType) + " WHERE uuid = ?";
         Connection connection = getConnection();
@@ -290,6 +319,15 @@ public class DatabaseManager {
         return questsData;
     }
 
+    /**
+     * Adds a new record of the player quest progress to the database. <br>
+     * The data is read from the {@link QuestManager} class provided and added to the
+     * database.
+     * @param questType The type of quests to add the progress to.
+     * @param player The player to add the quest data for.
+     * @param questManager A {@link QuestManager} instance to get the quest data from.
+     * @throws SQLException On database connection error
+     */
     public void addQuestDataForPlayer(QuestType questType, Player player, QuestManager questManager) throws SQLException {
         StringBuilder sql = new StringBuilder("INSERT INTO "+getQuestTableName(questType) + "(uuid, ");
         StringBuilder endSql  = new StringBuilder("( ?, ");
@@ -307,7 +345,6 @@ public class DatabaseManager {
         sql.append(endSql);
         sql.append(")");
 
-
         Connection connection = getConnection();
 
         PreparedStatement statement = connection.prepareStatement(sql.toString());
@@ -318,7 +355,6 @@ public class DatabaseManager {
             statement.setInt( i+2, activeQuests.get(i).getPlayerProgress(player));
         }
 
-
         statement.executeUpdate();
 
         statement.close();
@@ -326,24 +362,24 @@ public class DatabaseManager {
     }
 
     /**
-     * This function returns the progress for a specific quests for all of the
+     * This function returns the progress for a specific quests for all the
      * offline players
+     * @param quest The quest to get the progress for.
      * @return A hash map of all the player's progress
      */
     public HashMap<OfflinePlayer, Integer> getProgressOfAllOfflinePlayers(Quest quest) throws SQLException {
         StringBuilder notInStringBuilder = new StringBuilder("(");
         HashMap<OfflinePlayer, Integer> offlineProgressHashMap = new HashMap<>();
 
-        for(Player player : Bukkit.getOnlinePlayers()){
+        for (Player player : Bukkit.getOnlinePlayers()) {
             notInStringBuilder.append("'").append(player.getUniqueId()).append("', ");
         }
 
-        String notInString = notInStringBuilder.substring(0, notInStringBuilder.length()-2);
+        String notInString = notInStringBuilder.substring(0, notInStringBuilder.length() - 2);
 
         notInStringBuilder.append(")");
 
-
-        String sql = "SELECT uuid,"+quest.getDatabaseName()+" FROM "+getQuestTableName(quest.getQuestType())+" WHERE uuid NOT IN "+notInString+")";
+        String sql = "SELECT uuid," + quest.getDatabaseName() + " FROM " + getQuestTableName(quest.getQuestType()) + " WHERE uuid NOT IN " + notInString + ")";
 
 
         Connection connection = getConnection();
@@ -351,7 +387,7 @@ public class DatabaseManager {
 
         ResultSet results = statement.executeQuery();
 
-        while(results.next()){
+        while (results.next()) {
             OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(results.getString("uuid")));
 
             offlineProgressHashMap.put(player, results.getInt(quest.getDatabaseName()));
@@ -363,6 +399,15 @@ public class DatabaseManager {
         return offlineProgressHashMap;
     }
 
+    /**
+     * Updates the quest progress data for an existing player in the database. <br>
+     * The data is read from the {@link QuestManager} instance which is provided.
+     * @param questType The quest type to update the data for
+     * @param player The player to update the data. <b>The player
+     *               has to have a record in the database.</b>
+     * @param questManager An instance of a {@link QuestManager} to read the data from
+     * @throws SQLException On database connection error
+     */
     public void updateQuestDataForPlayer(QuestType questType, Player player, QuestManager questManager) throws SQLException {
         StringBuilder sql = new StringBuilder("UPDATE ");
         sql.append(getQuestTableName(questType)).append(" SET ");
@@ -396,8 +441,8 @@ public class DatabaseManager {
     }
 
     /**
-     * It removes the specified quest table
-     * @param questType The quest type so it can know which table to remove
+     * Removes the table where the quest progress is defined.
+     * @param questType The quest type to delete the table of.
      */
     public void removeQuestTable(QuestType questType) throws SQLException {
         String sql = "DROP TABLE IF EXISTS "+getQuestTableName(questType);
@@ -410,6 +455,15 @@ public class DatabaseManager {
         connection.close();
     }
 
+    /**
+     * Updates an existing player record with the new taken awards data.
+     * @param uuid The uuid of the player to update the record. <b>They have to be in the databse</b>
+     * @param dailyNum The new daily number of the taken awards.
+     * @param weeklyNum The new weekly number of the taken awards.
+     * @param cardNum The new card number of taken awards.
+     * @throws SQLException On database connection error
+     * @see QuestsAwardsManager
+     */
     public void updatePlayerTakenAwards(UUID uuid, byte dailyNum, byte weeklyNum, byte cardNum) throws SQLException {
         String sql = "UPDATE quests_awards_data SET daily_quests = ?, weekly_quests = ?, card_quests = ? WHERE uuid = ?";
 
@@ -427,6 +481,11 @@ public class DatabaseManager {
 
     }
 
+    /**
+     * Sets the specified quest taken awards for the player to 0.
+     * @param questType The quest type to set the taken awards
+     * @throws SQLException On database connection error
+     */
     public void resetPlayerTakenAwards(QuestType questType) throws SQLException {
         String sql = "UPDATE quests_awards_data SET " + getQuestTableName(questType) + " = 0";
 
@@ -551,7 +610,7 @@ public class DatabaseManager {
 
     /**
      * Adds a database name of quest to the skipped quests table
-     * which represents all of the quests that are currently skipped for everyone.
+     * which represents all the quests that are currently skipped for everyone.
      * @param quest The quest to add to the skipped quests
      */
     public void addSkippedQuest(Quest quest) throws SQLException {
@@ -695,9 +754,9 @@ public class DatabaseManager {
 
 
     /**
-     * Gets all of the quests that have their max progress cut in half. <br>
-     * @return A hashMap where the key is the quest type of the specified quests and it's
-     *         value is an array list of all of the database names that have been halfed
+     * Gets all the quests that have their max progress cut in half. <br>
+     * @return A hashMap where the key is the quest type of the specified quests, and it's
+     *         value is an array list of all the database names that have been halved
      * @throws SQLException On database connection error
      */
     public HashMap<QuestType, ArrayList<String>> getAllQuestHalfed() throws SQLException {
@@ -825,6 +884,12 @@ public class DatabaseManager {
         removeQuestTable(questType);
     }
 
+    /**
+     * Returns the name of the table where the corresponding quests scores are stored
+     * in the database.
+     * @param questTableType The type of quest to get the table name for.
+     * @return The name of the table.
+     */
     private String getQuestTableName(QuestType questTableType){
         switch (questTableType){
             case DAILY -> {

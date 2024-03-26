@@ -36,7 +36,7 @@ public class QuestsProgressDataSetup implements Listener {
         }
         questManager.calculatePlayerFinishedQuests(player);
 
-        //Skips all of the quests that are skipped for everyone
+        //Skips all the quests that are skipped for everyone
         for(Quest quest : plugin.getAllSkippedQuests()){
 
             if(!quest.hasFinished(player)){

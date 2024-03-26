@@ -35,7 +35,7 @@ public class CardTimingsManager {
     }
 
     /**
-     * Returns the time in epoch that the players can reedem the cards
+     * Returns the time in epoch that the players can redeem the cards
      * @return The time in epoch
      */
     public long getCardEndTime(){
@@ -43,7 +43,7 @@ public class CardTimingsManager {
     }
 
     /**
-     * Sets the time in epoch when the player reedem the cards
+     * Sets the time in epoch when the player redeem the cards
      * @param time The time in epoch
      * @throws IOException On yml saving error
      */
