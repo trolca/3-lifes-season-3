@@ -485,6 +485,7 @@ public class DatabaseManager {
      * Sets the specified quest taken awards for the player to 0.
      * @param questType The quest type to set the taken awards
      * @throws SQLException On database connection error
+     * @see QuestsAwardsManager
      */
     public void resetPlayerTakenAwards(QuestType questType) throws SQLException {
         String sql = "UPDATE quests_awards_data SET " + getQuestTableName(questType) + " = 0";
@@ -497,6 +498,12 @@ public class DatabaseManager {
         connection.close();
     }
 
+    /**
+     * Inserts an new record for the player specified with all of the taken values set to 0.
+     * @param uuid The uuid of the player to add the record for.
+     * @throws SQLException On database connection error
+     * @see  QuestsAwardsManager
+     */
     public void addPlayerTakenAwards(UUID uuid) throws SQLException {
         String sql = "INSERT INTO quests_awards_data(uuid, daily_quests, weekly_quests, card_quests, weekly_card_taken) VALUES (?, ?, ?, ?, ?)";
 
@@ -515,6 +522,12 @@ public class DatabaseManager {
         connection.close();
     }
 
+    /**
+     * Sets the value that shows if a player has taken it's weekly random card in the database.
+     * @param uuid The uuid of the player to set the value to
+     * @param taken If the player taken the weekly random card
+     * @throws SQLException On database connection error
+     */
     public void setTakenWeeklyCard(UUID uuid, boolean taken) throws SQLException{
         String sql = "UPDATE quests_awards_data SET weekly_card_taken = ? WHERE uuid = ?";
 
@@ -530,6 +543,10 @@ public class DatabaseManager {
         connection.close();
     }
 
+    /**
+     * Sets the value if players taken their weekly random card to false
+     * @throws SQLException On database connection error
+     */
     public void resetTakenWeeklyCardForAll() throws SQLException{
         String sql = "UPDATE quests_awards_data SET weekly_card_taken = ?";
 
@@ -544,7 +561,12 @@ public class DatabaseManager {
         connection.close();
     }
 
-
+    /**
+     * Gets if the player taken their weekly random card from the database.
+     * @param uuid The uuid of the player to get the value from.
+     * @return If the player has taken their weekly random card.
+     * @throws SQLException On database connection error
+     */
     public boolean hasTakenWeeklyCard(UUID uuid) throws SQLException {
         String sql = "SELECT weekly_card_taken FROM quests_awards_data WHERE uuid = ?";
 
@@ -570,6 +592,15 @@ public class DatabaseManager {
         return false;
     }
 
+    /**
+     * Gets the values of how many awards has the player taken
+     * @param uuid The uuid of the player to get the info from.
+     * @return An array of the amount of awards the player has taken where the indexes mean: <br>
+     *         0 - amount of awards taken from daily quests <br>
+     *         1 - amount of awards taken from weekly quests <br>
+     *         2 - amount of awards taken from card quests
+     * @throws SQLException On database connection error
+     */
     public ArrayList<Byte> getPlayerTakenAwards(UUID uuid) throws SQLException {
         String sql = "SELECT * FROM quests_awards_data WHERE uuid = ?";
 
@@ -593,7 +624,12 @@ public class DatabaseManager {
         return awards;
     }
 
-
+    /**
+     * Sets a specified progress for the specified quest for all of the player in the database.
+     * @param quest The quest to set progress to.
+     * @param newProgress The new progress to give all the players.
+     * @throws SQLException On database connection error
+     */
     public void setQuestProgressForAll(Quest quest, int newProgress) throws SQLException {
         String sql = "UPDATE "+getQuestTableName(quest.getQuestType()) + " SET "+quest.getDatabaseName()+" = ?";
 
@@ -677,12 +713,12 @@ public class DatabaseManager {
      * Changes the name of a column in the corresponding quest database. <br>
      * It should be only used to change the name of a quest progress column
      * @param questType The {@link QuestType} of the table to modify
-     * @param perviousName The pervious name of a quest
+     * @param previousName The previous name of a quest
      * @param newName The name to change the column to
      * @throws SQLException On error with the database
      */
-    public void changeNameOfQuestColumn(QuestType questType, String perviousName, String newName) throws SQLException {
-        String sql = "ALTER TABLE "+getQuestTableName(questType) + " CHANGE "+perviousName + " " + newName + " int";
+    public void changeNameOfQuestColumn(QuestType questType, String previousName, String newName) throws SQLException {
+        String sql = "ALTER TABLE "+getQuestTableName(questType) + " CHANGE "+previousName + " " + newName + " int";
 
         Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement(sql);
@@ -693,6 +729,12 @@ public class DatabaseManager {
         connection.close();
     }
 
+    /**
+     * Gets all of the column names from the table which corresponds to the specified all of the {@link QuestType}
+     * @param questType The type of quests to get name of the columns from
+     * @return A list of the names of columns.
+     * @throws SQLException
+     */
     public ArrayList<String> getAllQuestColumnNames(QuestType questType) throws SQLException {
         String sql = "SHOW COLUMNS FROM "+getQuestTableName(questType);
 
@@ -714,7 +756,7 @@ public class DatabaseManager {
     }
 
     /**
-     * Adds this quest as having halfed requirements to the database
+     * Adds this quest as having halved requirements to the database
      * @param quest The quest to add
      * @throws SQLException On database connection error
      */
@@ -734,11 +776,12 @@ public class DatabaseManager {
     }
 
     /**
-     * Removes every occurence of a quest of the specified quest type from the database
+     * Removes every occurrence of a quest which requirements where halved
+     * of the specified quest type from the database
      * @param questType The quest type to check
      * @throws SQLException On database connection error
      */
-    public void removeAllRequrementsType(QuestType questType) throws SQLException {
+    public void removeAllRequirementsType(QuestType questType) throws SQLException {
         String sql = "DELETE FROM requ_quests WHERE quest_type = ?";
 
         Connection connection = getConnection();
@@ -781,6 +824,12 @@ public class DatabaseManager {
         return databaseNamesMap;
     }
 
+    /**
+     * Gets the player's stats that are saved in the database.
+     * @param player The player to get the stats for.
+     * @return A new instance of {@link PlayerStats} with the stats values from the database.
+     * @throws SQLException On database connection error
+     */
     public PlayerStats getPlayerStats(Player player) throws SQLException {
         String sql = "SELECT * FROM player_stats WHERE uuid = ?";
 
@@ -823,6 +872,12 @@ public class DatabaseManager {
 
     }
 
+    /**
+     * Inserts a new record of player's stats to the database.<br>
+     * Should be used if the player doesn't have a record in the database.
+     * @param playerStats The player stats to save.
+     * @throws SQLException On database connection error
+     */
     public void addPlayerStats(PlayerStats playerStats) throws SQLException {
         String sql = "INSERT INTO player_stats VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
@@ -840,8 +895,8 @@ public class DatabaseManager {
         statement.setInt(9, playerStats.cardQuestCompleted);
         statement.setInt(10, playerStats.goldLifesUsed);
         statement.setInt(11, playerStats.cardsUsed);
-        statement.setInt(12, playerStats.dailyShardsReedemed);
-        statement.setInt(13, playerStats.weeklyShardReedemed);
+        statement.setInt(12, playerStats.dailyShardsRedeemed);
+        statement.setInt(13, playerStats.weeklyShardRedeemed);
 
         statement.executeUpdate();
 
@@ -850,6 +905,12 @@ public class DatabaseManager {
 
     }
 
+    /**
+     * Updates player's stats values in the database. <br>
+     * Should be used only if the player has an record in the database.
+     * @param playerStats The player stats to update to
+     * @throws SQLException On database connection error
+     */
     public void updatePlayerStats(PlayerStats playerStats) throws SQLException {
         String sql = "UPDATE player_stats SET kills = ?, lifes_crafted = ?, revives_crafted = ?, revived_someone = ?," +
                 "all_quest_completed = ?, daily_quest_completed = ?, weekly_quest_completed = ?, card_quest_completed = ?, gold_lifes_used = ?, cards_used = ?," +
@@ -868,8 +929,8 @@ public class DatabaseManager {
         statement.setInt(8, playerStats.cardQuestCompleted);
         statement.setInt(9, playerStats.goldLifesUsed);
         statement.setInt(10, playerStats.cardsUsed);
-        statement.setInt(11, playerStats.dailyShardsReedemed);
-        statement.setInt(12, playerStats.weeklyShardReedemed);
+        statement.setInt(11, playerStats.dailyShardsRedeemed);
+        statement.setInt(12, playerStats.weeklyShardRedeemed);
         statement.setString(13, playerStats.owner.getUniqueId().toString());
 
         statement.executeUpdate();
@@ -880,7 +941,7 @@ public class DatabaseManager {
 
     public void removeAllQuestValues(QuestType questType) throws SQLException {
         removeAllSkippedQuests(questType);
-        removeAllRequrementsType(questType);
+        removeAllRequirementsType(questType);
         removeQuestTable(questType);
     }
 

@@ -66,10 +66,10 @@ public class PlayerStatisticsMenu extends Menu {
         ItemStack cardsUsed = Utils.createCustomModelItem(Material.PAPER, 2137, "&9&lKarty użyte: "+ playerStats.cardsUsed,
                 "cards-used", "&fWszystkie użyte przez ciebie karty!");
         ItemStack dailyShardsReedemed = Utils.createCustomModelItem(Material.GOLD_NUGGET, 8760001,
-                "&4&lOdebrane kawałki żyć: " + playerStats.dailyShardsReedemed, "daily-shard-reedemed",
+                "&4&lOdebrane kawałki żyć: " + playerStats.dailyShardsRedeemed, "daily-shard-reedemed",
                 "&fWszystkie kawałki życia które zostały", "&fodebrane przez ciebie");
         ItemStack weeklyShardsReedemed = Utils.createCustomModelItem(Material.IRON_NUGGET, 8760001,
-                "&3&lOdebrane kawałki karty odrodzenia: "+ playerStats.weeklyShardReedemed, "weekly-shards-reedemed",
+                "&3&lOdebrane kawałki karty odrodzenia: "+ playerStats.weeklyShardRedeemed, "weekly-shards-reedemed",
                 "&fWszystkie kawałki odrodzenia", "&fktóre odebrałeś");
         ItemStack backItem = Utils.createItem(Material.RED_DYE, "&c&lPowrót", "back");
 

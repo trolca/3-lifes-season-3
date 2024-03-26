@@ -55,6 +55,11 @@ public class Utils {
         return empty;
     }
 
+    /**
+     * Checks if a player's is full and no items can get in.
+     * @param playerInventory The inventory to check.
+     * @return If the inventory is full.
+     */
     public static boolean isPlayerInvFull(PlayerInventory playerInventory){
         int howMuch = Utils.getEmptySpaceInInv(playerInventory);
 
@@ -254,9 +259,9 @@ public class Utils {
      */
     public static int indexOfItemLocalized(String localizedName, Inventory inventory){
         ItemStack[] contents = inventory.getContents();
-        int lenghtCon = contents.length;
+        int lengthCon = contents.length;
 
-        for(int i=0; i < lenghtCon; i++){
+        for(int i=0; i < lengthCon; i++){
             ItemStack item = contents[i];
 
             if(item == null || !item.hasItemMeta() || !item.getItemMeta().hasLocalizedName()) continue;
@@ -269,6 +274,12 @@ public class Utils {
 
     }
 
+    /**
+     * Tries to give the specified item to the player and
+     * if their inventory is full then it drops it into the ground.
+     * @param player The player to give the item to.
+     * @param itemStack The item to give.
+     */
     public static void givePlayerItemSafely(Player player, ItemStack itemStack){
         PlayerInventory inventory = player.getInventory();
         if(Utils.isPlayerInvFull(inventory)){
@@ -279,6 +290,13 @@ public class Utils {
 
     }
 
+    /**
+     * Check if the localized name of the card is equal to the card
+     * type that is specified.
+     * @param item The item of the card to check.
+     * @param cardType The type to be compared with the localized name.
+     * @return If the card is correct.
+     */
     public static boolean checkCardItem(ItemStack item, CardType cardType){
         if(item.getType() == Material.AIR) return false;
         if(!item.hasItemMeta()) return false;

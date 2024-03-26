@@ -13,6 +13,8 @@ import java.util.HashMap;
 
 /**
  * This class manages how much lifes a player has on the server side. <br>
+ * Every player has 3 lifes and when they die they lose 1 life, this
+ * class stores the info of the amount of lives each player has. <br>
  * This data is stored in a hashMap.
  * @see PlayerLifesDataSetup
  */

@@ -117,14 +117,19 @@ public class Quest {
         return questType;
     }
 
+    /**
+     * Gets the targets of this quest.
+     * @return An array of objects that this plugin is going to check if they match
+     *         a given listening scenario.
+     */
     public ArrayList<Object> getTargets() {
         return new ArrayList<>(targets);
     }
 
     /**
-     * Returns wheather or not the quest has it's max progress cut into half or not. <br>
+     * Returns whether or not the quest has it's max progress cut into half or not. <br>
      * (Player can do this with the lower requirements card)
-     * @return Are requrements halfed
+     * @return Are requirements halved
      */
     public boolean isHalfed() {
         return isHalfed;

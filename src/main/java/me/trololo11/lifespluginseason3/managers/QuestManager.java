@@ -471,7 +471,7 @@ public class QuestManager {
     /**
      * This function creates a new {@link Quest} object based from the YML file
      * provided. (The blueprint and how to create the quest YML files is located in questHelp.txt)
-     * <i>(This function automaticly sets the quests isHalfed value to false)</i>
+     * <i>(This function automatically sets the quests isHalved value to false)</i>
      * @param questFile The YML file to create the Quest from
      * @param questType The type of the quest to create
      * @return A new {@link Quest} object
@@ -485,12 +485,12 @@ public class QuestManager {
      * provided. (The blueprint and how to create the quest YML files is located in questHelp.txt)
      * @param questFile The YML file to create the Quest from
      * @param questType The type of the quest to create
-     * @param halfedQuestsMap The hashMap ov every quest that has it's max progress cut in half.
+     * @param halvedQuestsMap The hashMap ov every quest that has it's max progress cut in half.
      *                        The key is the quest type of the quest and the array list has all of these quests database name.
      * @param isActive Can players make progress in this quest
      * @return A new {@link Quest} object
      */
-    private Quest createQuest(File questFile, QuestType questType, HashMap<QuestType, ArrayList<String>> halfedQuestsMap, boolean isActive){
+    private Quest createQuest(File questFile, QuestType questType, HashMap<QuestType, ArrayList<String>> halvedQuestsMap, boolean isActive){
         YamlConfiguration config = YamlConfiguration.loadConfiguration(questFile);
         String name = config.getString("quest-name");
         ArrayList<String> description = (ArrayList<String>) config.getStringList("description");
@@ -546,7 +546,7 @@ public class QuestManager {
 
         Quest newQuest = new Quest(name, databaseName, maxProgress, showProgress, icon, description, questType,listenerType, targets, isActive);
 
-        if(halfedQuestsMap != null && halfedQuestsMap.get(questType).contains(databaseName)) newQuest.setHalfed(true);
+        if(halvedQuestsMap != null && halvedQuestsMap.get(questType).contains(databaseName)) newQuest.setHalfed(true);
 
         databaseNameQuestsHashMap.get(questType).put(databaseName, newQuest);
         allDatabaseNameQuestsHashMap.put(databaseName, newQuest);
@@ -555,6 +555,11 @@ public class QuestManager {
         return newQuest;
     }
 
+    /**
+     * This functions calculates how many quests are needed to get 1 award and sets the result to
+     * an hash map.
+     * @param questType The quest type to calculate it for.
+     */
     private void calculateQuestsPerAward(QuestType questType){
         int questsPerAward = (int) Math.ceil((double) getCorrespondingQuestArray(questType).size()/ (questsAwardsManager.getMaxAmountOfAwards(questType)-1));
         questsAwardsManager.setQuestsPerAwards(questType, questsPerAward);

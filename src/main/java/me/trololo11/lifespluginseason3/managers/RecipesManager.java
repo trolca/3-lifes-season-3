@@ -24,6 +24,7 @@ import java.util.UUID;
  *     <li>Revive card item</li>
  *     <li>Life shard item</li>
  *     <li>Revive card shard item</li>
+ *     <li>Gold life item</li>
  * </ul>
  */
 public class RecipesManager {
@@ -112,7 +113,7 @@ public class RecipesManager {
     }
 
     /**
-     * Creates and initalizes al of the custom recipes.
+     * Creates and initializes al of the custom recipes.
      */
     private void createRecipes(){
         NamespacedKey lifesNameKey = new NamespacedKey(plugin, "life_recipe");
@@ -194,6 +195,11 @@ public class RecipesManager {
         return reviveItemCopy;
     }
 
+    /**
+     * Returns a new gold life. It makes it's localized name
+     * a random UUID to make it non-stackable.
+     * @return A new gold life
+     */
     public ItemStack getGoldLifeItem(){
         ItemStack goldLifeCopy = goldLifeItem.clone();
         ItemMeta goldLifeMeta = goldLifeCopy.getItemMeta();

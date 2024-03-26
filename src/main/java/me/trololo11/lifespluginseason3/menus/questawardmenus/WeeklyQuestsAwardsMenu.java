@@ -156,7 +156,7 @@ public class WeeklyQuestsAwardsMenu extends Menu {
                 player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
                 setMenuItems(player);
 
-                plugin.getPlayerStats(player).weeklyShardReedemed++;
+                plugin.getPlayerStats(player).weeklyShardRedeemed++;
             }
 
             case GHAST_TEAR -> {

@@ -8,8 +8,11 @@ public class QuestUtils {
 
     private static final LifesPlugin plugin = LifesPlugin.getPlugin();
 
-
-
+    /**
+     * Gets the max amount of quests that the specified page can have.
+     * @param questType The type of quest to get the count for.
+     * @return The max amount of quests that the specified page can have.
+     */
     public static int getQuestsCount(QuestType questType){
 
         switch (questType){

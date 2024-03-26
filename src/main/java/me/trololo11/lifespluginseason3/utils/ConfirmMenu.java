@@ -5,20 +5,49 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * A basic menu used for confirming the specified actions. <br>
+ * Creates a 9-slot menu where the player has 2 options yes or no and in the middle a custom item.
+ */
 public abstract class ConfirmMenu extends Menu{
 
+    /**
+     * The menu name.
+     * @return The menu name
+     */
     public abstract String getMenuName();
 
+    /**
+     * Gets the item that is going to show as the confirm item.
+     * @return The material of this item.
+     */
     protected abstract Material getConfirmItem();
 
+    /**
+     * Gets the item that is going to show as the cancel item.
+     * @return The material of this item.
+     */
     protected abstract Material getCancelItem();
 
+    /**
+     * The item that is going to be showed in the middle of the inventory.
+     */
     protected abstract ItemStack getIcon();
 
     protected abstract String getNameSoundIcon();
 
+    /**
+     * The action that'll happen when a player clicks on the confirm option.
+     * @param e The event of the click
+     * @param player The player that clicked on the option
+     */
     protected abstract void onConfirm(InventoryClickEvent e, Player player);
 
+    /**
+     * The action that'll happen when a player clicks on the cancel option.
+     * @param e The event of the click
+     * @param player The player that clicked on the option
+     */
     protected abstract void onCancel(InventoryClickEvent e, Player player);
 
     @Override

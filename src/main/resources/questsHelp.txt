@@ -1,0 +1,56 @@
+In the main data folder of this plugin you can find 3 folders and as you can imagine they are for storing custom quests that you can make
+You have the daily folder where you put all of the daily quests you want
+You have the weekly folder where you put all of the weekly quests you want
+You have the card folder where you put all of the card quests you want
+
+You have to create a .yml file with the specified attributes:
+task-name - the name of the task (String)
+description - description of the task (ArrayList<String>)
+database-name - the name of the table that will be created in the mySQL database (String)
+icon - the item that is gonna be the icon of that task (Material)
+max-progress - because every progress if stored with an int you specify the number to finish this task (int)
+listener-type - listener type which is from TaskListenerType remember all caps (You have the list of types below)
+target - its an object which is converted to a specific target you need to do to finish any given task (for example if you had KILL_MOBS listener type you would need to type the entity itd)
+        (You can put a list of targets if you want to for example if you have KILL_MOBS listener you could put:
+        - ZOMBIE
+        - SKELETON, for the quest to check if a player kills zombies or skeletons.)
+
+if there is no target then the quest is gonna work on everything (in the listener type)
+ex. if I put a quest with listener-type of BREAK_BLOCKS but I'll put no target then every block the player breaks will count towards this quest
+
+The list of listener types:
+KILL_MOBS - To progress player needs to kill a specific entity (target should be EntityType)
+WALK_DISTANCE - To progress player needs to walk a specific distance on foot (target should be int)
+FLY_DISTANCE - To progress player needs to walk a specific distance by elytra (target should be int)
+RIDE_DISTANCE - To progress player needs to ride a specific distance in a vehicle IF YOU WANT TO DETECT MINECARTS USE "MINECART_RIDE" AS A LISTENER TYPE (target should be EntityType)
+SWIM_DISTANCE - To progress player needs to swim a specific distance by foot (i dont care about the target lol)
+EAT - To progress player needs to eat a specified item (target should be Material)
+VILLAGER_TRADE - To progress player needs to click on a villager trade with specific enchantment (target should be minecraft enchantment id)
+BREAK_BLOCKS - To progress player needs break a specific amount of blocks witch you specify (target should be Material)
+BREAK_BLOCKS_NO_SILK - To progress player needs break a specific amount of blocks witch you specify but they have to break it with a tool that doesn't have the silk touch enchantment on it (target should be Material)
+(this listener type adds an addicional message to the description of the quest that it can't be broken with silk touch)
+PLACE_BLOCKS - To progress player has to place a specified block (target should be Material)
+CRAFT - To progress player needs craft a specific item (target should be Material)
+GET_ITEM - To progress player needs to get (in any way) a specific item (target should be Material)
+PLAYER_HEART - To progress player needs to have specific amount of health (target should be double)
+LEVEL_UP - To progress player needs to get a specific number of expierence leveSls (there shouldn't be any target because it updates when player gets a levels so put the max progress as the target you know :D)
+BREAK_ITEM - To progress player has to break a specific item (target should be material preffably a tool that can break)
+MINE_SUS_BLOCK - To progress player has to brush sus blocks (sand or gravel) (There shouldn't be a target)
+BREED_ENTITY - To progress player has to breed a specific animal (Target should be EntityType)
+TAME_ANIMAL - To progress player has to tame a specific animal (Target should be EntityType)
+SMITHING_USE - To progress player has to use a smithing tameplate (Target should be Material of the specified template or null if all templates)
+RIGHT_CLICK_ENTITY - To progress player has to right click a specified entity (Target should be EntityType)
+SNOW_FOX_INTERACT - To progress player has to right click a snow fox (There should be no target :>)
+MINECART_RIDE - To progress player has to ride in a minecart (There should be no target :>)
+VILLAGER_CURE - To progress player has to cure zombie villagers into villagers (There should be no target :D)
+PUNCH_ENTITY - To progress player has to punch a specified entity (Target should be EntityType)
+USE_ITEM - To progress player has to right click an item (aka use it) (Target should be Material)
+SMELT_ITEM - To progress player has to smelt the specified item in a furnace (Target should be Material)
+TOTEM_USE - To progress player has to use a totem of undying (There shoudn't be a target :>)
+VILLAGER_TRADE_SPEND - To progress player has to spend a specified item while trading with a villager (Target should be Material)
+ON_FIRE - To progress player has to be on fire (There shouldn't be a target :>)
+VILLAGER_TRADE_BUY - To progress player has to buy a specific item from a villager (Target should be Material)
+GET_ITEM_BY_MOB - To progress a mob that player kills has to drop the specified item (Target should be Material)
+PLAYER_DAMAGE - To progress player has to damaged by a specific cause
+RENAME_MOB - To progress player has to rename a mob to a specific string (Target should be String :D)
+CREEPER_LIGHTER - To progress player has to light a creeper with flint and steel (There should be no target)

@@ -1,5 +1,11 @@
 package me.trololo11.lifespluginseason3.utils;
 
+import me.trololo11.lifespluginseason3.managers.QuestManager;
+
+/**
+ * The type of the action that a quest is going to be listening for. <br>
+ * You can read more about it in questsHelp.txt and {@link QuestManager}.
+ */
 public enum ListenerType {
     KILL_MOBS,
     WALK_DISTANCE,
