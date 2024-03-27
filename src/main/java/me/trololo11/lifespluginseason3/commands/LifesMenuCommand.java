@@ -10,6 +10,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * Opens the {@link MainLifesMenu} for the player.
+ */
 public class LifesMenuCommand implements CommandExecutor {
 
     private QuestManager questManager;

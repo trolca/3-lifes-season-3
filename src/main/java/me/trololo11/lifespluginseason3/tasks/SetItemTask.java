@@ -5,7 +5,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
- * Sets a specified item in specifed slot.
+ * Sets a specified item in specified slot.
  */
 public class SetItemTask extends BukkitRunnable {
 

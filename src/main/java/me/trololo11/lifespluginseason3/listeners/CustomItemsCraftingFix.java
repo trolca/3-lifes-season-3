@@ -12,6 +12,10 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * This class makes all the lives and revive cards crafted unstackable. <br>
+ * It also adds the stats for the player.
+ */
 public class CustomItemsCraftingFix implements Listener {
 
     private RecipesManager recipesManager;

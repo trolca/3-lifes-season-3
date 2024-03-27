@@ -15,6 +15,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * Listens for a life use. Gives the player 1 life.
+ */
 public class LifeUseListener implements Listener {
 
     private LifesPlugin plugin = LifesPlugin.getPlugin();

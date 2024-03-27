@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import java.util.ArrayList;
 
 /**
- * An blueprint for every listener that is tasked with listening
+ * A blueprint for every listener that is tasked with listening
  * for a specified {@link ListenerType}.
  */
 public abstract class QuestListener implements Listener {

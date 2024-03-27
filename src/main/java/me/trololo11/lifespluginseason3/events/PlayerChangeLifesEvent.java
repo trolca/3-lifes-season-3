@@ -5,7 +5,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 /**
- * This event is called when player's lifes are changed
+ * This event is called when a player's amount of lives are changed.
  */
 public class PlayerChangeLifesEvent extends Event {
 
@@ -19,10 +19,18 @@ public class PlayerChangeLifesEvent extends Event {
         this.newLifes = newLifes;
     }
 
+    /**
+     * Returns the player for whom the amount of lives is changed
+     * @return The player who's got their lives changed
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * The new amount of lives that the player lives were changed into
+     * @return The new amount of lives
+     */
     public byte getNewLifes() {
         return newLifes;
     }

@@ -11,6 +11,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.InventoryHolder;
 
+/**
+ * This class listens if a player exited a {@link GoldLifeGetMenu} to stop
+ * all the tasks and logic for the gold life randomising and stop it from
+ * breaking.
+ */
 public class GoldLifeMenuExitListener implements Listener  {
 
     private RecipesManager recipesManager;

@@ -14,6 +14,9 @@ import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
 
+/**
+ * Listens for a revive card use. It unbans the player and gives them 2 lives.
+ */
 public class ReviveCardUseListener implements Listener {
 
     private LifesManager lifesManager;

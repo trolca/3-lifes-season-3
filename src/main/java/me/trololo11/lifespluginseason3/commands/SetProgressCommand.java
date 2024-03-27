@@ -9,6 +9,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * Sets a specified amount of progress for a quest for the specified quest for
+ * the specified player.
+ */
 public class SetProgressCommand implements CommandExecutor {
 
     private QuestManager questManager;

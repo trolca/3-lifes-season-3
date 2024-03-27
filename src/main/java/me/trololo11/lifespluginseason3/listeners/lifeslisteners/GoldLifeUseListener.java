@@ -14,6 +14,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * Listens for a gold life use. It gives the player 2 lives.
+ */
 public class GoldLifeUseListener implements Listener {
 
     private LifesManager lifesManager;

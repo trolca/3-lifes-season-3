@@ -1,5 +1,6 @@
 package me.trololo11.lifespluginseason3.tasks;
 
+import me.trololo11.lifespluginseason3.menus.MainLifesMenu;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.utils.QuestType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -8,6 +9,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 
+/**
+ * This task is responsible for updating the text of how much time is
+ * for a specific quest page in the {@link MainLifesMenu}.
+ */
 public class ChangePageTimeTask extends BukkitRunnable {
 
     private QuestManager questsManager;
@@ -36,11 +41,15 @@ public class ChangePageTimeTask extends BukkitRunnable {
                 Thread.sleep(1000);
                 questsManager.checkPageQuestTimings();
             } catch (IOException | SQLException | InterruptedException e) {
-                e.printStackTrace();
+                e.printStackTrace(System.out);
             }
             cancel();
         }
     }
+
+    /**
+     * Creates and updates the time text using {@link QuestManager#setQuestPageTimeText(QuestType, String)`}
+     */
     private void updateText(){
         //just updates the text
         if(whatChange == 'd') timerText = startTime + " d";

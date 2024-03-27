@@ -10,6 +10,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * Removes 1 life from the player and gives them an item representation of it.
+ */
 public class TakeLifeCommand implements CommandExecutor {
 
     private LifesManager lifesManager;

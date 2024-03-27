@@ -8,7 +8,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.Random;
 
 /**
- * This task is responcilbe for making the roulette spining animation
+ * This task is responsible for making the roulette spinning animation
  * while the gold life is randomizing in the {@link GoldLifeGetMenu}.
  */
 public class GoldLifeRouletteTask extends BukkitRunnable  {

@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+/**
+ * This command gives the player a random card from all the cards that are set
+ * in the {@link CardManager}. It is available to use every week.
+ */
 public class GetRandomCardCommand implements CommandExecutor {
     private DatabaseManager databaseManager;
     private CardManager cardManager;

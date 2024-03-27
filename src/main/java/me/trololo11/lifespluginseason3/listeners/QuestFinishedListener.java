@@ -14,6 +14,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+/**
+ * It listens for the {@link QuestFinishedEvent}. It is used
+ * to print a message to the player that they've finished this quest.
+ * Also, it adds it the finished quests value and checks if the player
+ * unlocked any awards. It also adds to the player stats.
+ */
 public class QuestFinishedListener implements Listener {
 
     private QuestManager questManager;

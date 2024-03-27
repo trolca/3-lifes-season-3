@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 
+/**
+ * This task resets the ability for everyone to get their weekly random card.
+ */
 public class WeeklyCardResetTask extends BukkitRunnable {
 
     private CardTimingsManager cardTimingsManager;

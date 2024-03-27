@@ -6,7 +6,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
- * This task unstacks all of stacked lifes or revive cards in a player inventory
+ * This task unstacks all of stacked lives or revive cards in a player inventory. <br>
+ * It is used while crafting multiple lives at once
  */
 public class LifesStackCheckTask extends BukkitRunnable {
 

@@ -14,6 +14,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * This class is responsible for setting players afk using the {@link PlayerAfkManager}.<br>
+ * It checks the player location if it's the same 2 times and if it is it sets them afk.
+ * When a player moves and is afk then it sets them as not afk using {@link PlayerAfkManager#setPlayerNotAfk(Player)}
+ */
 public class CheckAfkPlayerTask extends BukkitRunnable implements Listener {
 
     private HashMap<Player, Location> playerLocations = new HashMap<>();
@@ -29,12 +34,14 @@ public class CheckAfkPlayerTask extends BukkitRunnable implements Listener {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
 
+
             if(playerLocations.get(player) == null){
                 playerLocations.put(player, player.getLocation());
                 continue;
             }
             if(playerAfkManager.isPlayerAfk(player)) continue;
-
+            //checks if player saved location is the same as it's current location
+            //and adds them into the check players array
             if (playerLocations.get(player).equals(player.getLocation()) && !checkPlayers.contains(player)) {
                 checkPlayers.add(player);
             }else if(checkPlayers.contains(player) && playerLocations.get(player).equals(player.getLocation())){
@@ -54,6 +61,9 @@ public class CheckAfkPlayerTask extends BukkitRunnable implements Listener {
         playerLocations.put(e.getPlayer(), e.getPlayer().getLocation());
     }
 
+    /**
+     * When a player moves it sets them no afk
+     */
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e){
 
@@ -61,6 +71,9 @@ public class CheckAfkPlayerTask extends BukkitRunnable implements Listener {
         playerLocations.put(e.getPlayer(), e.getPlayer().getLocation());
     }
 
+    /**
+     * When a player quits the server it makes them not afk.
+     */
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e){
 

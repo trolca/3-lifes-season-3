@@ -16,6 +16,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
+/**
+ * This class manages the revive card renaming to set their target
+ * to revive.
+ */
 public class ReviveCardRenameListener implements Listener {
 
     private LifesManager lifesManager;
@@ -23,6 +27,11 @@ public class ReviveCardRenameListener implements Listener {
     public ReviveCardRenameListener(LifesManager lifesManager){
         this.lifesManager = lifesManager;
     }
+
+    /**
+     * It listens when a player right-clicks on an anvil with the revive card in their main hand. <br>
+     * Opens a custom anvil inventory to listen to the renaming of the revive card.
+     */
     @EventHandler
     public void onOpen(InventoryOpenEvent e){
         if(!(e.getPlayer() instanceof Player)) return;
@@ -42,6 +51,10 @@ public class ReviveCardRenameListener implements Listener {
         player.getInventory().setItemInMainHand(null);
     }
 
+    /**
+     * It listens for a player clicking a revive card while having an anvil inventory open. <br>
+     * Opens a custom anvil inventory to listen to the renaming of the revive card.
+     */
     @EventHandler
     public void onOpenClick(InventoryClickEvent e){
         if(!(e.getWhoClicked() instanceof Player)) return;
@@ -74,6 +87,10 @@ public class ReviveCardRenameListener implements Listener {
         clickedInventory.setItem(slot, null);
     }
 
+    /**
+     * It listens for a player clicking the submit button in the revive anvil
+     * renaming menu. It sets the player to revive for the card.
+     */
     @EventHandler
     public void onSubmitClick(InventoryClickEvent e){
         if(!(e.getWhoClicked() instanceof Player)) return;

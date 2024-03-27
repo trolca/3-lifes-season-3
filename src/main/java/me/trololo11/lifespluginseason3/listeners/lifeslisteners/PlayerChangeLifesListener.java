@@ -10,6 +10,13 @@ import org.bukkit.event.Listener;
 
 import java.util.Date;
 
+/**
+ * Listens for the {@link PlayerChangeLifesEvent}.
+ * It is responsible for banning the player if their lives count is 0 and
+ * changing their teams depending on the amount lives they have.
+ * @see TeamsManager
+ * @see LifesManager
+ */
 public class PlayerChangeLifesListener implements Listener {
 
     private LifesManager lifesManager;
