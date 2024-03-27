@@ -7,7 +7,10 @@ import org.bukkit.ChatColor;
 public class GoldLifeCard extends CardClass {
     @Override
     protected void createDescription() {
-        description.add(ChatColor.WHITE + "HAZARDDD");
+        description.add(ChatColor.WHITE + "Możesz poświęcić 1 swoje życie");
+        description.add(ChatColor.WHITE + "by wygrać złote życie które dodaje 2");
+        description.add(ChatColor.WHITE + "życia. " + ChatColor.GRAY + ChatColor.ITALIC + "(Jak przegrasz hazard to");
+        description.add(ChatColor.GRAY + ChatColor.ITALIC.toString() + "stracisz to życie)");
     }
 
     @Override

@@ -19,6 +19,10 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+/**
+ * Menu that allows to collect the weekly awards from.
+ * @see QuestsAwardsManager
+ */
 public class WeeklyQuestsAwardsMenu extends Menu {
 
     private QuestsMenu questsMenu;

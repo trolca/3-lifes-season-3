@@ -7,12 +7,13 @@ import org.bukkit.ChatColor;
 public class ChangeGlobalQuestCard extends CardClass {
     @Override
     protected void createDescription() {
-        description.add(ChatColor.WHITE + "Sussy baka impostor");
+        description.add(ChatColor.WHITE + "Zmienia wybrany quest na inny losowy");
+        description.add(ChatColor.WHITE + "dla wszystkich graczy.");
     }
 
     @Override
     public String getName() {
-        return "&b&lGlobal quest skip";
+        return "&b&lGlobalny quest skip";
     }
 
     @Override

@@ -20,6 +20,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * This menu shows all of the quests and their progress for a specified {@link QuestType}. <br>
+ * If developer mode is turned on you can see go to the {@link QuestsStatisticsMenu}
+ */
 public class QuestsMenu extends Menu {
 
     private MainLifesMenu mainLifesMenu;
@@ -32,6 +36,12 @@ public class QuestsMenu extends Menu {
     private CardManager cardManager;
     private ArrayList<Quest> quests;
 
+    /**
+     * This menu shows all of the quests and their progress for a specified {@link QuestType}.
+     * @param mainLifesMenu The main lifes menu instance
+     * @param invName The name of this inventory you want to have. (It automatically translates color codes)
+     * @param questType The {@link QuestType} to show the quests for.
+     */
     public QuestsMenu(MainLifesMenu mainLifesMenu, String invName, QuestType questType, QuestManager questManager, QuestsAwardsManager questsAwardsManager,  RecipesManager recipesManager, DatabaseManager databaseManager, CardManager cardManager){
         this.mainLifesMenu = mainLifesMenu;
         this.questManager = questManager;

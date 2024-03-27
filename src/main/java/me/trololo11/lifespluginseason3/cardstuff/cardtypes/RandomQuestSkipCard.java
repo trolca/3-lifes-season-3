@@ -7,7 +7,7 @@ import org.bukkit.ChatColor;
 public class RandomQuestSkipCard extends CardClass {
     @Override
     protected void createDescription() {
-        description.add(ChatColor.WHITE + "Pls use this lol");
+        description.add(ChatColor.WHITE + "Pomija losowy quest dla wszystkich graczy.");
     }
 
     @Override

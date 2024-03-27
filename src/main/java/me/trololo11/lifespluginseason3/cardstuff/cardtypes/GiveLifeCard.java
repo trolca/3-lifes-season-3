@@ -8,7 +8,9 @@ public class GiveLifeCard extends CardClass {
 
     @Override
     protected void createDescription() {
-        description.add(ChatColor.WHITE + "This is a card lol");
+        description.add(ChatColor.WHITE + "Oddajesz 1 swoje życie martwiej osobie.");
+        description.add(ChatColor.WHITE + "Osoba wybrana zostanie wskrzeszona");
+        description.add(ChatColor.WHITE + "z 1 życiem.");
     }
 
     @Override

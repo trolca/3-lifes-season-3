@@ -2,6 +2,7 @@ package me.trololo11.lifespluginseason3.cardstuff;
 
 import me.trololo11.lifespluginseason3.managers.CardManager;
 import me.trololo11.lifespluginseason3.utils.Utils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -38,6 +39,7 @@ public abstract class CardClass {
         ItemMeta cardMeta = cardItem.getItemMeta();
 
         cardMeta.setDisplayName(Utils.chat(getName()));
+        if(getCardType() != CardType.TAKE_LIFE) description.add(ChatColor.GRAY + ChatColor.ITALIC.toString() + "(PPM by użyć)");
         cardMeta.setLore(description);
         cardMeta.setCustomModelData(getCustomModelData());
         cardMeta.setLocalizedName(getCardType().toString().toLowerCase());

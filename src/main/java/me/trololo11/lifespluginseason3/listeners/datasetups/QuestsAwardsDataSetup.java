@@ -1,6 +1,7 @@
 package me.trololo11.lifespluginseason3.listeners.datasetups;
 
 import me.trololo11.lifespluginseason3.managers.DatabaseManager;
+import me.trololo11.lifespluginseason3.managers.LifesManager;
 import me.trololo11.lifespluginseason3.managers.QuestsAwardsManager;
 import me.trololo11.lifespluginseason3.utils.QuestType;
 import org.bukkit.entity.Player;
@@ -12,6 +13,15 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * This class manages all of the database and server side saving of how much awards the player has taken. <br>
+ * When player joins it gets it's awards taken values from the sql database and assigns adds them to the
+ * {@link QuestsAwardsManager} hashMap and past that every modification of player award values should be done
+ * using {@link QuestsAwardsManager}. <br> <br>
+ *
+ * When player leaves the server it's values from the {@link QuestsAwardsManager} hashMap are saved to the sql
+ * database and it's removed from the {@link QuestsAwardsManager} hashMap.
+ */
 public class QuestsAwardsDataSetup implements Listener {
 
     private QuestsAwardsManager questsAwardsManager;

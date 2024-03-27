@@ -7,7 +7,7 @@ import org.bukkit.ChatColor;
 public class WeeklyQuestSkipCard extends CardClass {
     @Override
     protected void createDescription() {
-        description.add(ChatColor.WHITE + "This card is soooo suB");
+        description.add(ChatColor.WHITE + "Pomija wybrany tygodniowy quest dla ciebie.");
     }
 
     @Override

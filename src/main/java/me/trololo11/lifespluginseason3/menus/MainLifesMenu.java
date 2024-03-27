@@ -13,6 +13,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * The main quest menu where a player can choose which page they want
+ * to look at and their quests. They can also go to the stats menu from here.
+ */
 public class MainLifesMenu extends Menu {
 
     private QuestManager questManager;

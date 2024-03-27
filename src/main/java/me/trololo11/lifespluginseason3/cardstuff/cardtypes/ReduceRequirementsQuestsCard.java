@@ -7,7 +7,8 @@ import org.bukkit.ChatColor;
 public class ReduceRequirementsQuestsCard extends CardClass {
     @Override
     protected void createDescription() {
-        description.add(ChatColor.WHITE + "THIS IS GONNA BE SO HARD AHHHH");
+        description.add(ChatColor.WHITE + "Zmniejsza wymagania wybranego questa o 50%");
+        description.add(ChatColor.WHITE + "dla wszystkich graczy.");
     }
 
     @Override

@@ -2,6 +2,7 @@ package me.trololo11.lifespluginseason3.listeners.datasetups;
 
 import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.managers.DatabaseManager;
+import me.trololo11.lifespluginseason3.managers.LifesManager;
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.QuestType;
@@ -17,6 +18,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * This class manages all of the database and server side saving of player quest progress. <br>
+ * It gets all of the progress values from the database and goes through all of the active quests
+ * and sets their progress for the player to the progress in the database. If a quest progress doesn't
+ * exists in the database it sets it to 0. It also goes through all of the skipped quests
+ * and if the player doesn't have one skipped it skips it for them. <br><br>
+ *
+ * When a player leaves their quest progress is saved to the database and removed
+ * from the internal hash map in this plugin.
+ */
 public class QuestsProgressDataSetup implements Listener {
 
     private LifesPlugin plugin = LifesPlugin.getPlugin();

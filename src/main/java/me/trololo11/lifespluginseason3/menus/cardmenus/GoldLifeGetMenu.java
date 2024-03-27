@@ -19,6 +19,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Random;
 
+/**
+ * This is the main menu where you can get a gold life from.
+ * It shows an animation to see if you won or not. <br>
+ * The player has a 44.5% to win a gold life.
+ */
 public class GoldLifeGetMenu extends Menu {
 
     private LifesPlugin plugin = LifesPlugin.getPlugin();

@@ -7,12 +7,14 @@ import org.bukkit.ChatColor;
 public class  TakeLifeCard extends CardClass {
     @Override
     protected void createDescription() {
-        description.add(ChatColor.WHITE + "Takes life");
+        description.add(ChatColor.WHITE + "Kiedy masz tą kartę w ekwipunku");
+        description.add(ChatColor.WHITE + "i zabijesz innego gracza to dostajesz jego");
+        description.add(ChatColor.WHITE + "życie i tracisz tą kartę.");
     }
 
     @Override
     public String getName() {
-        return "&9&lZabierz zycie karta";
+        return "&9&lZabierz życie karta";
     }
 
     @Override

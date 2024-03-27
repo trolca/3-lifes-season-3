@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 /**
- * Listens for a player's death and subtracts their 1 of their life.
+ * Listens for a player's death and subtracts 1 from their lives.
  */
 public class PlayerDeathListener implements Listener {
 

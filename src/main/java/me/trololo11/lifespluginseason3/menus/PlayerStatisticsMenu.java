@@ -10,6 +10,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * Shows a player's {@link PlayerStats} in a menu.
+ */
 public class PlayerStatisticsMenu extends Menu {
 
     private Player player;

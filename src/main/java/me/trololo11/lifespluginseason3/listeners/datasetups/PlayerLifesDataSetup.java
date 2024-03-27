@@ -16,7 +16,7 @@ import java.sql.SQLException;
 
 /**
  * This class manages all of the database and server side saving of player lifes. <br>
- * When player joins it gets it's lifes from the sql database and assings adds them to the
+ * When player joins it gets it's lifes from the sql database and assigns adds them to the
  * {@link LifesManager} hashMap and past that every modification of player lifes should be done
  * using {@link LifesManager}. <br> <br>
  *

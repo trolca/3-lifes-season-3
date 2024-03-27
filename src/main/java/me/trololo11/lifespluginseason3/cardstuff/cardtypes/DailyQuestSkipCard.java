@@ -9,12 +9,12 @@ public class DailyQuestSkipCard extends CardClass {
 
     @Override
     protected void createDescription() {
-        description.add(ChatColor.WHITE + "Skip a daily quest!");
+        description.add(ChatColor.WHITE + "Pomija wybrany dzienny quest dla ciebie.");
     }
 
     @Override
     public String getName() {
-        return "&c&lSkip daily";
+        return "&c&lPominięcie dziennego";
     }
 
     @Override

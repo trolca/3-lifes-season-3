@@ -16,6 +16,10 @@ import me.trololo11.lifespluginseason3.listeners.lifeslisteners.LifeUseListener;
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerChangeLifesListener;
 import me.trololo11.lifespluginseason3.listeners.lifeslisteners.PlayerDeathListener;
 import me.trololo11.lifespluginseason3.listeners.questslisteners.*;
+import me.trololo11.lifespluginseason3.listeners.questslisteners.movelisteners.FlyDistanceListener;
+import me.trololo11.lifespluginseason3.listeners.questslisteners.movelisteners.RideDistanceListener;
+import me.trololo11.lifespluginseason3.listeners.questslisteners.movelisteners.SwimDistanceListener;
+import me.trololo11.lifespluginseason3.listeners.questslisteners.movelisteners.WalkDistanceListener;
 import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardRenameListener;
 import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardUseListener;
 import me.trololo11.lifespluginseason3.managers.*;
@@ -160,6 +164,7 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ChangeHealthListener(questManager), this);
         getServer().getPluginManager().registerEvents(new CraftItemListener(questManager), this);
         getServer().getPluginManager().registerEvents(new EatItemListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new FlyDistanceListener(questManager), this);
         getServer().getPluginManager().registerEvents(new InteractAtEntityListener(questManager), this);
         getServer().getPluginManager().registerEvents(new KillMobListener(questManager), this);
         getServer().getPluginManager().registerEvents(new PlaceBlockListener(questManager), this);
@@ -167,8 +172,10 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerLevelUpListener(questManager), this);
         getServer().getPluginManager().registerEvents(new PlayerOnFireListener(questManager), this);
         getServer().getPluginManager().registerEvents(new PunchEntityListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new RideDistanceListener(questManager), this);
         getServer().getPluginManager().registerEvents(new SmeltItemListener(questManager), this);
         getServer().getPluginManager().registerEvents(new SmithingUseListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new SwimDistanceListener(questManager), this);
         getServer().getPluginManager().registerEvents(new SnowFoxInteract(questManager), this);
         getServer().getPluginManager().registerEvents(new SusSandBreakListener(questManager), this);
         getServer().getPluginManager().registerEvents(new TameEntityListener(questManager), this);
@@ -177,6 +184,7 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new VillagerBuyTradeListener(questManager), this);
         getServer().getPluginManager().registerEvents(new VillagerCureListener(questManager), this);
         getServer().getPluginManager().registerEvents(new VillagerPayTradeListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new WalkDistanceListener(questManager), this);
 
 
 

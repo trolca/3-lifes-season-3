@@ -16,6 +16,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * Lists all of the dead players and allows you to revive them by giving up your life.
+ */
 public class PlayerReviveMenu extends Menu {
 
     private LifesManager lifesManager;

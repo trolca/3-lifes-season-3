@@ -15,6 +15,10 @@ import org.bukkit.inventory.ItemStack;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * Shows the progress of a specified quest of all of the players that have played on this server. <br>
+ * It sorts it in an descending order.
+ */
 public class QuestsStatisticsMenu extends Menu  {
 
     private QuestsMenu questsMenu;
@@ -22,6 +26,12 @@ public class QuestsStatisticsMenu extends Menu  {
 
     private LinkedHashMap<OfflinePlayer, Integer> playerQuestProgressMap;
 
+    /**
+     * Shows the progress of a specified quest of all of the players that have played on this server. <br>
+     * It sorts it in an descending order.
+     * @param questsMenu An quests menu instance.
+     * @param quest The quest to show the progress of.
+     */
     public QuestsStatisticsMenu(QuestsMenu questsMenu, Quest quest, DatabaseManager databaseManager){
         LifesPlugin plugin = LifesPlugin.getPlugin();
 
