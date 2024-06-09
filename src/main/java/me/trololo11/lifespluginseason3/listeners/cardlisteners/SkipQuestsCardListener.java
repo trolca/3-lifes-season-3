@@ -35,8 +35,6 @@ public class SkipQuestsCardListener implements Listener {
 
         if(!Utils.checkCardItem(item, CardType.DAILY_SKIP)) return;
 
-
-
         new QuestSelectMenu("&c&lWybierz dzienny quest do pominięcia", QuestType.DAILY,  questManager,"&7&o(Klknij by pominąć)", questSelectFunction ).open(player);
     }
 

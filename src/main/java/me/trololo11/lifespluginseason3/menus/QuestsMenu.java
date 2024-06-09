@@ -97,6 +97,7 @@ public class QuestsMenu extends Menu {
             ItemStack questItem = new ItemStack(quest.getIcon());
             ItemMeta questMeta = questItem.getItemMeta();
             questMeta.setDisplayName(Utils.chat(quest.getName()));
+            questMeta.setDisplayName(ChatColor.BOLD + questMeta.getDisplayName());
 
             if(mainLifesMenu.developerMode) questMeta.addEnchant(Enchantment.MENDING, 1, true);
 
@@ -116,7 +117,7 @@ public class QuestsMenu extends Menu {
                 lore.add(Utils.chat("&a&lSkończony!"));
             }
 
-            questMeta.setLocalizedName("quest-"+quest.getDatabaseName());
+            Utils.setPrivateName(questMeta, "quest-"+quest.getDatabaseName());
             questMeta.setLore(lore);
             questMeta.addItemFlags(ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES);
 
@@ -142,10 +143,10 @@ public class QuestsMenu extends Menu {
         Player player = (Player) e.getWhoClicked();
         ItemStack item = e.getCurrentItem();
 
-        String localizedName = item.getItemMeta().getLocalizedName();
+        String privateName = Utils.getPrivateName(item);
 
-        if(mainLifesMenu.developerMode && localizedName.startsWith("quest-") && player.hasPermission("3lifes3.stats")){
-            Quest clickedQuest = questManager.getQuestByDatabaseName(questTypeOfThisInv, localizedName.substring(6));
+        if(mainLifesMenu.developerMode && privateName.startsWith("quest-") && player.hasPermission("3lifes3.stats")){
+            Quest clickedQuest = questManager.getQuestByDatabaseName(questTypeOfThisInv, privateName.substring(6));
             new QuestsStatisticsMenu(this, clickedQuest, databaseManager).open(player);
             return;
         }
@@ -153,25 +154,25 @@ public class QuestsMenu extends Menu {
         switch (item.getType()){
 
             case RED_DYE -> {
-                if (!item.getItemMeta().getLocalizedName().equalsIgnoreCase("back")) return;
+                if (!privateName.equalsIgnoreCase("back")) return;
 
                 mainLifesMenu.open(player);
             }
 
             case GOLD_NUGGET -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("shard_life-menu")) return;
+                if(!privateName.equalsIgnoreCase("shard_life-menu")) return;
 
                 new LifeShardAwardsMenu(this, recipesManager, questManager, questsAwardsManager).open(player);
             }
 
             case IRON_NUGGET -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("shard_revive_card-menu")) return;
+                if(!privateName.equalsIgnoreCase("shard_revive_card-menu")) return;
 
                 new WeeklyQuestsAwardsMenu(this, recipesManager, questManager, questsAwardsManager).open(player);
             }
 
             case PAPER -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("card-shard-take")) return;
+                if(!privateName.equalsIgnoreCase("card-shard-take")) return;
 
                 player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
                 player.getInventory().addItem(cardManager.getRandomCard(new Random()).getCardItem());
@@ -209,7 +210,7 @@ public class QuestsMenu extends Menu {
                 if(playerTaken >= 1){
                     ItemMeta blockedMeta = item.getItemMeta();
                     blockedMeta.setDisplayName(ChatColor.DARK_RED  + "To już zostało odebrane!");
-                    blockedMeta.setLocalizedName("card-shard-blocked");
+                    Utils.setPrivateName(blockedMeta, "card-shard-blocked");
                     item.setItemMeta(blockedMeta);
                 }else{
                     ItemMeta takeMeta = item.getItemMeta();
@@ -217,7 +218,7 @@ public class QuestsMenu extends Menu {
                     takeMeta.setCustomModelData(8760002);
                     takeMeta.addEnchant(Enchantment.MENDING, 1, false);
                     takeMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                    takeMeta.setLocalizedName("card-shard-take");
+                    Utils.setPrivateName(takeMeta, "card-shard-take");
                     item.setItemMeta(takeMeta);
                 }
 
@@ -241,9 +242,9 @@ public class QuestsMenu extends Menu {
             itemMeta.setDisplayName((questType == QuestType.DAILY ? ChatColor.RED : ChatColor.AQUA) + "Kliknij by odebrać nagrody!");
         }
 
-        String localizedName = itemMeta.hasLocalizedName() ? itemMeta.getLocalizedName() : "";
+        String privateName = Utils.getPrivateName(item) != null ? Utils.getPrivateName(item) : "";
 
-        itemMeta.setLocalizedName(localizedName + "-menu");
+        Utils.setPrivateName(itemMeta, privateName + "-menu");
 
         item.setItemMeta(itemMeta);
         return item;

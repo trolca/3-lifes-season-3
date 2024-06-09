@@ -10,10 +10,8 @@ import me.trololo11.lifespluginseason3.utils.QuestType;
 import me.trololo11.lifespluginseason3.utils.QuestUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -108,7 +106,7 @@ public class QuestManager {
             calculatePlayerFinishedQuests(player);
         }
 
-        calulcateListenerQuestArrays();
+        calculateListenerQuestArrays();
 
         for(QuestType questType : QuestType.values()){
             calculateQuestsPerAward(questType);
@@ -161,7 +159,7 @@ public class QuestManager {
      * puts them into an internal array to make the listening for quests
      * easier
      */
-    private void calulcateListenerQuestArrays(){
+    private void calculateListenerQuestArrays(){
         for(ListenerType listenerType : ListenerType.values()){
 
             ArrayList<Quest> listenerQuests = new ArrayList<>(allActiveQuests.stream().filter(quest -> quest.getListenerType() == listenerType).toList());
@@ -332,7 +330,7 @@ public class QuestManager {
 
         databaseManager.createQuestTable(questType, currQuestArray);
         questsTimingsManager.setEndDate(newDate, questType);
-        calulcateListenerQuestArrays();
+        calculateListenerQuestArrays();
 
         for(Player player : Bukkit.getOnlinePlayers()){
             playerAmountOfFinishedQuests.get(player).put(questType, 0);

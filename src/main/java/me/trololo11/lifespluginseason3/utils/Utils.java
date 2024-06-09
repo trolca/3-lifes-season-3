@@ -1,5 +1,6 @@
 package me.trololo11.lifespluginseason3.utils;
 
+import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.cardstuff.CardType;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -10,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -90,11 +93,11 @@ public class Utils {
      * Creates a new {@link ItemStack} from the specified parameters
      * @param material The material of this item
      * @param name The display name of this item
-     * @param localizedName The localized name of this item
+     * @param privateName The private name of this item
      * @param lore The LOREEE of this item
      * @return The created {@link ItemStack}
      */
-    public static ItemStack createItem(Material material, String name, String localizedName, String... lore){
+    public static ItemStack createItem(Material material, String name, String privateName, String... lore){
         ItemStack item = new ItemStack(material);
 
         ArrayList<String> loreArray = new ArrayList<>();
@@ -103,7 +106,7 @@ public class Utils {
             loreArray.add(Utils.chat(string));
         }
 
-        item.setItemMeta(getItemMeta(item.getItemMeta(), name, localizedName, loreArray));
+        item.setItemMeta(getItemMeta(item.getItemMeta(), name, privateName, loreArray));
 
         return item;
     }
@@ -111,12 +114,12 @@ public class Utils {
      * Creates a new enchanted {@link ItemStack} from the specified parameters
      * @param material The material of this item
      * @param name The display name of this item
-     * @param localizedName The localized name of this item
+     * @param privateName The private name of this item
      * @param enchantment The {@link Enchantment} that will be aplied to this item
      * @param lore The LOREEE of this item
      * @return The created {@link ItemStack}
      */
-    public static ItemStack createEnchantedItem(Material material, String name, String localizedName, Enchantment enchantment, String... lore){
+    public static ItemStack createEnchantedItem(Material material, String name, String privateName, Enchantment enchantment, String... lore){
         ItemStack item = new ItemStack(material);
 
         ArrayList<String> loreArray = new ArrayList<>();
@@ -125,7 +128,7 @@ public class Utils {
             loreArray.add(Utils.chat(string));
         }
 
-        item.setItemMeta(getItemMeta(item.getItemMeta(), name, localizedName, loreArray));
+        item.setItemMeta(getItemMeta(item.getItemMeta(), name, privateName, loreArray));
 
         item.addUnsafeEnchantment(enchantment, 1);
 
@@ -136,14 +139,14 @@ public class Utils {
      * Creates a new {@link ItemStack} from the specified parameters
      * @param material The material of this item
      * @param name The display name of this item
-     * @param localizedName The localized name of this item
+     * @param privateName The private name of this item
      * @param lore The LOREEE of this item
      * @return The created {@link ItemStack}
      */
-    public static ItemStack createItem(Material material, String name, String localizedName, List<String> lore){
+    public static ItemStack createItem(Material material, String name, String privateName, List<String> lore){
         ItemStack item = new ItemStack(material);
 
-        item.setItemMeta(getItemMeta(item.getItemMeta(), name, localizedName, lore));
+        item.setItemMeta(getItemMeta(item.getItemMeta(), name, privateName, lore));
 
         return item;
     }
@@ -153,11 +156,11 @@ public class Utils {
      * @param material The material of this item
      * @param customModelData The cutom model data that will be aplied to this item
      * @param name The display name of this item
-     * @param localizedName The localized name of this item
+     * @param privateName The private name of this item
      * @param lore The LOREEE of this item
      * @return The created {@link ItemStack}
      */
-    public static ItemStack createCustomModelItem(Material material, int customModelData, String name, String localizedName, String... lore){
+    public static ItemStack createCustomModelItem(Material material, int customModelData, String name, String privateName, String... lore){
 
         ItemStack item = new ItemStack(material);
         ArrayList<String> loreArray = new ArrayList<>();
@@ -166,7 +169,7 @@ public class Utils {
             loreArray.add(Utils.chat(string));
         }
 
-        ItemMeta itemMeta = getItemMeta(Objects.requireNonNull(item.getItemMeta()), name, localizedName, loreArray);
+        ItemMeta itemMeta = getItemMeta(Objects.requireNonNull(item.getItemMeta()), name, privateName, loreArray);
 
         itemMeta.setCustomModelData(customModelData);
 
@@ -180,11 +183,11 @@ public class Utils {
      * Creates a new player head from the specified parameters
      * @param owner The player that will be displayed on this head
      * @param name The display name of this item
-     * @param localizedName The localized name of this item
+     * @param privateName The private name of this item
      * @param lore The LOREEE of this item
      * @return The created {@link ItemStack}
      */
-    public static ItemStack createPlayerHead(OfflinePlayer owner, String name, String localizedName, String... lore){
+    public static ItemStack createPlayerHead(OfflinePlayer owner, String name, String privateName, String... lore){
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
 
         ArrayList<String> loreArray = new ArrayList<>();
@@ -193,7 +196,7 @@ public class Utils {
             loreArray.add(Utils.chat(string));
         }
 
-        SkullMeta skullMeta = (SkullMeta) getItemMeta(item.getItemMeta(), name, localizedName, loreArray);
+        SkullMeta skullMeta = (SkullMeta) getItemMeta(item.getItemMeta(), name, privateName, loreArray);
 
         skullMeta.setOwningPlayer(owner);
 
@@ -239,10 +242,10 @@ public class Utils {
     }
 
 
-    private static ItemMeta getItemMeta(ItemMeta itemMeta, String displayName, String localizedName, List<String> lore){
+    private static ItemMeta getItemMeta(ItemMeta itemMeta, String displayName, String privateName, List<String> lore){
 
         itemMeta.setDisplayName(Utils.chat(displayName));
-        itemMeta.setLocalizedName(localizedName);
+        setPrivateName(itemMeta, privateName);
         itemMeta.setLore(lore);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
 
@@ -250,23 +253,23 @@ public class Utils {
     }
 
     /**
-     * Checks the inventory for an item that has a localized name which starts the same as the one provided
+     * Checks the inventory for an item that has a private name which starts the same as the one provided
      * and returns the index of the slot of this item. <br><br>
      * If no item is found it returns -1
-     * @param localizedName The localized name to check in the item
+     * @param privateName The private name to check in the item
      * @param inventory The inventory to check
      * @return The index of this item, if none is found then returns -1.
      */
-    public static int indexOfItemLocalized(String localizedName, Inventory inventory){
+    public static int indexOfItemPrivateName(String privateName, Inventory inventory){
         ItemStack[] contents = inventory.getContents();
         int lengthCon = contents.length;
 
         for(int i=0; i < lengthCon; i++){
             ItemStack item = contents[i];
 
-            if(item == null || !item.hasItemMeta() || !item.getItemMeta().hasLocalizedName()) continue;
+            if(item == null || !item.hasItemMeta() || getPrivateName(item) == null) continue;
 
-            if(item.getItemMeta().getLocalizedName().startsWith(localizedName)) return i;
+            if(getPrivateName(item).startsWith(privateName)) return i;
 
         }
 
@@ -291,18 +294,56 @@ public class Utils {
     }
 
     /**
-     * Check if the localized name of the card is equal to the card
+     * Check if the private name of the card is equal to the card
      * type that is specified.
      * @param item The item of the card to check.
-     * @param cardType The type to be compared with the localized name.
+     * @param cardType The type to be compared with the private name.
      * @return If the card is correct.
      */
     public static boolean checkCardItem(ItemStack item, CardType cardType){
         if(item.getType() == Material.AIR) return false;
         if(!item.hasItemMeta()) return false;
-        if(!item.getItemMeta().hasLocalizedName()) return false;
+        if(getPrivateName(item) == null) return false;
 
-        return item.getItemMeta().getLocalizedName().startsWith(cardType.toString().toLowerCase());
+        return getPrivateName(item).startsWith(cardType.toString().toLowerCase());
+    }
+
+    /**
+     * Checks if the private name of the item is equal to the specified string. (Case insensitive)
+     * @param item The item to check the private name.
+     * @param string The string to check to.
+     * @return If the private name is equal
+     * @see LifesPlugin#getPrivateNameKey()
+     */
+    public static boolean isPrivateNameEqual(@NotNull ItemStack item, String string){
+        String privateName = getPrivateName(item);
+        if(privateName == null) return false;
+
+        return privateName.equalsIgnoreCase(string);
+    }
+
+    /**
+     * Gets the private name from the item.
+     * @param item The item to get the name from.
+     * @return The private name of the item.
+     */
+    public static String getPrivateName(@NotNull ItemStack item){
+        if(item.getItemMeta() == null) return null;
+
+        return getPrivateName(item.getItemMeta());
+    }
+
+    public static void setPrivateName(@NotNull ItemMeta itemMeta, String privateName){
+        itemMeta.getPersistentDataContainer().set(LifesPlugin.getPrivateNameKey(), PersistentDataType.STRING, privateName);
+    }
+
+    /**
+     * Gets the private name from the item meta.
+     * @param itemMeta The item meta to get the name from.
+     * @return The private name of the item meta.
+     */
+    public static String getPrivateName(@NotNull ItemMeta itemMeta){
+        return itemMeta.getPersistentDataContainer().get(LifesPlugin.getPrivateNameKey(), PersistentDataType.STRING);
     }
 
     /**

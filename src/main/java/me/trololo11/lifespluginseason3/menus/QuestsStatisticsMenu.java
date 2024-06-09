@@ -120,7 +120,7 @@ public class QuestsStatisticsMenu extends Menu  {
         Player player = (Player) e.getWhoClicked();
 
         if(item.getType() == Material.RED_DYE){
-            if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("back")) return;
+            if(!Utils.isPrivateNameEqual(item, "back")) return;
 
             questsMenu.open(player);
 

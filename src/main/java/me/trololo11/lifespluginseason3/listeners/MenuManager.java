@@ -1,6 +1,7 @@
 package me.trololo11.lifespluginseason3.listeners;
 
 import me.trololo11.lifespluginseason3.utils.Menu;
+import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,7 +27,7 @@ public class MenuManager implements Listener {
 
             if (item == null) return;
             if (!item.hasItemMeta()) return;
-            if (!item.getItemMeta().hasLocalizedName()) return;
+            if (Utils.getPrivateName(item) == null) return;
             if(!(e.getWhoClicked() instanceof Player)) return;
 
             Menu menu = (Menu) holder;

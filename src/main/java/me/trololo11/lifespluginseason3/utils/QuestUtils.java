@@ -68,7 +68,7 @@ public class QuestUtils {
            }else{
                normalMeta.setDisplayName(normalMeta.getDisplayName().replace("<num>", ( (questsPerAward*numOfTheItem)-playerFinishedQuests )+""));
            }
-            normalMeta.setLocalizedName("lifes-shard-blocked");
+            Utils.setPrivateName(normalMeta, "lifes-shard-blocked");
             orginalItem.setItemMeta(normalMeta);
 
 

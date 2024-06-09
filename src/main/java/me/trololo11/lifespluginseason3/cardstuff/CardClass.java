@@ -42,7 +42,7 @@ public abstract class CardClass {
         if(getCardType() != CardType.TAKE_LIFE) description.add(ChatColor.GRAY + ChatColor.ITALIC.toString() + "(PPM by użyć)");
         cardMeta.setLore(description);
         cardMeta.setCustomModelData(getCustomModelData());
-        cardMeta.setLocalizedName(getCardType().toString().toLowerCase());
+        Utils.setPrivateName(cardMeta, getCardType().toString().toLowerCase());
 
         cardItem.setItemMeta(cardMeta);
     }
@@ -66,8 +66,9 @@ public abstract class CardClass {
         ItemStack newItem = cardItem.clone();
 
         ItemMeta cardMeta = newItem.getItemMeta();
+        assert cardMeta != null;
 
-        cardMeta.setLocalizedName(cardMeta.getLocalizedName() + ","+ UUID.randomUUID());
+        Utils.setPrivateName(cardMeta,  Utils.getPrivateName(cardMeta)+ ","+ UUID.randomUUID());
 
         newItem.setItemMeta(cardMeta);
         return newItem;

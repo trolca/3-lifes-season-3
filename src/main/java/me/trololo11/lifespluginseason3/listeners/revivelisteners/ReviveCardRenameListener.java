@@ -140,8 +140,8 @@ public class ReviveCardRenameListener implements Listener {
         ArrayList<String> lore = new ArrayList<>(itemMeta.getLore());
         lore.set(0, ChatColor.GRAY + "Przypisany gracz: "+ deadPlayer.getName());
         itemMeta.setLore(lore);
-        String oldName = itemMeta.getLocalizedName().split("_")[2].split(":")[1];
-        itemMeta.setLocalizedName(itemMeta.getLocalizedName().replace(oldName, deadPlayer.getName()));
+        String oldName = Utils.getPrivateName(itemMeta).split("_")[2].split(":")[1];
+        Utils.setPrivateName(itemMeta, Utils.getPrivateName(itemMeta).replace(oldName, deadPlayer.getName()));
 
         reviveCard.setItemMeta(itemMeta);
 
@@ -197,9 +197,9 @@ public class ReviveCardRenameListener implements Listener {
         if(item == null) return true;
         if(item.getType() == Material.AIR) return true;
         if(!item.hasItemMeta()) return true;
-        if(!item.getItemMeta().hasLocalizedName()) return true;
+        if(Utils.getPrivateName(item) == null) return true;
 
-        return !item.getItemMeta().getLocalizedName().startsWith("revive_card");
+        return !Utils.getPrivateName(item).startsWith("revive_card");
     }
 
 

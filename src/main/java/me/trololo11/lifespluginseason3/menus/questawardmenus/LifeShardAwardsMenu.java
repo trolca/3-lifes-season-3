@@ -73,15 +73,15 @@ public class LifeShardAwardsMenu extends Menu {
         lifeShardTakeMeta.setDisplayName(Utils.chat("&cKilknij by mnie odebrać!"));
         lifeShardTakeMeta.addEnchant(Enchantment.MENDING, 1, true);
         lifeShardTakeMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        lifeShardTakeMeta.setLocalizedName("lifes-shard-take");
+        Utils.setPrivateName(lifeShardTakeMeta, "lifes-shard-take");
 
         ItemMeta lifeShardStandardMeta = lifeShard1.getItemMeta();
         lifeShardStandardMeta.setDisplayName(Utils.chat("&4Zrób jeszcze <num> questy by odebrać!"));
-        lifeShardStandardMeta.setLocalizedName("lifes-shard-not-take");
+        Utils.setPrivateName(lifeShardStandardMeta, "lifes-shard-not-take");
 
         ItemMeta otherMeta = lifeShard1.getItemMeta();
         otherMeta.setDisplayName(ChatColor.DARK_RED + "Odbierz najpierw poprzednie nagrody!" );
-        otherMeta.setLocalizedName("life-shard-blocked");
+        Utils.setPrivateName(otherMeta, "life-shard-blocked");
 
         int activeQuestsSize = questManager.getCorrespondingQuestArray(QuestType.DAILY).size();
 
@@ -93,12 +93,12 @@ public class LifeShardAwardsMenu extends Menu {
 
         if(howManyTaken == 2){
             lifeShardTakeMeta.setDisplayName(Utils.chat("&bKliknij by mnie odebrać!"));
-            lifeShardTakeMeta.setLocalizedName("card-shard-take");
+            Utils.setPrivateName(lifeShardTakeMeta, "card-shard-take");
             cardItem.setItemMeta(lifeShardTakeMeta);
         }else if(howManyTaken < 2){
             lifeShardStandardMeta.setDisplayName(Utils.chat("&3Odbierz jeszcze "+ ( maxAmountOfAwards-howManyTaken  ) +
                     ( howManyTaken == 1 ? " nagrode" : " nagród" ) +" by odebrać!"));
-            lifeShardStandardMeta.setLocalizedName("card-shard-blocked");
+            Utils.setPrivateName(lifeShardStandardMeta, "card-shard-blocked");
             cardItem.setItemMeta(lifeShardStandardMeta);
         }else{
             cardItem = awardTaken;
@@ -128,13 +128,13 @@ public class LifeShardAwardsMenu extends Menu {
 
         switch (item.getType()){
             case RED_DYE -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("back")) return;
+                if(!Utils.isPrivateNameEqual(item, "back")) return;
 
                 questsMenu.open(player);
             }
 
             case GOLD_NUGGET -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("lifes-shard-take")) return;
+                if(!Utils.isPrivateNameEqual(item, "lifes-shard-take")) return;
 
                 if(Utils.isInventoryFull(player.getInventory())){
                     player.sendMessage(ChatColor.RED + "Twój ekwipunek jest pełny i nie można dodać itemu!");
@@ -151,7 +151,7 @@ public class LifeShardAwardsMenu extends Menu {
             }
 
             case GHAST_TEAR -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("card-shard-take")) return;
+                if(!Utils.isPrivateNameEqual(item, "card-shard-take")) return;
 
                 questsAwardsManager.setAwardsTakenForPlayer(player, QuestType.DAILY, (byte) (questsAwardsManager.getAwardsTakenForPlayer(player, QuestType.DAILY)+1 ));
                 player.getInventory().addItem(new ItemStack(Material.GHAST_TEAR));

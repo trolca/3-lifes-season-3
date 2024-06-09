@@ -125,14 +125,14 @@ public class GoldLifeGetMenu extends Menu {
 
             case SCUTE -> {
                 if(currLife != null && randomizingStage != 2) return;
-                if(randomizingStage == 0 && (item.getItemMeta().getLocalizedName().startsWith("life_item") || item.getItemMeta().getLocalizedName().startsWith("player_life")) ) {
+                if(randomizingStage == 0 && (Utils.getPrivateName(item).startsWith("life_item") || Utils.getPrivateName(item).startsWith("player_life")) ) {
                     if (e.getClick() == ClickType.NUMBER_KEY) return;
 
 
                     player.getInventory().setItem(e.getSlot(), null);
                     currLife = item;
                     setMenuItems(player);
-                }else if(item.getItemMeta().getLocalizedName().startsWith("gold_life") && e.getClickedInventory() != null && e.getClickedInventory().getType() != InventoryType.PLAYER){
+                }else if(Utils.getPrivateName(item).startsWith("gold_life") && e.getClickedInventory() != null && e.getClickedInventory().getType() != InventoryType.PLAYER){
 
                     player.closeInventory(); //We dont need to add the gold item for the player bcs the exit listener does that for us
 
@@ -141,12 +141,12 @@ public class GoldLifeGetMenu extends Menu {
             }
 
             case GREEN_DYE -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("confirm")) return;
+                if(!Utils.isPrivateNameEqual(item, "confirm")) return;
 
                 player.getInventory().setItemInMainHand(null);
                 randomizingStage = 1;
 
-                int randomizedNum = r.nextInt(1000) + 1; //We write the chance in hundreds bcs we want the 0.1 perecentage. So 123 is 12.3%
+                int randomizedNum = r.nextInt(1000) + 1; //We write the chance in hundreds bcs we want the 0.1 percentage. So 123 is 12.3%
 
                 int additionalSpins = (randomizedNum /125)+2;
                 if(randomizedNum > 445 && randomizedNum < 500 ) additionalSpins++;
@@ -163,7 +163,7 @@ public class GoldLifeGetMenu extends Menu {
             }
 
             case RED_DYE -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("back")) return;
+                if(!Utils.isPrivateNameEqual(item, "back")) return;
                 if(e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) return;
 
                 player.closeInventory();

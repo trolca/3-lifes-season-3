@@ -127,7 +127,7 @@ public class QuestSelectMenu extends Menu {
 
             questMeta.setLore(addLore);
             questMeta.addItemFlags(ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS);
-            questMeta.setLocalizedName("quest_"+quest.getDatabaseName());
+            Utils.setPrivateName(questMeta, "quest_"+quest.getDatabaseName());
 
             questItem.setItemMeta(questMeta);
 
@@ -145,16 +145,16 @@ public class QuestSelectMenu extends Menu {
     public void handleMenu(InventoryClickEvent e) {
         ItemStack item = e.getCurrentItem();
         Player player = (Player) e.getWhoClicked();
-        String localizedName = item.getItemMeta().getLocalizedName();
+        String privateName = Utils.getPrivateName(item);
 
-        if(item.getType() == Material.RED_DYE && localizedName.equalsIgnoreCase("back")){
+        if(item.getType() == Material.RED_DYE && privateName.equalsIgnoreCase("back")){
             player.closeInventory();
             return;
         }
 
-        if(localizedName.startsWith("quest")){
-             Quest quest = questType != null ? questManager.getQuestByDatabaseName(questType ,localizedName.substring(6)) :
-                     questManager.getQuestByDatabaseName(localizedName.substring(6));
+        if(privateName.startsWith("quest")){
+             Quest quest = questType != null ? questManager.getQuestByDatabaseName(questType ,privateName.substring(6)) :
+                     questManager.getQuestByDatabaseName(privateName.substring(6));
 
             if(quest == null){
                 player.closeInventory();

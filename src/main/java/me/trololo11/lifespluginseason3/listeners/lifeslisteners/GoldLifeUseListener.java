@@ -3,6 +3,7 @@ package me.trololo11.lifespluginseason3.listeners.lifeslisteners;
 import me.trololo11.lifespluginseason3.LifesPlugin;
 import me.trololo11.lifespluginseason3.events.PlayerChangeLifesEvent;
 import me.trololo11.lifespluginseason3.managers.LifesManager;
+import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -33,7 +34,7 @@ public class GoldLifeUseListener implements Listener {
         ItemStack item = e.getItem();
         if(item == null) return;
         if(!item.hasItemMeta()) return;
-        if(!item.getItemMeta().getLocalizedName().startsWith("gold_life")) return;
+        if(!Utils.getPrivateName(item).startsWith("gold_life")) return;
 
         byte newLifes = (byte) (lifesManager.getPlayerLifes(player)+2);
         int slot = e.getHand() == EquipmentSlot.HAND ? player.getInventory().getHeldItemSlot() : 40;

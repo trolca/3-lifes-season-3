@@ -30,6 +30,7 @@ import me.trololo11.lifespluginseason3.utils.PlayerStats;
 import me.trololo11.lifespluginseason3.utils.Quest;
 import me.trololo11.lifespluginseason3.utils.QuestType;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -56,6 +57,13 @@ public final class LifesPlugin extends JavaPlugin {
     private CardTimingsManager cardTimingsManager;
     private ArrayList<Quest> allSkippedQuests;
 
+    /**
+     * Every custom item created in this plugin should have a private name stored in its nbt, thanks to which
+     * this plugin can differentiate between custom and non custom items without using the
+     * display name, because players can change it.
+     */
+    private static NamespacedKey PRIVATE_NAME_KEY;
+
     private HashMap<Player, Boolean> developerModePlayers = new HashMap<>();
     private HashMap<Player, PlayerStats> playerPlayerStatsHashMap = new HashMap<>();
     private boolean detailedErrors;
@@ -71,6 +79,7 @@ public final class LifesPlugin extends JavaPlugin {
     public void onEnable() {
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
+        PRIVATE_NAME_KEY = new NamespacedKey(this, "private-key");
         detailedErrors = getConfig().getBoolean("detailed-errors");
         tier = getConfig().getInt("quest-tier");
         dailyQuestsCount = getConfig().getInt("daily-quests-count");
@@ -216,7 +225,6 @@ public final class LifesPlugin extends JavaPlugin {
         getCommand("setprogress").setTabCompleter(new SetProgressTabCompleter(questManager));
         getCommand("lifesmenu").setTabCompleter(new LifesMenuTabCompleter());
 
-
     }
 
     @Override
@@ -266,7 +274,6 @@ public final class LifesPlugin extends JavaPlugin {
         databaseManager.turnOffDatabase();
 
     }
-
 
     public void setupData() throws SQLException {
 
@@ -400,6 +407,17 @@ public final class LifesPlugin extends JavaPlugin {
 
     public PlayerStats getPlayerStats(Player player){
         return playerPlayerStatsHashMap.get(player);
+    }
+
+    /**
+     * Every custom item created in this plugin should have a private name stored in its nbt, thanks to which
+     * this plugin can differentiate between custom and non custom items without using the
+     * display name, because players can change it.
+     *
+     * @return The key where the private name is stored in the nbt.
+     */
+    public static NamespacedKey getPrivateNameKey(){
+        return PRIVATE_NAME_KEY;
     }
 
     public boolean isDetailedErrors() {

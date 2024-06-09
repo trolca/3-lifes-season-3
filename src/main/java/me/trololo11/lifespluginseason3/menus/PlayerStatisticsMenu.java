@@ -108,7 +108,7 @@ public class PlayerStatisticsMenu extends Menu {
     public void handleMenu(InventoryClickEvent e) {
         ItemStack item = e.getCurrentItem();
 
-        if(item.getType() == Material.RED_DYE && item.getItemMeta().getLocalizedName().equalsIgnoreCase("back")){
+        if(item.getType() == Material.RED_DYE && Utils.isPrivateNameEqual(item, "back")){
             mainLifesMenu.open(player);
         }
 

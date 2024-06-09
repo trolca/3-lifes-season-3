@@ -104,7 +104,7 @@ public class MainLifesMenu extends Menu {
             case ENCHANTED_BOOK -> {
                 QuestType questType;
                 try {
-                    questType = QuestType.valueOf(item.getItemMeta().getLocalizedName().toUpperCase());
+                    questType = QuestType.valueOf(Utils.getPrivateName(item).toUpperCase());
                 }catch (IllegalArgumentException ex){
                     return;
                 }
@@ -113,23 +113,23 @@ public class MainLifesMenu extends Menu {
             }
 
             case PAPER -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("card")) return;
+                if(!Utils.isPrivateNameEqual(item, "card")) return;
                 new QuestsMenu(this, "&f&lQuesty do karty", QuestType.CARD, questManager,questsAwardsManager, recipesManager, databaseManager, cardManager).open(player);
             }
 
             case RED_DYE ->{
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("back")) return;
+                if(!Utils.isPrivateNameEqual(item, "back")) return;
                 player.closeInventory();
             }
 
             case PLAYER_HEAD -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("statistics")) return;
+                if(!Utils.isPrivateNameEqual(item, "statistics")) return;
 
                 new PlayerStatisticsMenu(player, this).open(player);
             }
 
             case REDSTONE, GLOWSTONE_DUST -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("dev-mode")) return;
+                if(!Utils.isPrivateNameEqual(item, "dev-mode")) return;
 
                 if(!player.hasPermission("3lifes3.stats")){
                     player.sendMessage(ChatColor.RED + "How did you what?!!?!?");

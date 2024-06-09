@@ -78,15 +78,15 @@ public class WeeklyQuestsAwardsMenu extends Menu {
         takeMeta.setDisplayName(ChatColor.AQUA + "Kliknij by mnie odebrać!");
         takeMeta.addEnchant(Enchantment.MENDING, 1, false);
         takeMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        takeMeta.setLocalizedName("revive-shard-take");
+        Utils.setPrivateName(takeMeta, "revive-shard-take");
 
         ItemMeta normalMeta = reviveCardTemplate.getItemMeta();
         normalMeta.setDisplayName(ChatColor.AQUA + "Zrób jeszcze <num> questy by odebrać!");
-        normalMeta.setLocalizedName("revive-shard-blocked");
+        Utils.setPrivateName(normalMeta, "revive-shard-blocked");
 
         ItemMeta otherMeta = reviveCardTemplate.getItemMeta();
         otherMeta.setDisplayName(ChatColor.AQUA + "Odbierz najpierw poprzednie nagrody!" );
-        otherMeta.setLocalizedName("revive-shard-blocked");
+        Utils.setPrivateName(otherMeta, "revive-shard-blocked");
 
         reviveCardShard1 = QuestUtils.getAwardItem(reviveCardTemplate.clone(), awardTaken, normalMeta.clone(), takeMeta.clone(), otherMeta.clone(), howMuchShouldTake, howManyTaken,
                 allQuestsSize, playerFinishedQuests, 1, maxAmountOfAwards, questsPerAward);
@@ -101,12 +101,12 @@ public class WeeklyQuestsAwardsMenu extends Menu {
 
         if(howManyTaken == 3){
             cardMeta.setDisplayName(Utils.chat("&bKliknij by mnie odebrać!"));
-            cardMeta.setLocalizedName("card-shard-take");
+            Utils.setPrivateName(cardMeta, "card-shard-take");
             cardItem.setItemMeta(cardMeta);
         }else if(howManyTaken < 3){
             cardMeta.setDisplayName(Utils.chat("&3Odbierz jeszcze "+ ( maxAmountOfAwards-howManyTaken  ) +
                     ( howManyTaken == 2 ? " nagrode" : " nagrody" ) +" by odebrać!"));
-            cardMeta.setLocalizedName("card-shard-blocked");
+            Utils.setPrivateName(cardMeta, "card-shard-blocked");
             cardItem.setItemMeta(cardMeta);
         }else{
             cardItem = awardTaken;
@@ -147,13 +147,13 @@ public class WeeklyQuestsAwardsMenu extends Menu {
         switch (item.getType()){
 
             case RED_DYE -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("back")) return;
+                if(!Utils.isPrivateNameEqual(item, "back")) return;
 
                 questsMenu.open(player);
             }
 
             case IRON_NUGGET -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("revive-shard-take")) return;
+                if(!Utils.isPrivateNameEqual(item, "revive-shard-take")) return;
 
                 questsAwardsManager.setAwardsTakenForPlayer(player, QuestType.WEEKLY, (byte) (questsAwardsManager.getAwardsTakenForPlayer(player, QuestType.WEEKLY)+1) );
                 player.getInventory().addItem(recipesManager.getReviveShardItem());
@@ -164,7 +164,7 @@ public class WeeklyQuestsAwardsMenu extends Menu {
             }
 
             case GHAST_TEAR -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("card-shard-take")) return;
+                if(!Utils.isPrivateNameEqual(item, "card-shard-take")) return;
 
                 questsAwardsManager.setAwardsTakenForPlayer(player, QuestType.WEEKLY, questsAwardsManager.getMaxAmountOfAwards(QuestType.WEEKLY));
                 player.getInventory().addItem(new ItemStack(Material.GHAST_TEAR));

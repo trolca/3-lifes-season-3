@@ -31,7 +31,7 @@ public class TakeLifeCardListener implements Listener {
         if(playerDie.getKiller() == null) return;
         Player killer = playerDie.getKiller();
 
-        int indexCard = Utils.indexOfItemLocalized(CardType.TAKE_LIFE.toString().toLowerCase(), killer.getInventory());
+        int indexCard = Utils.indexOfItemPrivateName(CardType.TAKE_LIFE.toString().toLowerCase(), killer.getInventory());
         if(indexCard == -1) return;
 
         byte playerLifes = lifesManager.getPlayerLifes(killer);

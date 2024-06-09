@@ -72,13 +72,13 @@ public abstract class ConfirmMenu extends Menu{
 
     @Override
     public void handleMenu(InventoryClickEvent e) {
-        String localizedName = e.getCurrentItem().getItemMeta().getLocalizedName();
+        String privateName = Utils.getPrivateName(e.getCurrentItem());
         Material material = e.getCurrentItem().getType();
         Player player = (Player) e.getWhoClicked();
 
-        if(material == getConfirmItem() && localizedName.equalsIgnoreCase("yes")) onConfirm(e, player);
-        else if(material == getCancelItem() && localizedName.equalsIgnoreCase("no")) onCancel(e, player);
-        else if(material == getIcon().getType() && localizedName.equalsIgnoreCase(getIcon().getItemMeta().getLocalizedName())){
+        if(material == getConfirmItem() && privateName.equalsIgnoreCase("yes")) onConfirm(e, player);
+        else if(material == getCancelItem() && privateName.equalsIgnoreCase("no")) onCancel(e, player);
+        else if(material == getIcon().getType() && privateName.equalsIgnoreCase(Utils.getPrivateName(getIcon()))){
 
             if(getNameSoundIcon() == null) return;
 

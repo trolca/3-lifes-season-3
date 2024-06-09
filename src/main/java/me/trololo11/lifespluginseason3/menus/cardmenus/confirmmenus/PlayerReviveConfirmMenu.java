@@ -60,20 +60,20 @@ public class PlayerReviveConfirmMenu extends Menu {
         switch (item.getType()){
 
             case RED_STAINED_GLASS_PANE -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("no")) return;
+                if(!Utils.isPrivateNameEqual(item, "no")) return;
 
                 playerReviveMenu.open(player);
             }
 
             case PLAYER_HEAD -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("text-confirm")) return;
+                if(!Utils.isPrivateNameEqual(item, "text-confirm")) return;
 
                 player.stopAllSounds();
                 player.playSound(player, "secret.szumiszumi", 1f, 1f);
             }
 
             case LIME_STAINED_GLASS_PANE -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("yes")) return;
+                if(!Utils.isPrivateNameEqual(item, "yes")) return;
 
                 try {
                     player.getInventory().setItemInMainHand(null);

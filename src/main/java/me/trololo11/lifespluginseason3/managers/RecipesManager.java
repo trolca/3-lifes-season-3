@@ -1,6 +1,7 @@
 package me.trololo11.lifespluginseason3.managers;
 
 import me.trololo11.lifespluginseason3.LifesPlugin;
+import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -46,6 +47,8 @@ public class RecipesManager {
         createRecipes();
     }
 
+
+    ///For season 4 - Change this item logic!
     /**
      * Creates all of the custom items.
      */
@@ -64,13 +67,13 @@ public class RecipesManager {
         lore.add(ChatColor.WHITE + "Użyj PPM by użyć!");
         heartMeta.setLore(lore);
         heartMeta.setCustomModelData(8760001);
-        heartMeta.setLocalizedName("life_item");
+        Utils.setPrivateName(heartMeta, "life_item");
 
         ItemMeta playerHeartMeta = playerLifeItem.getItemMeta();
         playerHeartMeta.setDisplayName(ChatColor.DARK_RED + ChatColor.BOLD.toString() + "Życie <player>");
         playerHeartMeta.setLore(lore);
         playerHeartMeta.setCustomModelData(8760002);
-        playerHeartMeta.setLocalizedName("player_life");
+        Utils.setPrivateName(playerHeartMeta, "player_life");
 
         ItemMeta goldLifeMeta = goldLifeItem.getItemMeta();
         goldLifeMeta.setDisplayName(ChatColor.YELLOW + ChatColor.BOLD.toString() + "Złote życie");
@@ -81,7 +84,7 @@ public class RecipesManager {
 
         goldLifeMeta.setLore(lore);
         goldLifeMeta.setCustomModelData(8760003);
-        goldLifeMeta.setLocalizedName("gold_life");
+        Utils.setPrivateName(goldLifeMeta, "gold_life");
 
         ItemMeta reviveMeta = reviveCardItem.getItemMeta();
         reviveMeta.setDisplayName(ChatColor.AQUA + ChatColor.BOLD.toString() + "Karta odrodzenia");
@@ -92,17 +95,17 @@ public class RecipesManager {
         lore.add(ChatColor.WHITE + "Później użyj PPM by og wskrzesić!");
         reviveMeta.setLore(lore);
         reviveMeta.setCustomModelData(8760005);
-        reviveMeta.setLocalizedName("revive_card_player:null");
+        Utils.setPrivateName(reviveMeta, "revive_card_player:null");
 
         ItemMeta heartShardMeta = lifeShardItem.getItemMeta();
         heartShardMeta.setDisplayName(ChatColor.RED + "Kawałek życia");
         heartShardMeta.setCustomModelData(8760001);
-        heartShardMeta.setLocalizedName("shard_life");
+        Utils.setPrivateName(heartShardMeta, "shard_life");
 
         ItemMeta reviveCardShardMeta = reviveCardItem.getItemMeta();
         reviveCardShardMeta.setDisplayName(ChatColor.AQUA + "Kawałek karty odrodzenia");
         reviveCardShardMeta.setCustomModelData(8760001);
-        reviveCardShardMeta.setLocalizedName("shard_revive_card");
+        Utils.setPrivateName(reviveCardShardMeta, "shard_revive_card");
 
         lifeItem.setItemMeta(heartMeta);
         reviveCardItem.setItemMeta(reviveMeta);
@@ -137,14 +140,14 @@ public class RecipesManager {
     }
 
     /**
-     * Returns a new life item with a random UUID as it's localized name
+     * Returns a new life item with a random UUID as it's private name
      * to make the items non-stackable.
      * @return The new non-stackable life.
      */
     public ItemStack getLifeItem() {
         ItemStack lifeItemCopy = lifeItem.clone();
         ItemMeta lifeMeta = lifeItemCopy.getItemMeta();
-        lifeMeta.setLocalizedName(lifeMeta.getLocalizedName()+"_"+UUID.randomUUID());
+        Utils.setPrivateName(lifeMeta, Utils.getPrivateName(lifeMeta) + "_" + UUID.randomUUID());;
 
         lifeItemCopy.setItemMeta(lifeMeta);
 
@@ -153,7 +156,7 @@ public class RecipesManager {
 
     /**
      * Returns a new player life with the specified player's name
-     * on the display name. It makes it's localized name
+     * on the display name. It makes it's private name
      * a random UUID to make it non-stackable.
      *
      * @param player The player to put on the display name of this life.
@@ -164,14 +167,14 @@ public class RecipesManager {
         ItemStack playerLifeItemCopy = playerLifeItem.clone();
         ItemMeta playerLifeMeta = playerLifeItemCopy.getItemMeta();
         playerLifeMeta.setDisplayName(playerLifeMeta.getDisplayName().replace("<player>", player.getDisplayName()));
-        playerLifeMeta.setLocalizedName(playerLifeMeta.getLocalizedName()+"_"+UUID.randomUUID());
+        Utils.setPrivateName(playerLifeMeta, Utils.getPrivateName(playerLifeMeta) + "_" + UUID.randomUUID());
         playerLifeItemCopy.setItemMeta(playerLifeMeta);
 
         return playerLifeItemCopy;
     }
 
     /**
-     * Returns a new revive card item with a random UUID as it's localized name
+     * Returns a new revive card item with a random UUID as it's private name
      * to make the items non-stackable.
      * @return The new non-stackable revive card.
      */
@@ -181,14 +184,14 @@ public class RecipesManager {
 
     /**
      * Returns a new revive card item with the specified uuid in it's
-     * localized name.
+     * private name.
      * @param uuid The uuid to set
      * @return The new revive card item
      */
     public ItemStack getReviveCardItem(UUID uuid) {
         ItemStack reviveItemCopy = reviveCardItem.clone();
         ItemMeta reviveMeta = reviveItemCopy.getItemMeta();
-        reviveMeta.setLocalizedName(reviveMeta.getLocalizedName()+"_"+uuid);
+        Utils.setPrivateName(reviveMeta, Utils.getPrivateName(reviveMeta) + "_" + uuid);
 
         reviveItemCopy.setItemMeta(reviveMeta);
 
@@ -196,14 +199,14 @@ public class RecipesManager {
     }
 
     /**
-     * Returns a new gold life. It makes it's localized name
+     * Returns a new gold life. It makes it's private name
      * a random UUID to make it non-stackable.
      * @return A new gold life
      */
     public ItemStack getGoldLifeItem(){
         ItemStack goldLifeCopy = goldLifeItem.clone();
         ItemMeta goldLifeMeta = goldLifeCopy.getItemMeta();
-        goldLifeMeta.setLocalizedName(goldLifeMeta.getLocalizedName() + "_" + UUID.randomUUID());
+        Utils.setPrivateName(goldLifeMeta, Utils.getPrivateName(goldLifeMeta) + "_" + UUID.randomUUID());
 
         goldLifeCopy.setItemMeta(goldLifeMeta);
 

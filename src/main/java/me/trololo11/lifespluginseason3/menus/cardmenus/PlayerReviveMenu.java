@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -58,7 +59,7 @@ public class PlayerReviveMenu extends Menu {
 
             headMeta.setDisplayName(ChatColor.DARK_RED + deadPlayer.getName());
             headMeta.setOwningPlayer(deadPlayer);
-            headMeta.setLocalizedName(deadPlayer.getUniqueId().toString());
+            Utils.setPrivateName(headMeta, deadPlayer.getUniqueId().toString());
 
             playerHead.setItemMeta(headMeta);
 
@@ -77,7 +78,7 @@ public class PlayerReviveMenu extends Menu {
         switch (item.getType()){
 
             case RED_DYE -> {
-                if(!item.getItemMeta().getLocalizedName().equalsIgnoreCase("back")) return;
+                if(!Utils.isPrivateNameEqual(item, "back")) return;
 
                 player.closeInventory();
             }
@@ -85,7 +86,7 @@ public class PlayerReviveMenu extends Menu {
             case PLAYER_HEAD -> {
                 UUID deadUuid;
                 try {
-                    deadUuid = UUID.fromString(item.getItemMeta().getLocalizedName());
+                    deadUuid = UUID.fromString(Objects.requireNonNull(Utils.getPrivateName(item)));
                 }catch (IllegalArgumentException ex){
                     return;
                 }

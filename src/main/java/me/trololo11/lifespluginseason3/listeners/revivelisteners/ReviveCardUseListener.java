@@ -32,13 +32,13 @@ public class ReviveCardUseListener implements Listener {
         ItemStack reviveCard = e.getItem();
         if(reviveCard == null) return;
         if(!reviveCard.hasItemMeta()) return;
-        if(!reviveCard.getItemMeta().hasLocalizedName()) return;
-        if(!reviveCard.getItemMeta().getLocalizedName().startsWith("revive_card")) return;
-        String playerName = reviveCard.getItemMeta().getLocalizedName().split("_")[2].split(":")[1];
+        if(Utils.getPrivateName(reviveCard) == null) return;
+        if(!Utils.getPrivateName(reviveCard).startsWith("revive_card")) return;
+        String playerName = Utils.getPrivateName(reviveCard).split("_")[2].split(":")[1];
         Player player = e.getPlayer();
 
 
-        //We check if the player is not targeting an anvil so they dont get the
+        //We check if the player is not targeting an anvil so they don't get the
         //error message when they are trying to rename the card
         Block playerTargetBlock = player.getTargetBlockExact(5);
 

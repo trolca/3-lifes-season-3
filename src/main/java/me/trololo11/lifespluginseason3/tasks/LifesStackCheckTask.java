@@ -1,6 +1,7 @@
 package me.trololo11.lifespluginseason3.tasks;
 
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
+import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -23,14 +24,14 @@ public class LifesStackCheckTask extends BukkitRunnable {
     @Override
     public void run() {
 
-        //check if theres a life item which is more than 1 and usnstacks it
-        //(to unstack it it creats an random uuid in the localized name)
+        //check if theres a life item which is more than 1 and unstacks it
+        //(to unstack it it creates an random uuid in the private name)
         for(ItemStack item : p.getInventory().getContents()  ) {
 
-            if (item != null && item.hasItemMeta() && item.getItemMeta().hasLocalizedName()
-                    && (item.getItemMeta().getLocalizedName().equalsIgnoreCase("life_item") || item.getItemMeta().getLocalizedName().equalsIgnoreCase("revive_card"))
+            if (item != null && item.hasItemMeta() && Utils.getPrivateName(item) != null
+                    && (Utils.getPrivateName(item).equalsIgnoreCase("life_item") || Utils.getPrivateName(item).equalsIgnoreCase("revive_card"))
                     && item.getAmount() > 1) {
-                isLife = item.getItemMeta().getLocalizedName().equalsIgnoreCase("life_item");
+                isLife = Utils.getPrivateName(item).equalsIgnoreCase("life_item");
 
                 p.getInventory().remove(item);
 
