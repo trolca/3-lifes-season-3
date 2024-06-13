@@ -26,7 +26,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class LifeShardAwardsMenu extends Menu {
     private QuestsMenu questsMenu;
     private RecipesManager recipesManager;
-    private QuestsAwardsManager questsAwardsManager;
+    private QuestsAwardsManager questsAwardsManager; //TODO: add big reward card shards
     private QuestManager questManager;
     private LifesPlugin plugin = LifesPlugin.getPlugin();
 
@@ -97,7 +97,7 @@ public class LifeShardAwardsMenu extends Menu {
             cardItem.setItemMeta(lifeShardTakeMeta);
         }else if(howManyTaken < 2){
             lifeShardStandardMeta.setDisplayName(Utils.chat("&3Odbierz jeszcze "+ ( maxAmountOfAwards-howManyTaken  ) +
-                    ( howManyTaken == 1 ? " nagrode" : " nagród" ) +" by odebrać!"));
+                    ( howManyTaken == 1 ? " nagrodę" : " nagrody" ) +" by odebrać!"));
             Utils.setPrivateName(lifeShardStandardMeta, "card-shard-blocked");
             cardItem.setItemMeta(lifeShardStandardMeta);
         }else{

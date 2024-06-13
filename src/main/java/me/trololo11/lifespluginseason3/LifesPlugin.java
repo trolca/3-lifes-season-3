@@ -194,6 +194,9 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new VillagerCureListener(questManager), this);
         getServer().getPluginManager().registerEvents(new VillagerPayTradeListener(questManager), this);
         getServer().getPluginManager().registerEvents(new WalkDistanceListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new CreeperLightListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new GetItemListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new GetItemByMobListener(questManager), this);
 
 
 

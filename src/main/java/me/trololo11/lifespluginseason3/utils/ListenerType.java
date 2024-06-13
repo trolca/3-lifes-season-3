@@ -12,6 +12,7 @@ public enum ListenerType {
     FLY_DISTANCE,
     RIDE_DISTANCE,
     EAT,
+    GET_ITEM,
     BREAK_BLOCKS,
     CRAFT,
     PLAYER_HEART,
@@ -35,5 +36,7 @@ public enum ListenerType {
     VILLAGER_TRADE_SPEND,
     ON_FIRE,
     VILLAGER_TRADE_BUY,
-    PLAYER_DAMAGE
+    GET_ITEM_BY_MOB,
+    PLAYER_DAMAGE,
+    CREEPER_LIGHTER
 }
