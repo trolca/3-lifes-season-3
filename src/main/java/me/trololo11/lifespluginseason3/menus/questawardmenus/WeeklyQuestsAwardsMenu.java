@@ -57,7 +57,7 @@ public class WeeklyQuestsAwardsMenu extends Menu {
         ItemStack reviveCardShard2;
         ItemStack reviveCardShard3;
         ItemStack awardTaken = Utils.createItem(Material.BARRIER, "&4To już zostało odebrane!", "award-taken");
-        ItemStack cardItem = Utils.createItem(Material.GHAST_TEAR, "&3Kawałek karty oddania", "card-shard");
+        ItemStack cardItem = recipesManager.getGiveLifeShardItem();
         ItemStack completed = Utils.createItem(Material.LIME_STAINED_GLASS_PANE, " ", "completed");
         ItemStack notCompleted = Utils.createItem(Material.RED_STAINED_GLASS_PANE, " ", "not-completed");
 
@@ -100,11 +100,11 @@ public class WeeklyQuestsAwardsMenu extends Menu {
         ItemMeta cardMeta = cardItem.getItemMeta();
 
         if(howManyTaken == 3){
-            cardMeta.setDisplayName(Utils.chat("&bKliknij by mnie odebrać!"));
+            cardMeta.setDisplayName(Utils.chat("&cKliknij by mnie odebrać!"));
             Utils.setPrivateName(cardMeta, "card-shard-take");
             cardItem.setItemMeta(cardMeta);
         }else if(howManyTaken < 3){
-            cardMeta.setDisplayName(Utils.chat("&3Odbierz jeszcze "+ ( maxAmountOfAwards-howManyTaken  ) +
+            cardMeta.setDisplayName(Utils.chat("&4Odbierz jeszcze "+ ( maxAmountOfAwards-howManyTaken  ) +
                     ( howManyTaken == 2 ? " nagrode" : " nagrody" ) +" by odebrać!"));
             Utils.setPrivateName(cardMeta, "card-shard-blocked");
             cardItem.setItemMeta(cardMeta);
@@ -167,7 +167,7 @@ public class WeeklyQuestsAwardsMenu extends Menu {
                 if(!Utils.isPrivateNameEqual(item, "card-shard-take")) return;
 
                 questsAwardsManager.setAwardsTakenForPlayer(player, QuestType.WEEKLY, questsAwardsManager.getMaxAmountOfAwards(QuestType.WEEKLY));
-                player.getInventory().addItem(new ItemStack(Material.GHAST_TEAR));
+                player.getInventory().addItem(recipesManager.getGiveLifeShardItem());
                 player.playSound(player, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
                 player.closeInventory();
             }

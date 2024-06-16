@@ -30,6 +30,7 @@ public class GetItemsCommand implements CommandExecutor {
         player.getInventory().addItem(recipesManager.getPlayerLifeItem(player));
         player.getInventory().addItem(recipesManager.getLifeShardItem());
         player.getInventory().addItem(recipesManager.getReviveShardItem());
+        player.getInventory().addItem(recipesManager.getGiveLifeShardItem());
 
 
         return true;

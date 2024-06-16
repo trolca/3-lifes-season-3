@@ -1,6 +1,8 @@
 package me.trololo11.lifespluginseason3.listeners;
 
 import me.trololo11.lifespluginseason3.LifesPlugin;
+import me.trololo11.lifespluginseason3.cardstuff.CardType;
+import me.trololo11.lifespluginseason3.managers.CardManager;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
 import me.trololo11.lifespluginseason3.tasks.LifesStackCheckTask;
 import me.trololo11.lifespluginseason3.utils.Utils;
@@ -19,10 +21,12 @@ import org.bukkit.inventory.ItemStack;
 public class CustomItemsCraftingFix implements Listener {
 
     private RecipesManager recipesManager;
+    private CardManager cardManager;
     private LifesPlugin plugin = LifesPlugin.getPlugin();
 
-    public CustomItemsCraftingFix(RecipesManager recipesManager){
+    public CustomItemsCraftingFix(RecipesManager recipesManager, CardManager cardManager){
         this.recipesManager = recipesManager;
+        this.cardManager = cardManager;
     }
 
     @EventHandler
@@ -39,6 +43,8 @@ public class CustomItemsCraftingFix implements Listener {
         }else if(e.getRecipe().getResult().equals(recipesManager.getReviveCardRecipe().getResult())){
             currItem = recipesManager.getReviveCardItem();
             plugin.getPlayerStats(player).revivesCrafted++;
+        }else if(e.getRecipe().getResult().equals(recipesManager.getGiveLifeCardRecipe().getResult())){
+            currItem = cardManager.getCard(CardType.LIFE_GIVE).getCardItem();
         }else{
             return;
         }
@@ -53,7 +59,7 @@ public class CustomItemsCraftingFix implements Listener {
 
 
 
-            LifesStackCheckTask lifesStackCheckTask = new LifesStackCheckTask(player, recipesManager);
+            LifesStackCheckTask lifesStackCheckTask = new LifesStackCheckTask(player, recipesManager, cardManager);
             lifesStackCheckTask.runTaskLater(plugin, 1L);
 
         }else{

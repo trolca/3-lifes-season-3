@@ -1,5 +1,7 @@
 package me.trololo11.lifespluginseason3.tasks;
 
+import me.trololo11.lifespluginseason3.cardstuff.CardType;
+import me.trololo11.lifespluginseason3.managers.CardManager;
 import me.trololo11.lifespluginseason3.managers.RecipesManager;
 import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.entity.Player;
@@ -14,11 +16,13 @@ public class LifesStackCheckTask extends BukkitRunnable {
 
     private Player p;
     private RecipesManager recipesManager;
+    private CardManager cardManager;
     private boolean isLife=true;
 
-    public LifesStackCheckTask(Player p, RecipesManager recipesManager){
+    public LifesStackCheckTask(Player p, RecipesManager recipesManager, CardManager cardManager){
         this.p = p;
         this.recipesManager = recipesManager;
+        this.cardManager = cardManager;
     }
 
     @Override
@@ -29,14 +33,15 @@ public class LifesStackCheckTask extends BukkitRunnable {
         for(ItemStack item : p.getInventory().getContents()  ) {
 
             if (item != null && item.hasItemMeta() && Utils.getPrivateName(item) != null
-                    && (Utils.getPrivateName(item).equalsIgnoreCase("life_item") || Utils.getPrivateName(item).equalsIgnoreCase("revive_card"))
+                    && (Utils.getPrivateName(item).equalsIgnoreCase("life_item") || Utils.getPrivateName(item).equalsIgnoreCase("revive_card") || Utils.getPrivateName(item).startsWith("life_give"))
                     && item.getAmount() > 1) {
                 isLife = Utils.getPrivateName(item).equalsIgnoreCase("life_item");
 
                 p.getInventory().remove(item);
 
                 for (int i = 0; i < item.getAmount(); i++) {
-                    p.getInventory().addItem(isLife ? recipesManager.getLifeItem() : recipesManager.getReviveCardItem());
+                    p.getInventory().addItem(isLife ? recipesManager.getLifeItem() :
+                            (Utils.getPrivateName(item).startsWith("life_give") ? cardManager.getCard(CardType.LIFE_GIVE).getCardItem() : recipesManager.getReviveCardItem() ) );
                 }
 
 

@@ -117,11 +117,11 @@ public final class LifesPlugin extends JavaPlugin {
 
         questsTimingsManager = new QuestsTimingsManager();
         teamsManager = new TeamsManager();
-        recipesManager = new RecipesManager();
         questsAwardsManager = new QuestsAwardsManager();
         questManager = new QuestManager(databaseManager, questsTimingsManager, questsAwardsManager);
         questsProgressDataSetup = new QuestsProgressDataSetup(databaseManager, questManager);
         cardManager = new CardManager();
+        recipesManager = new RecipesManager(cardManager);
 
         if(getConfig().getBoolean("afk-logic")) {
             PlayerAfkManager playerAfkManager = new PlayerAfkManager(lifesManager, teamsManager);
@@ -144,7 +144,7 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerChangeLifesListener(lifesManager, teamsManager), this);
         getServer().getPluginManager().registerEvents(new PlayerLifesDataSetup(lifesManager, databaseManager), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(lifesManager), this);
-        getServer().getPluginManager().registerEvents(new CustomItemsCraftingFix(recipesManager), this);
+        getServer().getPluginManager().registerEvents(new CustomItemsCraftingFix(recipesManager, cardManager), this);
         getServer().getPluginManager().registerEvents(new LifeUseListener(lifesManager), this);
         getServer().getPluginManager().registerEvents(new MenuManager(), this);
         getServer().getPluginManager().registerEvents(new ReviveCardRenameListener(lifesManager), this);

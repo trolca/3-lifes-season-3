@@ -93,7 +93,6 @@ public class QuestManager {
         allUnactiveQuests.addAll(getAllQuestsInFolder(mainFolder + "/weekly-quests/tier-"+tier, QuestType.WEEKLY, false));
         allUnactiveQuests.addAll(getAllQuestsInFolder(mainFolder + "/card-quests/tier-"+tier, QuestType.CARD, false));
 
-
         activeDailyQuests.addAll(getAllQuestsInFolder(mainFolder + "/daily-quests/active-quests", QuestType.DAILY, halfedQuestMap, true));
         activeWeeklyQuests.addAll(getAllQuestsInFolder(mainFolder + "/weekly-quests/active-quests", QuestType.WEEKLY, halfedQuestMap, true));
         activeCardQuests.addAll(getAllQuestsInFolder(mainFolder + "/card-quests/active-quests", QuestType.CARD, halfedQuestMap, true));
@@ -144,7 +143,7 @@ public class QuestManager {
 
         }
 
-        //We have to remove these quests seperetly because we cannot modify and go through the array at the same time
+        //We have to remove these quests separately because we cannot modify and go through the array at the same time
         for(Quest quest : questsToDeletion){
             allUnactiveQuests.add(quest);
             listenerTypesQuests.get(quest.getListenerType()).remove(quest);

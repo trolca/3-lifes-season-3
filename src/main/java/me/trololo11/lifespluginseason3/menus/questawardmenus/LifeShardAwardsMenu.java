@@ -54,7 +54,7 @@ public class LifeShardAwardsMenu extends Menu {
         ItemStack lifeShard1 = recipesManager.getLifeShardItem();
         ItemStack lifeShard2 = recipesManager.getLifeShardItem();
         ItemStack awardTaken = Utils.createItem(Material.BARRIER, "&4To już zostało odebrane!", "award-taken");
-        ItemStack cardItem = Utils.createItem(Material.GHAST_TEAR, "&3Kawałek karty oddania", "card-shard");
+        ItemStack cardItem = recipesManager.getGiveLifeShardItem();
         ItemStack completed = Utils.createItem(Material.LIME_STAINED_GLASS_PANE, " ", "completed");
         ItemStack notCompleted = Utils.createItem(Material.RED_STAINED_GLASS_PANE, " ", "not-completed");
 
@@ -92,11 +92,11 @@ public class LifeShardAwardsMenu extends Menu {
                activeQuestsSize, playerFinishedQuests, 2, maxAmountOfAwards, questsPerAward);
 
         if(howManyTaken == 2){
-            lifeShardTakeMeta.setDisplayName(Utils.chat("&bKliknij by mnie odebrać!"));
+            lifeShardTakeMeta.setDisplayName(Utils.chat("&cKliknij by mnie odebrać!"));
             Utils.setPrivateName(lifeShardTakeMeta, "card-shard-take");
             cardItem.setItemMeta(lifeShardTakeMeta);
         }else if(howManyTaken < 2){
-            lifeShardStandardMeta.setDisplayName(Utils.chat("&3Odbierz jeszcze "+ ( maxAmountOfAwards-howManyTaken  ) +
+            lifeShardStandardMeta.setDisplayName(Utils.chat("&4Odbierz jeszcze "+ ( maxAmountOfAwards-howManyTaken  ) +
                     ( howManyTaken == 1 ? " nagrodę" : " nagrody" ) +" by odebrać!"));
             Utils.setPrivateName(lifeShardStandardMeta, "card-shard-blocked");
             cardItem.setItemMeta(lifeShardStandardMeta);
@@ -154,7 +154,7 @@ public class LifeShardAwardsMenu extends Menu {
                 if(!Utils.isPrivateNameEqual(item, "card-shard-take")) return;
 
                 questsAwardsManager.setAwardsTakenForPlayer(player, QuestType.DAILY, (byte) (questsAwardsManager.getAwardsTakenForPlayer(player, QuestType.DAILY)+1 ));
-                player.getInventory().addItem(new ItemStack(Material.GHAST_TEAR));
+                player.getInventory().addItem(recipesManager.getGiveLifeShardItem());
                 player.playSound(player, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
                 player.closeInventory();
             }

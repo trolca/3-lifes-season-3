@@ -1,6 +1,7 @@
 package me.trololo11.lifespluginseason3.managers;
 
 import me.trololo11.lifespluginseason3.LifesPlugin;
+import me.trololo11.lifespluginseason3.cardstuff.CardType;
 import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -36,13 +37,17 @@ public class RecipesManager {
     private ItemStack lifeShardItem;
     private ItemStack reviveShardItem;
     private ItemStack goldLifeItem;
+    private ItemStack giveLifeShardItem;
 
     private ShapedRecipe lifesRecipe;
     private ShapedRecipe reviveCardRecipe;
+    private ShapedRecipe giveLifeCardRecipe;
 
     private LifesPlugin plugin = LifesPlugin.getPlugin();
+    private CardManager cardManager;
 
-    public RecipesManager(){
+    public RecipesManager(CardManager cardManager){
+        this.cardManager = cardManager;
         createItems();
         createRecipes();
     }
@@ -61,6 +66,7 @@ public class RecipesManager {
         lifeShardItem = new ItemStack(Material.GOLD_NUGGET);
         reviveShardItem = new ItemStack(Material.IRON_NUGGET);
         goldLifeItem = new ItemStack(Material.SCUTE);
+        giveLifeShardItem = new ItemStack(Material.GHAST_TEAR);
 
         ItemMeta heartMeta = lifeItem.getItemMeta();
         heartMeta.setDisplayName(ChatColor.RED + ChatColor.BOLD.toString() + "Życie");
@@ -107,12 +113,18 @@ public class RecipesManager {
         reviveCardShardMeta.setCustomModelData(8760001);
         Utils.setPrivateName(reviveCardShardMeta, "shard_revive_card");
 
+        ItemMeta giveLifeShardMeta = giveLifeShardItem.getItemMeta();
+        giveLifeShardMeta.setDisplayName(ChatColor.RED + "Kawałek karty oddawania");
+        giveLifeShardMeta.setCustomModelData(8760001);
+        Utils.setPrivateName(giveLifeShardMeta, "shard_give_life");
+
         lifeItem.setItemMeta(heartMeta);
         reviveCardItem.setItemMeta(reviveMeta);
         playerLifeItem.setItemMeta(playerHeartMeta);
         lifeShardItem.setItemMeta(heartShardMeta);
         reviveShardItem.setItemMeta(reviveCardShardMeta);
         goldLifeItem.setItemMeta(goldLifeMeta);
+        giveLifeShardItem.setItemMeta(giveLifeShardMeta);
     }
 
     /**
@@ -121,10 +133,11 @@ public class RecipesManager {
     private void createRecipes(){
         NamespacedKey lifesNameKey = new NamespacedKey(plugin, "life_recipe");
         NamespacedKey reviveNameKey = new NamespacedKey(plugin, "revive_card_recipe");
+        NamespacedKey giveLifesKey = new NamespacedKey(plugin, "give_life_card_recipe");
 
         lifesRecipe = new ShapedRecipe(lifesNameKey, lifeItem);
         reviveCardRecipe = new ShapedRecipe(reviveNameKey, reviveCardItem);
-
+        giveLifeCardRecipe = new ShapedRecipe(giveLifesKey, cardManager.getCard(CardType.LIFE_GIVE).getCardItem());
 
         lifesRecipe.shape("###", "#D#", "###");
         lifesRecipe.setIngredient('#', new RecipeChoice.ExactChoice(lifeShardItem));
@@ -134,9 +147,14 @@ public class RecipesManager {
         reviveCardRecipe.setIngredient('#', new RecipeChoice.ExactChoice(reviveShardItem));
         reviveCardRecipe.setIngredient('D', Material.NETHERITE_INGOT);
 
+        giveLifeCardRecipe.shape("###", "#R#", "###");
+        giveLifeCardRecipe.setIngredient('#', new RecipeChoice.ExactChoice(giveLifeShardItem));
+        giveLifeCardRecipe.setIngredient('R', Material.REDSTONE);
+
         //adds them to the server so player can use them
         Bukkit.getServer().addRecipe(lifesRecipe);
         Bukkit.getServer().addRecipe(reviveCardRecipe);
+        Bukkit.getServer().addRecipe(giveLifeCardRecipe);
     }
 
     /**
@@ -221,6 +239,10 @@ public class RecipesManager {
         return reviveShardItem.clone();
     }
 
+    public ItemStack getGiveLifeShardItem(){
+        return giveLifeShardItem.clone();
+    }
+
     public ShapedRecipe getLifesRecipe() {
         return lifesRecipe;
     }
@@ -229,5 +251,8 @@ public class RecipesManager {
         return reviveCardRecipe;
     }
 
+    public ShapedRecipe getGiveLifeCardRecipe() {
+        return giveLifeCardRecipe;
+    }
 
 }
