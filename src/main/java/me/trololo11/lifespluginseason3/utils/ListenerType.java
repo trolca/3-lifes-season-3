@@ -38,5 +38,6 @@ public enum ListenerType {
     VILLAGER_TRADE_BUY,
     GET_ITEM_BY_MOB,
     PLAYER_DAMAGE,
-    CREEPER_LIGHTER
+    CREEPER_LIGHTER,
+    USE_ITEM_ON_GROUND
 }

@@ -38,8 +38,10 @@ public class PlayerAfkManager {
      */
     public void setPlayerAfk(Player player){
         Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
-        Team playerAfkTeam = scoreboard.registerNewTeam(player.getName() + "_afk");
+        Team playerAfkTeam = scoreboard.getTeam(player.getName() + "_afk") == null ? scoreboard.registerNewTeam(player.getName() + "_afk") :
+                scoreboard.getTeam(player.getName() + "_afk");
 
+        assert playerAfkTeam != null;
         playerAfkTeam.setColor(ChatColor.GRAY);
         playerAfkTeam.setSuffix(ChatColor.DARK_RED + " ("+lifesManager.getPlayerLifes(player)+")");
 

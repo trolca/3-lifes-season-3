@@ -54,3 +54,4 @@ GET_ITEM_BY_MOB - To progress a mob that player kills has to drop the specified 
 PLAYER_DAMAGE - To progress player has to damaged by a specific cause
 RENAME_MOB - To progress player has to rename a mob to a specific string (Target should be String :D)
 CREEPER_LIGHTER - To progress player has to light a creeper with flint and steel (There should be no target)
+USE_ITEM_ON_GROUND - To progress player has to use a specified item on grass or dirt (Target should be material)

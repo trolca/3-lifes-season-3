@@ -197,6 +197,7 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CreeperLightListener(questManager), this);
         getServer().getPluginManager().registerEvents(new GetItemListener(questManager), this);
         getServer().getPluginManager().registerEvents(new GetItemByMobListener(questManager), this);
+        getServer().getPluginManager().registerEvents(new UseItemGround(questManager), this);
 
 
 

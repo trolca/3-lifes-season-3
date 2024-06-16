@@ -412,7 +412,7 @@ public class QuestManager {
         String moveQuestTierPath =  plugin.getDataFolder() + "/quests-data/" + getQuestFolderName(questType) + "/tier-"+fileConfig.getInt("tier");
 
 
-        //Bassicaly swaps these files of quests
+        //Basically swaps these files of quests
         moveQuest(quest, moveQuestTierPath);
         moveQuest(changeToQuest, activeQuestsPath);
 
@@ -562,6 +562,7 @@ public class QuestManager {
         questsAwardsManager.setQuestsPerAwards(questType, questsPerAward);
     }
 
+    //For season 4 - better this logic (maybe with enums?)
     /**
      * This function transforms every target which is saved as a string
      * to a specified object that the {@link ListenerType} provided requries. <br><br>
@@ -579,7 +580,8 @@ public class QuestManager {
 
         switch (listenerType){
 
-            case BREAK_BLOCKS, CRAFT, EAT, PLACE_BLOCKS, BREAK_ITEM, BREAK_BLOCKS_NO_SILK, SMITHING_USE, USE_ITEM, SMELT_ITEM, VILLAGER_TRADE_SPEND, VILLAGER_TRADE_BUY->
+            case BREAK_BLOCKS, CRAFT, EAT, PLACE_BLOCKS, BREAK_ITEM, BREAK_BLOCKS_NO_SILK, SMITHING_USE,
+                 USE_ITEM, SMELT_ITEM, VILLAGER_TRADE_SPEND, VILLAGER_TRADE_BUY, GET_ITEM_BY_MOB, GET_ITEM, USE_ITEM_ON_GROUND->
                     stringTargets.forEach(s -> targets.add(Material.getMaterial(s == null ? null : s.toUpperCase()))) ;
 
             case KILL_MOBS,RIDE_DISTANCE,TAME_ANIMAL, BREED_ENTITY, RIGHT_CLICK_ENTITY, PUNCH_ENTITY -> stringTargets.forEach(s -> targets.add(s == null ? null : EntityType.valueOf(s.toUpperCase())));

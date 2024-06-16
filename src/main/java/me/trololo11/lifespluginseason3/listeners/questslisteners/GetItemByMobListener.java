@@ -19,7 +19,7 @@ public class GetItemByMobListener extends QuestListener {
         Player player = e.getEntity().getKiller();
 
         for(ItemStack itemStack : e.getDrops()){
-            checkTarget(itemStack, player, itemStack.getAmount());
+            checkTarget(itemStack.getType(), player, itemStack.getAmount());
         }
     }
 
