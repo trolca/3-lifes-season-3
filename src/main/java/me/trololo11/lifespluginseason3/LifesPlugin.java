@@ -156,6 +156,7 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GoldLifeUseListener(lifesManager), this);
         getServer().getPluginManager().registerEvents(new PlayerStatsDataSetup(databaseManager), this);
         getServer().getPluginManager().registerEvents(new PlayerKillListener(), this);
+        getServer().getPluginManager().registerEvents(new CustomNameRenameFix(), this);
 
         //Registering the listeners that are used for cards
         getServer().getPluginManager().registerEvents(new TakeLifeCardListener(lifesManager, recipesManager), this);

@@ -27,6 +27,6 @@ public class RandomQuestSkipCard extends CardClass {
 
     @Override
     public int getPercentageChance() {
-        return 40;
+        return 10;
     }
 }

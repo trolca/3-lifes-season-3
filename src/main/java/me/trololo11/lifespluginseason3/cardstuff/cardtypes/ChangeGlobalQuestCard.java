@@ -28,6 +28,6 @@ public class ChangeGlobalQuestCard extends CardClass {
 
     @Override
     public int getPercentageChance() {
-        return 40;
+        return 20;
     }
 }

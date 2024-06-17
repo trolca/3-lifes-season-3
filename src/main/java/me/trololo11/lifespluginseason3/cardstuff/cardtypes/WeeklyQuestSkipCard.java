@@ -27,6 +27,6 @@ public class WeeklyQuestSkipCard extends CardClass {
 
     @Override
     public int getPercentageChance() {
-        return 30;
+        return 40;
     }
 }
