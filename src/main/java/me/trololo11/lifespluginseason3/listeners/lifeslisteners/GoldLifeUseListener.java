@@ -34,6 +34,7 @@ public class GoldLifeUseListener implements Listener {
         ItemStack item = e.getItem();
         if(item == null) return;
         if(!item.hasItemMeta()) return;
+        if(!Utils.hasPrivateName(item)) return;
         if(!Utils.getPrivateName(item).startsWith("gold_life")) return;
 
         byte newLifes = (byte) (lifesManager.getPlayerLifes(player)+2);

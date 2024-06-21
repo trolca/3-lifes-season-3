@@ -53,7 +53,7 @@ public class GoldLifeRouletteTask extends BukkitRunnable  {
                 running = false;
             }
 
-            long sleepTime = (long) ( ( (double) allSpins/spins)*25 ); //The sleep time is calculated based on the completed sping to make the later pointer changes slower
+            long sleepTime = (long) ( ( (double) allSpins/spins)*25 ); //The sleep time is calculated based on the completed spin to make the later pointer changes slower
 
             if(spins <= 3){
                 sleepTime += random.nextInt(30);

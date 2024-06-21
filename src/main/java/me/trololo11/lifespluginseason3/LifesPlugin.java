@@ -25,10 +25,7 @@ import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardUseLi
 import me.trololo11.lifespluginseason3.managers.*;
 import me.trololo11.lifespluginseason3.tasks.CheckAfkPlayerTask;
 import me.trololo11.lifespluginseason3.tasks.WeeklyCardResetTask;
-import me.trololo11.lifespluginseason3.utils.Menu;
-import me.trololo11.lifespluginseason3.utils.PlayerStats;
-import me.trololo11.lifespluginseason3.utils.Quest;
-import me.trololo11.lifespluginseason3.utils.QuestType;
+import me.trololo11.lifespluginseason3.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -199,6 +196,7 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GetItemListener(questManager), this);
         getServer().getPluginManager().registerEvents(new GetItemByMobListener(questManager), this);
         getServer().getPluginManager().registerEvents(new UseItemGround(questManager), this);
+        getServer().getPluginManager().registerEvents(new KillChargedCreeperListener(questManager), this);
 
 
 
@@ -350,6 +348,14 @@ public final class LifesPlugin extends JavaPlugin {
 
         file = new File(dataFolder + "/quests-data/quests-timings.yml");
         if(!file.exists()) file.createNewFile();
+
+        file = new File(dataFolder + "/quests-data/questsHelp.txt");
+        if(!file.exists()) Utils.createTextFile(getResource("questsHelp.txt"), file);
+
+
+        file = new File(dataFolder + "/quests-data/example-quest.yml");
+        if(!file.exists()) Utils.createTextFile(getResource("example-quest.yml"), file);
+
     }
 
     private void createSubfoldersForQuests(String questsName) throws IOException {

@@ -308,6 +308,10 @@ public class Utils {
         return getPrivateName(item).startsWith(cardType.toString().toLowerCase());
     }
 
+    public static boolean hasPrivateName(@NotNull ItemStack itemStack){
+        return getPrivateName(itemStack) == null;
+    }
+
     /**
      * Checks if the private name of the item is equal to the specified string. (Case insensitive)
      * @param item The item to check the private name.

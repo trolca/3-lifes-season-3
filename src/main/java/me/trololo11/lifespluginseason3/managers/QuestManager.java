@@ -584,7 +584,8 @@ public class QuestManager {
                  USE_ITEM, SMELT_ITEM, VILLAGER_TRADE_SPEND, VILLAGER_TRADE_BUY, GET_ITEM_BY_MOB, GET_ITEM, USE_ITEM_ON_GROUND->
                     stringTargets.forEach(s -> targets.add(Material.getMaterial(s == null ? null : s.toUpperCase()))) ;
 
-            case KILL_MOBS,RIDE_DISTANCE,TAME_ANIMAL, BREED_ENTITY, RIGHT_CLICK_ENTITY, PUNCH_ENTITY -> stringTargets.forEach(s -> targets.add(s == null ? null : EntityType.valueOf(s.toUpperCase())));
+            case KILL_MOBS,RIDE_DISTANCE,TAME_ANIMAL,
+                 BREED_ENTITY, RIGHT_CLICK_ENTITY, PUNCH_ENTITY -> stringTargets.forEach(s -> targets.add(s == null ? null : EntityType.valueOf(s.toUpperCase())));
 
             case PLAYER_HEART -> stringTargets.forEach(s -> targets.add(Integer.parseInt(s)));
 

@@ -10,4 +10,6 @@ show-progress: false
 max-progress: 1
 
 listener-type: BREAK_BLOCKS
-target: GRASS_BLOCK
+target:
+  - GRASS_BLOCK
+  - DIRT
