@@ -309,7 +309,7 @@ public class Utils {
     }
 
     public static boolean hasPrivateName(@NotNull ItemStack itemStack){
-        return getPrivateName(itemStack) == null;
+        return getPrivateName(itemStack) != null;
     }
 
     /**

@@ -67,7 +67,7 @@ public final class LifesPlugin extends JavaPlugin {
     private int tier=1;
     public int dailyQuestsCount=6;
     public int weeklyQuestsCount=10;
-    public int cardQuestsCount=11;
+    public int cardQuestsCount=10;
     public Properties globalDbProperties;
     public Logger logger;
     public final String loggerPerfix = "[LifesPluginS3]";
@@ -120,11 +120,13 @@ public final class LifesPlugin extends JavaPlugin {
         cardManager = new CardManager();
         recipesManager = new RecipesManager(cardManager);
 
-        if(getConfig().getBoolean("afk-logic")) {
+        int afkDelay = getConfig().getInt("afk-delay");
+
+        if(afkDelay > 0) {
             PlayerAfkManager playerAfkManager = new PlayerAfkManager(lifesManager, teamsManager);
 
             CheckAfkPlayerTask checkAfkPlayerTask = new CheckAfkPlayerTask(playerAfkManager);
-            checkAfkPlayerTask.runTaskTimer(this, 200L, 200L);
+            checkAfkPlayerTask.runTaskTimer(this, afkDelay*400L, afkDelay*400L);
 
             getServer().getPluginManager().registerEvents(checkAfkPlayerTask, this);
         }
@@ -215,14 +217,13 @@ public final class LifesPlugin extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new BreakBlocksListener(questManager), this);
 
-        getCommand("getitems").setExecutor(new GetItemsCommand(recipesManager));
         getCommand("setlifes").setExecutor(new SetLifesCommand());
         getCommand("takelife").setExecutor(new TakeLifeCommand(lifesManager, recipesManager));
         getCommand("lifesmenu").setExecutor(new LifesMenuCommand(questManager, recipesManager, questsAwardsManager, databaseManager, cardManager));
         getCommand("setprogress").setExecutor(new SetProgressCommand(questManager));
-        getCommand("getallcards").setExecutor(new GetAllCardsItems(cardManager));
         getCommand("ping").setExecutor(new PingCommand());
         getCommand("getcard").setExecutor(new GetRandomCardCommand(cardManager, databaseManager));
+        getCommand("startserver").setExecutor(new StartServerCommand());
 
         getCommand("setlifes").setTabCompleter(new SetLifesTabCompleter());
         getCommand("setprogress").setTabCompleter(new SetProgressTabCompleter(questManager));

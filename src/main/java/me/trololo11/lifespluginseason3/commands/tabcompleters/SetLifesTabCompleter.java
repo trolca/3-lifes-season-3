@@ -13,6 +13,10 @@ public class SetLifesTabCompleter implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         ArrayList<String> completer = new ArrayList<>();
 
+        if(!sender.hasPermission("3lifes3.admin")){
+            return completer;
+        }
+
         if(args.length == 1){
             return null;
         }

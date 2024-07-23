@@ -81,7 +81,7 @@ public class WeeklyQuestsAwardsMenu extends Menu {
         Utils.setPrivateName(takeMeta, "revive-shard-take");
 
         ItemMeta normalMeta = reviveCardTemplate.getItemMeta();
-        normalMeta.setDisplayName(ChatColor.AQUA + "Zrób jeszcze <num> questy by odebrać!");
+        normalMeta.setDisplayName(ChatColor.AQUA + "Zrób jeszcze <num> by odebrać!");
         Utils.setPrivateName(normalMeta, "revive-shard-blocked");
 
         ItemMeta otherMeta = reviveCardTemplate.getItemMeta();

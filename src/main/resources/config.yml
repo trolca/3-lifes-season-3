@@ -2,14 +2,13 @@ host: 'localhost'
 port: '' #leave empty to use the default (1433)
 user: 'root'
 password: ''
-
 database-name: 'lifes3_database'
 
 detailed-errors: false #do true if you want to have stack traces printed
 
-afk-logic: true
+afk-delay: 5 #how often does it check for player afk in minutes, set to -1 to disable
 
 quest-tier: 1 # the tier of quests that is currently set (max value: 3)
 daily-quests-count: 6
 weekly-quests-count: 10
-card-quests-count: 11
+card-quests-count: 10

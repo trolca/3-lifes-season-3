@@ -69,7 +69,7 @@ public class PlayerAfkManager {
         playerAfkTeam.unregister();
 
         byte lifes = lifesManager.getPlayerLifes(player);
-        teamsManager.getLifesTeamList().get(lifes >= 3 ? 4 : lifes).addEntry(player.getName());
+        teamsManager.getLifesTeamList().get(lifes > 3 ? 4 : lifes).addEntry(player.getName());
     }
 
     /**

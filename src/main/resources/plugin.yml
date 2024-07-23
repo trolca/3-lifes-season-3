@@ -4,8 +4,6 @@ version: '${project.version}'
 main: me.trololo11.lifespluginseason3.LifesPlugin
 api-version: '1.20'
 commands:
-  getitems:
-    description: "Gets all your items :D"
   setlifes:
     description: "Sets player's amount of lifes"
   takelife:
@@ -16,12 +14,12 @@ commands:
     description: "Opens the main lifes menu"
   setprogress:
     description: "Sets a quest progress!"
-  getallcards:
-    description: "Gives you all the cards lol"
   ping:
     description: "Get your ping!"
   getcard:
-    description: "Gets yours card"
+    description: "Gets yours weekly random card"
+  startserver:
+    description: "Starts the server lol"
 permissions:
   3lifes3.admin:
     description: "A administator perm for the 3LifesPluginSeason3"

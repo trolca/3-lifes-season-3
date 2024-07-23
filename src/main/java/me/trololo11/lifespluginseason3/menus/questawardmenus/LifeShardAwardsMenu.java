@@ -76,7 +76,7 @@ public class LifeShardAwardsMenu extends Menu {
         Utils.setPrivateName(lifeShardTakeMeta, "lifes-shard-take");
 
         ItemMeta lifeShardStandardMeta = lifeShard1.getItemMeta();
-        lifeShardStandardMeta.setDisplayName(Utils.chat("&4Zrób jeszcze <num> questy by odebrać!"));
+        lifeShardStandardMeta.setDisplayName(Utils.chat("&4Zrób jeszcze <num> by odebrać!"));
         Utils.setPrivateName(lifeShardStandardMeta, "lifes-shard-not-take");
 
         ItemMeta otherMeta = lifeShard1.getItemMeta();

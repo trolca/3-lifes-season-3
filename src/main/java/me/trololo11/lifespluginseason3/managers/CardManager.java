@@ -85,7 +85,6 @@ public class CardManager {
      * @return A random card from the allCard ArrayList
      */
     public CardClass getRandomCard(Random random){
-
         int theChosenChance = -1;
 
         for(int chance : percentageCards.keySet()){

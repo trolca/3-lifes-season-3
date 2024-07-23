@@ -64,9 +64,13 @@ public class QuestUtils {
         }else{
 
            if(numOfTheItem >= maxAmountAwards){
-               normalMeta.setDisplayName(normalMeta.getDisplayName().replace("<num>", ( allQuestsSize-playerFinishedQuests )+""));
+               int num = allQuestsSize-playerFinishedQuests;
+               normalMeta.setDisplayName(normalMeta.getDisplayName().replace("<num>", ( allQuestsSize-playerFinishedQuests ) + (num > 4 ? " questów"
+                       :  num == 1 ? ". questa" : " questy" ) ));
            }else{
-               normalMeta.setDisplayName(normalMeta.getDisplayName().replace("<num>", ( (questsPerAward*numOfTheItem)-playerFinishedQuests )+""));
+               int num = (questsPerAward*numOfTheItem)-playerFinishedQuests;
+               normalMeta.setDisplayName(normalMeta.getDisplayName().replace("<num>", ( (questsPerAward*numOfTheItem)-playerFinishedQuests ) + (num > 4 ? " questów"
+                       :  num == 1 ? ". questa" : " questy" ) ));
            }
             Utils.setPrivateName(normalMeta, "lifes-shard-blocked");
             orginalItem.setItemMeta(normalMeta);

@@ -5,6 +5,7 @@ import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.menus.cardmenus.QuestSelectMenu;
 import me.trololo11.lifespluginseason3.menus.cardmenus.confirmmenus.ChangeQuestConfirmMenu;
 import me.trololo11.lifespluginseason3.utils.QuestSelectFunction;
+import me.trololo11.lifespluginseason3.utils.QuestType;
 import me.trololo11.lifespluginseason3.utils.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,6 +34,6 @@ public class ChangeQuestCardUseListener implements Listener {
 
         if(!Utils.checkCardItem(item, CardType.QUEST_CHANGE)) return;
 
-        new QuestSelectMenu("&6&lZmień globalnie questa na innego", null, questManager,"&7&o(Kliknij by zmienić)", questSelectFunction).open(player);
+        new QuestSelectMenu("&6&lZmień globalnie questa na innego", null, questManager,"&7&o(Kliknij by zmienić)", questSelectFunction, quest -> quest.getQuestType() != QuestType.CARD).open(player);
     }
 }
