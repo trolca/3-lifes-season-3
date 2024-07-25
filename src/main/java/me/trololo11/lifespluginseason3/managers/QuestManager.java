@@ -333,6 +333,7 @@ public class QuestManager {
 
         for(Player player : Bukkit.getOnlinePlayers()){
             playerAmountOfFinishedQuests.get(player).put(questType, 0);
+            questsAwardsManager.setAwardsTakenForPlayer(player, questType,  (byte) 0);
         }
 
         calculateQuestsPerAward(questType);

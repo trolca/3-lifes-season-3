@@ -19,7 +19,7 @@ public class QuestsAwardsManager {
     public QuestsAwardsManager(){
         numAwards.put(QuestType.DAILY, (byte) 3);
         numAwards.put(QuestType.WEEKLY, (byte) 4);
-        numAwards.put(QuestType.CARD, (byte) 4);
+        numAwards.put(QuestType.CARD, (byte) 1);
 
         for(QuestType questType : QuestType.values()){
             numTakenAwardsPlayers.put(questType, new HashMap<>());

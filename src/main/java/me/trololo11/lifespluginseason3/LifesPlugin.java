@@ -24,6 +24,7 @@ import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardRenam
 import me.trololo11.lifespluginseason3.listeners.revivelisteners.ReviveCardUseListener;
 import me.trololo11.lifespluginseason3.managers.*;
 import me.trololo11.lifespluginseason3.tasks.CheckAfkPlayerTask;
+import me.trololo11.lifespluginseason3.tasks.SaveDataTask;
 import me.trololo11.lifespluginseason3.tasks.WeeklyCardResetTask;
 import me.trololo11.lifespluginseason3.utils.*;
 import org.bukkit.Bukkit;
@@ -126,7 +127,7 @@ public final class LifesPlugin extends JavaPlugin {
             PlayerAfkManager playerAfkManager = new PlayerAfkManager(lifesManager, teamsManager);
 
             CheckAfkPlayerTask checkAfkPlayerTask = new CheckAfkPlayerTask(playerAfkManager);
-            checkAfkPlayerTask.runTaskTimer(this, afkDelay*400L, afkDelay*400L);
+            checkAfkPlayerTask.runTaskTimer(this, afkDelay*1200L, afkDelay*1200L);
 
             getServer().getPluginManager().registerEvents(checkAfkPlayerTask, this);
         }
@@ -156,6 +157,7 @@ public final class LifesPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerStatsDataSetup(databaseManager), this);
         getServer().getPluginManager().registerEvents(new PlayerKillListener(), this);
         getServer().getPluginManager().registerEvents(new CustomNameRenameFix(), this);
+        getServer().getPluginManager().registerEvents(new ChatColorFix(teamsManager), this);
 
         //Registering the listeners that are used for cards
         getServer().getPluginManager().registerEvents(new TakeLifeCardListener(lifesManager, recipesManager), this);
@@ -214,6 +216,8 @@ public final class LifesPlugin extends JavaPlugin {
 
         new WeeklyCardResetTask(cardTimingsManager, databaseManager).runTaskLater(this, timeWeeklyReset);
 
+        long delay = getConfig().getInt("save-data")*1200L;
+        new SaveDataTask(databaseManager, lifesManager, questsAwardsManager, questManager).runTaskTimer(this, delay, delay);
 
         getServer().getPluginManager().registerEvents(new BreakBlocksListener(questManager), this);
 
@@ -224,6 +228,8 @@ public final class LifesPlugin extends JavaPlugin {
         getCommand("ping").setExecutor(new PingCommand());
         getCommand("getcard").setExecutor(new GetRandomCardCommand(cardManager, databaseManager));
         getCommand("startserver").setExecutor(new StartServerCommand());
+        getCommand("testes").setExecutor(new GetItemsCommand(recipesManager, cardManager));
+        getCommand("savedata").setExecutor(new SaveDataCommand(databaseManager, lifesManager, questsAwardsManager, questManager));
 
         getCommand("setlifes").setTabCompleter(new SetLifesTabCompleter());
         getCommand("setprogress").setTabCompleter(new SetProgressTabCompleter(questManager));

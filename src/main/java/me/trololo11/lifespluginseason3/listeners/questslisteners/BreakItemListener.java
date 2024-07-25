@@ -22,6 +22,6 @@ public class BreakItemListener extends QuestListener {
 
     @Override
     public ListenerType getThisListenerType() {
-        return null;
+        return ListenerType.BREAK_ITEM;
     }
 }

@@ -247,7 +247,9 @@ public class Utils {
         itemMeta.setDisplayName(Utils.chat(displayName));
         setPrivateName(itemMeta, privateName);
         itemMeta.setLore(lore);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
 
         return itemMeta;
     }

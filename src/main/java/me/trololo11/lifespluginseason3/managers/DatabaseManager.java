@@ -250,6 +250,8 @@ public class DatabaseManager {
             return isRevived;
         }
 
+        connection.close();
+
         return false;
     }
 
@@ -301,7 +303,10 @@ public class DatabaseManager {
 
         ResultSet resultSet = statement.executeQuery();
 
-        if(!resultSet.next()) return null;
+        if(!resultSet.next()){
+            connection.close();
+            return null;
+        }
 
         for(Quest quest : activeQuests){
 
@@ -687,6 +692,8 @@ public class DatabaseManager {
             if(quest != null) allSkippedQuests.add(quest);
         }
 
+        connection.close();
+
         return allSkippedQuests;
     }
 
@@ -820,6 +827,8 @@ public class DatabaseManager {
             databaseNamesMap.get( QuestType.valueOf(results.getString("quest_type")) ).add( results.getString("quest_name") );
 
         }
+
+        connection.close();
 
         return databaseNamesMap;
     }

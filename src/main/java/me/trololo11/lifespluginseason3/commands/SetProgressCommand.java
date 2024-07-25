@@ -2,6 +2,7 @@ package me.trololo11.lifespluginseason3.commands;
 
 import me.trololo11.lifespluginseason3.managers.QuestManager;
 import me.trololo11.lifespluginseason3.utils.Quest;
+import me.trololo11.lifespluginseason3.utils.QuestType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -55,8 +56,15 @@ public class SetProgressCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "Ten gracz nie istnieje!");
             return true;
         }
+        QuestType questType;
+        try{
+            questType = QuestType.valueOf(args[1].toUpperCase());
+        }catch (IllegalArgumentException e){
+            player.sendMessage(ChatColor.RED + "Taki typ questów nie istnieje!");
+            return true;
+        }
 
-        Quest setProgressQuest = questManager.getQuestByDatabaseName(args[2]);
+        Quest setProgressQuest = questManager.getQuestByDatabaseName(questType, args[2]);
 
         if(setProgressQuest == null || !questManager.getAllActiveQuests().contains(setProgressQuest)){
             sender.sendMessage(ChatColor.RED + "Ten quest nie istnieje!");

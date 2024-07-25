@@ -8,6 +8,8 @@ detailed-errors: false #do true if you want to have stack traces printed
 
 afk-delay: 5 #how often does it check for player afk in minutes, set to -1 to disable
 
+save-data: 10 #how often does it try to save data to the database in minutes
+
 quest-tier: 1 # the tier of quests that is currently set (max value: 3)
 daily-quests-count: 6
 weekly-quests-count: 10

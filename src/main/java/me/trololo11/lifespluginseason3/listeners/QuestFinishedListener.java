@@ -38,9 +38,12 @@ public class QuestFinishedListener implements Listener {
         boolean showMessage = e.getShowMessage();
         questManager.incrementPlayerFinishedQuests(player, questType);
 
-        if(showMessage) {
+        if(showMessage && questType != QuestType.CARD) {
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
-            player.sendMessage(Utils.chat("&aWłaśnie ukończyłeś quest &f[" + quest.getName() + "&f]"));
+            player.sendMessage(Utils.chat("&aWłaśnie ukończyłeś "+ getQuestFinishWord(questType) +" quest &f[" + quest.getName() + "&f]"));
+        } else if (showMessage) {
+            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+            player.sendMessage(Utils.chat("&aWłaśnie ukończyłeś quest do karty &f[" + quest.getName() + "&f]"));
         }
 
         //Sets the stats for the player
@@ -66,6 +69,25 @@ public class QuestFinishedListener implements Listener {
             else player.sendMessage(ChatColor.GOLD + "Właśnie odblokowałeś kolejna karte z questów!");
         }
 
+    }
+
+    private String getQuestFinishWord(QuestType questType){
+
+        switch (questType){
+
+            case DAILY -> {
+                return "dzienny";
+            }
+
+            case WEEKLY -> {
+                return "tygodniowy";
+            }
+
+            default -> {
+                return "";
+            }
+
+        }
 
     }
 

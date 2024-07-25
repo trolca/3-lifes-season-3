@@ -98,6 +98,7 @@ public class QuestsMenu extends Menu {
             ItemMeta questMeta = questItem.getItemMeta();
             questMeta.setDisplayName(Utils.chat(quest.getName()));
             questMeta.setDisplayName(ChatColor.BOLD + questMeta.getDisplayName());
+            questMeta.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES);
 
             if(mainLifesMenu.developerMode) questMeta.addEnchant(Enchantment.MENDING, 1, true);
 

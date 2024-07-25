@@ -1,5 +1,7 @@
 package me.trololo11.lifespluginseason3.commands;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,7 +17,25 @@ public class PingCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        player.sendMessage("Twój ping: "+ player.getPing()+"ms");
+        if(args.length == 0) {
+            player.sendMessage("Twój ping: " + player.getPing() + "ms");
+        }else if(!args[0].equalsIgnoreCase("*")){
+            Player pingPlayer = Bukkit.getPlayer(args[0]);
+            if(pingPlayer == null){
+                player.sendMessage(ChatColor.RED + "Ta osoba nie jest online");
+                return true;
+            }
+
+            player.sendMessage("Ping " + pingPlayer.getName() + ": "+ pingPlayer.getPing() + "ms");
+        }else{
+            player.sendMessage("Ping wszystkich graczy:");
+            player.sendMessage("");
+            for(Player pingPlayer : Bukkit.getOnlinePlayers()){
+                player.sendMessage(pingPlayer.getName() + ": " + pingPlayer.getPing() + "ms");
+            }
+
+        }
+
 
         return true;
     }

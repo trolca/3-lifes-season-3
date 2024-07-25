@@ -20,6 +20,10 @@ commands:
     description: "Gets yours weekly random card"
   startserver:
     description: "Starts the server lol"
+  testes:
+    description: "testes"
+  savedata:
+    description: "Saves the data of everything to the database."
 permissions:
   3lifes3.admin:
     description: "A administator perm for the 3LifesPluginSeason3"

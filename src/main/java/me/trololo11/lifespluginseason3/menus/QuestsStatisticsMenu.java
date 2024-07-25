@@ -19,7 +19,7 @@ import java.util.*;
  * Shows the progress of a specified quest of all of the players that have played on this server. <br>
  * It sorts it in an descending order.
  */
-public class QuestsStatisticsMenu extends Menu  {
+public class    QuestsStatisticsMenu extends Menu  {
 
     private QuestsMenu questsMenu;
     private Quest quest;
